@@ -1,0 +1,27 @@
+[
+{
+  "directory": "D:/Main/Programming/VS/MG-Engine-Core/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/MG-Engine-Core.dir/includes_CXX.rsp -O3 -DNDEBUG -o CMakeFiles\\MG-Engine-Core.dir\\src\\Files.cpp.obj -c D:\\Main\\Programming\\VS\\MG-Engine-Core\\src\\Files.cpp",
+  "file": "D:/Main/Programming/VS/MG-Engine-Core/src/Files.cpp"
+},
+{
+  "directory": "D:/Main/Programming/VS/MG-Engine-Core/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/MG-Engine-Core.dir/includes_CXX.rsp -O3 -DNDEBUG -o CMakeFiles\\MG-Engine-Core.dir\\src\\Hash.cpp.obj -c D:\\Main\\Programming\\VS\\MG-Engine-Core\\src\\Hash.cpp",
+  "file": "D:/Main/Programming/VS/MG-Engine-Core/src/Hash.cpp"
+},
+{
+  "directory": "D:/Main/Programming/VS/MG-Engine-Core/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/MG-Engine-Core.dir/includes_CXX.rsp -O3 -DNDEBUG -o CMakeFiles\\MG-Engine-Core.dir\\src\\IO.cpp.obj -c D:\\Main\\Programming\\VS\\MG-Engine-Core\\src\\IO.cpp",
+  "file": "D:/Main/Programming/VS/MG-Engine-Core/src/IO.cpp"
+},
+{
+  "directory": "D:/Main/Programming/VS/MG-Engine-Core/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/MG-Engine-Core.dir/includes_CXX.rsp -O3 -DNDEBUG -o CMakeFiles\\MG-Engine-Core.dir\\src\\string.cpp.obj -c D:\\Main\\Programming\\VS\\MG-Engine-Core\\src\\string.cpp",
+  "file": "D:/Main/Programming/VS/MG-Engine-Core/src/string.cpp"
+},
+{
+  "directory": "D:/Main/Programming/VS/MG-Engine-Core/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/Test.dir/includes_CXX.rsp -O3 -DNDEBUG -o CMakeFiles\\Test.dir\\test\\main.cpp.obj -c D:\\Main\\Programming\\VS\\MG-Engine-Core\\test\\main.cpp",
+  "file": "D:/Main/Programming/VS/MG-Engine-Core/test/main.cpp"
+}
+]
