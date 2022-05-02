@@ -21,16 +21,16 @@ namespace mge {
         string operator+(const string& other);
         string operator+(string&& other);
 
-        bool8_t operator==(const string& other) { return strcmp(str, other.c_str()) == 0; }
-        bool8_t operator==(string&& other)      { return strcmp(str, other.c_str()) == 0; }
-        bool8_t operator<(const string& other)  { return strcmp(str, other.c_str()) <  0; }
-        bool8_t operator<(string&& other)       { return strcmp(str, other.c_str()) <  0; }
-        bool8_t operator>(const string& other)  { return strcmp(str, other.c_str()) >  0; }
-        bool8_t operator>(string&& other)       { return strcmp(str, other.c_str()) >  0; }
-        bool8_t operator<=(const string& other) { return strcmp(str, other.c_str()) <= 0; }
-        bool8_t operator<=(string&& other)      { return strcmp(str, other.c_str()) <= 0; }
-        bool8_t operator>=(const string& other) { return strcmp(str, other.c_str()) >= 0; }
-        bool8_t operator>=(string&& other)      { return strcmp(str, other.c_str()) >= 0; }
+        bool8_t operator==(const string& other) const { return strcmp(str, other.c_str()) == 0; }
+        bool8_t operator==(string&& other)      const { return strcmp(str, other.c_str()) == 0; }
+        bool8_t operator< (const string& other) const { return strcmp(str, other.c_str()) <  0; }
+        bool8_t operator< (string&& other)      const { return strcmp(str, other.c_str()) <  0; }
+        bool8_t operator> (const string& other) const { return strcmp(str, other.c_str()) >  0; }
+        bool8_t operator> (string&& other)      const { return strcmp(str, other.c_str()) >  0; }
+        bool8_t operator<=(const string& other) const { return strcmp(str, other.c_str()) <= 0; }
+        bool8_t operator<=(string&& other)      const { return strcmp(str, other.c_str()) <= 0; }
+        bool8_t operator>=(const string& other) const { return strcmp(str, other.c_str()) >= 0; }
+        bool8_t operator>=(string&& other)      const { return strcmp(str, other.c_str()) >= 0; }
 
         char_t& operator[](size_t ind)       { return str[ind]; }
         char_t  operator[](size_t ind) const { return str[ind]; }
@@ -49,8 +49,18 @@ namespace mge {
         const char_t* c_str()    const { return str; }
         char_t*       data()           { return str; }
         const char_t* data()     const { return str; }
-        size_t        size()     const { return strnlen_s(str, _capacity); }
-        size_t        length()   const { return strnlen_s(str, _capacity); }
+        size_t        size()     const { 
+            size_t size = 0;
+            
+            for(; size < _capacity && str[size]; size++) { }
+            return size;
+        }
+        size_t        length()   const { 
+            size_t size = 0;
+            
+            for(; size < _capacity && str[size]; size++) { }
+            return size;
+        }
         size_t        max_size() const { return MAX_SIZE; }
         size_t        capacity()       { return _capacity; }
 

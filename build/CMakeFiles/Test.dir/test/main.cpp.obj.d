@@ -126,17 +126,4 @@ CMakeFiles/Test.dir/test/main.cpp.obj: \
  C:/msys64/mingw64/include/c++/11.2.0/bits/basic_ios.tcc \
  C:/msys64/mingw64/include/c++/11.2.0/bits/ostream.tcc \
  C:/msys64/mingw64/include/c++/11.2.0/istream \
- C:/msys64/mingw64/include/c++/11.2.0/bits/istream.tcc \
- D:/Main/Programming/VS/MG-Engine-Core/include/IO.hpp \
- D:/Main/Programming/VS/MG-Engine-Core/include/Files.hpp \
- D:/Main/Programming/VS/MG-Engine-Core/include/Defines.hpp \
- D:/Main/Programming/VS/MG-Engine-Core/include/BuildInfo.hpp \
- C:/msys64/mingw64/include/assert.h \
- D:/Main/Programming/VS/MG-Engine-Core/include/string.hpp \
- C:/msys64/mingw64/include/string.h \
- C:/msys64/mingw64/include/sec_api/string_s.h \
- D:/Main/Programming/VS/MG-Engine-Core/include/vector.hpp \
- D:/Main/Programming/VS/MG-Engine-Core/include/map.hpp \
- D:/Main/Programming/VS/MG-Engine-Core/include/pair.hpp \
- D:/Main/Programming/VS/MG-Engine-Core/include/unordered_map.hpp \
- D:/Main/Programming/VS/MG-Engine-Core/include/Hash.hpp
+ C:/msys64/mingw64/include/c++/11.2.0/bits/istream.tcc

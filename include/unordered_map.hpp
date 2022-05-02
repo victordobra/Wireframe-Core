@@ -122,18 +122,18 @@ namespace mge {
             if(*currentNode == nullptr) {
                 allocatedBuckets++;
 
-                currentNode = new node(key);
+                *currentNode = new node(key);
 
-                return currentNode->value;
+                return (*currentNode)->value;
             }
 
             //Loop through every node
-            while(currentNode != nullptr) {
+            while(*currentNode != nullptr) {
                 //If the node's key is equal to this key, return the value
-                if(key == currentNode->key) {
-                    return currentNode->value;
+                if(key == (*currentNode)->key) {
+                    return (*currentNode)->value;
                 }
-                currentNode = currentNode->next;
+                currentNode = &(*currentNode)->next;
             }
 
             //The element with the specified node doesn't exit, create it
@@ -144,9 +144,9 @@ namespace mge {
                     reserve(bucketCount * 2);
             }
 
-            currentNode = new node(key);
+            *currentNode = new node(key);
 
-            return currentNode->value;
+            return (*currentNode)->value;
         } 
         Value& operator[](Key&& key) {
             //Find the correct bucket for the key
@@ -170,7 +170,7 @@ namespace mge {
                 if(key == (*currentNode)->key) {
                     return (*currentNode)->value;
                 }
-                currentNode = &((*currentNode)->next);
+                currentNode = &(*currentNode)->next;
             }
 
             //The element with the specified node doesn't exit, create it
@@ -196,18 +196,19 @@ namespace mge {
             if(*currentNode == nullptr) {
                 allocatedBuckets++;
 
-                currentNode = new node(key);
+                *currentNode = new node(key);
+                (*currentNode)->value = value;
 
-                return currentNode->value;
+                return (*currentNode)->value;
             }
 
             //Loop through every node
-            while(currentNode != nullptr) {
+            while(*currentNode != nullptr) {
                 //If the node's key is equal to this key, return the value
-                if(key == currentNode->key) {
-                    return currentNode->value;
+                if(key == (*currentNode)->key) {
+                    return (*currentNode)->value;
                 }
-                currentNode = currentNode->next;
+                currentNode = &(*currentNode)->next;
             }
 
             //The element with the specified node doesn't exit, create it
@@ -218,9 +219,10 @@ namespace mge {
                     reserve(bucketCount * 2);
             }
 
-            currentNode = new node(key);
+            *currentNode = new node(key);
+            (*currentNode)->value = value;
 
-            return currentNode->value;
+            return (*currentNode)->value;
         }
         Value& insert_or_assign(const Key& key, const Value& value) {
             return insert(key, value);
@@ -324,8 +326,8 @@ namespace mge {
             delete[] buckets;
         }
     private:
-        node** buckets;
         size_t bucketCount;
         size_t allocatedBuckets;
+        node** buckets;
     };
 }

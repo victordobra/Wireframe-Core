@@ -37,7 +37,7 @@ namespace mge {
                 _capacity = _capacity << 1;
             }
             //Create the data
-            data = new value_type[_capacity];
+            _data = new value_type[_capacity];
         }
         vector(std::initializer_list<value_type> _list) : _size(_list.size()), _capacity(1) {
             //Find the lowest possible capacity
@@ -271,7 +271,7 @@ namespace mge {
             //Move over all the evelemts to the right of the new element
             size_type pos_ind = position - _data;
 
-            for(size_type i = position; i < _size; i++)
+            for(size_type i = pos_ind; i < _size; i++)
                 _data[i] = _data[i + 1];
             
             return *this;

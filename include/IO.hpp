@@ -3,6 +3,11 @@
 #include "Files.hpp"
 #include "vector.hpp"
 
+#ifdef ERROR
+#define ERROR_DEFINED
+#undef ERROR
+#endif
+
 namespace mge {
     namespace console {
         enum class MessageType : uint8_t {
@@ -36,3 +41,8 @@ namespace mge {
 #define OutFatalError(error, returnCode) OutFatalErrorFunction(error  , returnCode, __LINE__, __FILE__)
     }
 }
+
+#ifdef ERROR_DEFINED
+#define ERROR 0
+#undef ERROR_DEFINED
+#endif

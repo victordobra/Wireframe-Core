@@ -20,7 +20,7 @@ target_sources(Test PRIVATE ${TESTS})
 
 target_include_directories(Test PRIVATE ${PROJECT_SOURCE_DIR}/test PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_link_directories(Test PUBLIC ${PROJECT_SOURCE_DIR}/build)
-target_link_libraries(Test PRIVATE MG-Engine-Core)
+target_link_libraries(Test MG-Engine-Core)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
