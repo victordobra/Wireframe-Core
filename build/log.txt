@@ -1,4 +1,0 @@
-[MESSAGE LINE: 28 FILE: D:\Main\Programming\VS\MG-Engine-Core\test\main.cpp] test
-[MESSAGE LINE: 29 FILE: D:\Main\Programming\VS\MG-Engine-Core\test\main.cpp] test2
-
-[WARNING LINE: 30 FILE: D:\Main\Programming\VS\MG-Engine-Core\test\main.cpp] test2
