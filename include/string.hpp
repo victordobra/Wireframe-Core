@@ -50,16 +50,10 @@ namespace mge {
         char_t*       data()           { return str; }
         const char_t* data()     const { return str; }
         size_t        size()     const { 
-            size_t size = 0;
-            
-            for(; size < _capacity && str[size]; size++) { }
-            return size;
+            return strnlen_s(str, _capacity);
         }
         size_t        length()   const { 
-            size_t size = 0;
-            
-            for(; size < _capacity && str[size]; size++) { }
-            return size;
+            return strnlen_s(str, _capacity);
         }
         size_t        max_size() const { return MAX_SIZE; }
         size_t        capacity()       { return _capacity; }

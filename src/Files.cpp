@@ -20,23 +20,23 @@ namespace mge {
 
     //Open/Close file
     FileInput& FileInput::Open(const string& fileLocation, SType type) {
-        //If the file is already open, close it
+        // If the file is already open, close it
         if(file)
             Close();
 
-        //Chose the creation tags
+        // Chose the creation tags
         string tags = "r";
         if(type & StreamType::BINARY)
             tags.append(1, 'b');
         
-        //Open the file
+        // Open the file
         file = fopen(fileLocation.c_str(), tags.c_str());
 
         //If the file wasn't created, exit the function
         if(!file)
             return *this;
         
-        //Move the file pointer to the end, if needed
+        // Move the file pointer to the end, if needed
         if(type & StreamType::AT_THE_END)
             fseek(file, 0, SEEK_END);
         
@@ -51,7 +51,7 @@ namespace mge {
         return *this;
     }
 
-    //Get functions
+    // Get functions
     FileInput& FileInput::Get() {
         if(feof(file))
             return *this;
@@ -60,38 +60,44 @@ namespace mge {
 
         return *this;
     }
-    FileInput& FileInput::Get(char_t& c) {
+    FileInput& FileInput::ReadBuffer(char_t& c) {
         c = fgetc(file);
 
         return *this;
     }
-    FileInput& FileInput::Get(char_t* buffer, size_t count) {
+    FileInput& FileInput::ReadBuffer(char_t* buffer, size_t count) {
         fread(buffer, sizeof(char_t), count, file);
 
         return *this;
     }
 
-    FileInput& FileInput::GetLine(string& str, size_t size, char_t sep) {
-        char_t c; size_t s = 0;
+    FileInput& FileInput::ReadLine(string& str, size_t size, char_t sep) {
+        char_t character; 
+        size_t ind = 0;
+        bool8_t exitError = false;
         
         do {
             sint32_t charTemp = fgetc(file);
-            if(charTemp < 0)
+            if(charTemp < 0) {
+                exitError = true;
                 break;
-            c = (char_t)charTemp;
-            str.append(1, c);
-            s++;
-        } while(c != sep && s < size && file);
+            }
+            character = (char_t)charTemp;
+            str.append(1, (char_t)character);
+            ++ind;
+        } while(character != sep && ind < size && file);
 
+        if(exitError)
+            return *(FileInput*)0;
         return *this;
     }
 
-    //Read functions
+    // Read functions
     FileInput& FileInput::Read(sint8_t  & num, const char_t* sep) { 
         string str;
         Read(str, sep);
         num = (sint8_t)stoll(str);
-
+        
         return *this;
     }
     FileInput& FileInput::Read(sint16_t & num, const char_t* sep) { 
@@ -176,13 +182,14 @@ namespace mge {
         return *this;
     }
 
-    //Const functions
+    // Const functions
     bool8_t FileInput::IsOpen() const {
         return file;
     }
     bool8_t FileInput::IsAtTheEnd() const {
-        FILE* tempFile = file;
+        size_t pos = ftell(file);
         sint32_t result = fgetc(file);
+        fseek(file, pos, SEEK_SET);
         return result == EOF;
     }
     bool8_t FileInput::IsBad() const {
@@ -197,11 +204,13 @@ namespace mge {
         return (size_t)ftell(tempFile);
     }
     char_t FileInput::Peek() const {
-        FILE* tempFile = file;
-        return fgetc(tempFile);
+        size_t pos = ftell(file);
+        char_t result = fgetc(file);
+        fseek(file, pos, SEEK_SET);
+        return result;
     }
 
-    //Destructor
+    // Destructor
     FileInput::~FileInput() {
         Close();
     }
@@ -214,7 +223,7 @@ namespace mge {
         Open(fileLocation, type);
     }
 
-    //Operators
+    // Operators
     bool8_t FileOutput::operator!() {
         return !file;
     }
@@ -222,13 +231,13 @@ namespace mge {
         return file;
     }
 
-    //Open/Close file
+    // Open/Close file
     FileOutput& FileOutput::Open(const string& fileLocation, SType type) {
-        //If the file is already open, close it
+        // If the file is already open, close it
         if(file)
             Close();
 
-        //Chose the creation tags
+        // Chose the creation tags
         string tags;
         if(type & StreamType::APPEND)
             tags = "a";
@@ -238,14 +247,14 @@ namespace mge {
         if(type & StreamType::BINARY)
             tags.append(1, 'b');
         
-        //Open the file
+        // Open the file
         file = fopen(fileLocation.c_str(), tags.c_str());
 
-        //If the file wasn't created, exit the function
+        // If the file wasn't created, exit the function
         if(!file)
             return *this;
         
-        //Move the file pointer to the end, if needed
+        // Move the file pointer to the end, if needed
         if(type & StreamType::AT_THE_END)
             fseek(file, 0, SEEK_END);
         
@@ -260,7 +269,7 @@ namespace mge {
         return *this;
     }
 
-    //WriteBuffer functions
+    // WriteBuffer functions
     FileOutput& FileOutput::WriteBuffer(char_t c) {
         fputc(c, file);
 
@@ -272,7 +281,7 @@ namespace mge {
         return *this;
     }
 
-    //Write functions
+    // Write functions
     FileOutput& FileOutput::Write(char_t c) { 
         fputc(c, file);
 
@@ -284,7 +293,7 @@ namespace mge {
         return *this;
     }
 
-    //Const functions
+    // Const functions
     bool8_t FileOutput::IsOpen() const {
         return file;
     }
@@ -309,7 +318,7 @@ namespace mge {
         return fgetc(tempFile);
     }
 
-    //Destructor
+    // Destructor
     FileOutput::~FileOutput() {
         fclose(file);
     }
