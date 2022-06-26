@@ -2,10 +2,21 @@
 #include "Core.hpp"
 
 int main() {
-    mge::vector<int> vec{1, 2, 3};
+    mge::set<mge::string> set;
 
-    for(auto number : vec)
-        std::cout << number << ' ';
+    set.insert("bals");
+    set.insert("amogus");
+    set.insert("sus");
+    set.insert("imposter");
+
+    for(const auto& str : set)
+        std::cout << str.c_str() << ' ';
+    std::cout << '\n';
+
+    set.erase("bals");
+
+    for(const auto& str : set)
+        std::cout << str.c_str() << ' ';
 
     return 0;
 }
