@@ -18,7 +18,7 @@ file(GLOB_RECURSE TESTS ${PROJECT_SOURCE_DIR}/test/*.cpp)
 add_executable(Test)
 target_sources(Test PRIVATE ${TESTS})
 
-target_include_directories(Test PRIVATE ${PROJECT_SOURCE_DIR}/test PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(Test PRIVATE ${PROJECT_SOURCE_DIR}/test PUBLIC ${PROJECT_SOURCE_DIR}/include )
 target_link_directories(Test PUBLIC ${PROJECT_SOURCE_DIR}/build)
 target_link_libraries(Test MG-Engine-Core)
 

@@ -87,8 +87,6 @@ namespace mge {
             ++ind;
         } while(character != sep && ind < size && file);
 
-        if(exitError)
-            return *(FileInput*)0;
         return *this;
     }
 
