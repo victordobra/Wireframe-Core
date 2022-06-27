@@ -3,30 +3,6 @@
 #include <assert.h>
 
 namespace mge {
-    //Constructors
-    string::string() : str(nullptr), _capacity(0) { }
-    string::string(const string& other) : _capacity(other._capacity), str(new char_t[other._capacity]) {
-        //Copy the string over
-        memcpy(str, other.str, _capacity * sizeof(char_t));
-    }
-    string::string(string&& other) noexcept : _capacity(other._capacity), str(other.str) {
-        //Unassign the other vector's string pointer
-        other.str = nullptr;
-    }
-    string::string(const char_t* other) : _capacity(1) {
-        //Get the size of the string
-        size_t sSize = strlen(other) + 1;
-        assert((sSize <= MAX_SIZE) && "The string's size bust be lower than or equal to MAX_SIZE!");
-
-        //Find the lowest possible capacity
-        while(_capacity < sSize) {
-            _capacity = _capacity << 1;
-        }
-        
-        str = new char_t[_capacity];
-        memcpy(str, other, sSize);
-    }
-
     //Operators
     string& string::operator=(const string& other) {
         //If the other string is the same as this string, exit the function
@@ -224,11 +200,6 @@ namespace mge {
         memset(str + pos, 0, len * sizeof(char_t));
         
         return *this;
-    }
-
-    //Destructor
-    string::~string() {
-        delete[] str;
     }
 
     //sto_ functions

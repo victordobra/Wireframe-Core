@@ -10,19 +10,19 @@ namespace mge {
     public:
         typedef pair<Key, Value> pair_type;
 
-        map() : _size(0), _capacity(0), _pairs(nullptr) {
+        constexpr map() : _size(0), _capacity(0), _pairs(nullptr) {
 
         }
-        map(const map& other) : _size(other._size), _capacity(other._capacity), _pairs(new pair_type[_capacity]) {
+        constexpr map(const map& other) : _size(other._size), _capacity(other._capacity), _pairs(new pair_type[_capacity]) {
             // Copy every pair
             for(size_t i = 0; i < _size; ++i)
                 _pairs[i] == other._pairs[i];
         }
-        map(map&& other) noexcept : _size(other._size), _capacity(other._capacity), _pairs(other._pairs) {
+        constexpr map(map&& other) noexcept : _size(other._size), _capacity(other._capacity), _pairs(other._pairs) {
             // Unkink the pair list from the other map
             other._pairs = nullptr;
         }
-        map(const pair_type* begin, const pair_type* end) : _size((size_t)(end - begin)), _capacity(1), _pairs(nullptr) {
+        constexpr map(const pair_type* begin, const pair_type* end) : _size((size_t)(end - begin)), _capacity(1), _pairs(nullptr) {
             // Find the lowest possible capacity
             while(_capacity < _size)
                 _capacity <<= 1;
@@ -567,7 +567,7 @@ namespace mge {
             return _size; 
         }
 
-        ~map() {
+        constexpr ~map() {
             // Delete the pairs
             delete[] _pairs;
         }

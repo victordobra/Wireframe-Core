@@ -8,19 +8,19 @@ namespace mge {
     template<class Value>
     class set {
     public:
-        set() : _size(0), _capacity(0), _values(nullptr) {
+        constexpr set() : _size(0), _capacity(0), _values(nullptr) {
 
         } 
-        set(const set& other) : _size(other._size), _capacity(other._capacity), _values(new Value[_capacity]) {
+        constexpr set(const set& other) : _size(other._size), _capacity(other._capacity), _values(new Value[_capacity]) {
             // Copy every value
             for(size_t i = 0; i < _size; ++i)
                 _values = other._values[i];
         }
-        set(set&& other) noexcept : _size(other.size), _capacity(other._capacity), _values(other._values) {
+        constexpr set(set&& other) noexcept : _size(other.size), _capacity(other._capacity), _values(other._values) {
             // Unlink the value list from the other set
             other._values = nullptr;
         }
-        set(const Value* begin, const Value* end) : _size((size_t)(end - begin)), _capacity(1), _values(new Value[_size]) {
+        constexpr set(const Value* begin, const Value* end) : _size((size_t)(end - begin)), _capacity(1), _values(new Value[_size]) {
             // Find the lowest possible capacity
             while(_capacity < _size)
                 _capacity <<= 1;
@@ -563,7 +563,7 @@ namespace mge {
             return _size; 
         }
 
-        ~set() {
+        constexpr ~set() {
             // Delete the array
             delete[] _values;
         }
