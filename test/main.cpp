@@ -2,21 +2,16 @@
 #include "Core.hpp"
 
 int main() {
-    mge::set<mge::string> set;
+    mge::FileInput input("Cube.obj");
 
-    set.insert("bals");
-    set.insert("amogus");
-    set.insert("sus");
-    set.insert("imposter");
+    while(!input.IsAtTheEnd()) {
+        mge::string line = "";
+        input.ReadLine(line, 1000001);
+        const char* cStr = line.c_str();
+        std::cout << cStr;
+    }
 
-    for(const auto& str : set)
-        std::cout << str.c_str() << ' ';
-    std::cout << '\n';
-
-    set.erase("bals");
-
-    for(const auto& str : set)
-        std::cout << str.c_str() << ' ';
+    input.Close();
 
     return 0;
 }

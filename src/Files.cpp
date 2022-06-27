@@ -78,10 +78,8 @@ namespace mge {
         
         do {
             sint32_t charTemp = fgetc(file);
-            if(charTemp < 0) {
-                exitError = true;
+            if(charTemp == EOF)
                 break;
-            }
             character = (char_t)charTemp;
             str.append(1, (char_t)character);
             ++ind;
@@ -185,10 +183,7 @@ namespace mge {
         return file;
     }
     bool8_t FileInput::IsAtTheEnd() const {
-        size_t pos = ftell(file);
-        sint32_t result = fgetc(file);
-        fseek(file, pos, SEEK_SET);
-        return result == EOF;
+        return feof(file);
     }
     bool8_t FileInput::IsBad() const {
         return !file;
@@ -197,9 +192,11 @@ namespace mge {
         return (size_t)ftell(file);
     }
     size_t FileInput::GetCount() const {
-        FILE* tempFile = file;
-        fseek(tempFile, 0, SEEK_END);
-        return (size_t)ftell(tempFile);
+        size_t pos = ftell(file);
+        fseek(file, 0, SEEK_END);
+        size_t count = ftell(file);
+        fseek(file, pos, SEEK_SET);
+        return count;
     }
     char_t FileInput::Peek() const {
         size_t pos = ftell(file);
