@@ -14,7 +14,7 @@ namespace mge {
         constexpr set(const set& other) : _size(other._size), _capacity(other._capacity), _values(new Value[_capacity]) {
             // Copy every value
             for(size_t i = 0; i < _size; ++i)
-                _values = other._values[i];
+                _values[i] = other._values[i];
         }
         constexpr set(set&& other) noexcept : _size(other.size), _capacity(other._capacity), _values(other._values) {
             // Unlink the value list from the other set
@@ -160,7 +160,7 @@ namespace mge {
                 _values = new Value[1];
                 *_values = value;
 
-                return _values;
+                return *_values;
             }
 
             // Binary search for the element
