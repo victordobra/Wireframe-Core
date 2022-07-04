@@ -1,12 +1,12 @@
 #include "Files.hpp"
 #include <stdio.h>
 
-namespace mge {
+namespace wfe {
     //----------------------FileInput----------------------
 
     //Constructors
     FileInput::FileInput() : file(0) { }
-    FileInput::FileInput(const string& fileLocation, SType type) : file(0) {
+    FileInput::FileInput(const string& fileLocation, StreamType type) : file(0) {
         Open(fileLocation, type);
     }
 
@@ -19,7 +19,7 @@ namespace mge {
     }
 
     //Open/Close file
-    FileInput& FileInput::Open(const string& fileLocation, SType type) {
+    FileInput& FileInput::Open(const string& fileLocation, StreamType type) {
         // If the file is already open, close it
         if(file)
             Close();
@@ -173,7 +173,7 @@ namespace mge {
         return *this;
     }
 
-    FileInput& FileInput::Seek(ptrdiff_t pos, SeekRel relative) {
+    FileInput& FileInput::Seek(ptrdiff_t pos, SeekRelative relative) {
         fseek(file, (sint32_t)pos, relative);
         return *this;
     }
@@ -214,7 +214,7 @@ namespace mge {
 
     //Constructors
     FileOutput::FileOutput() : file(0) { }
-    FileOutput::FileOutput(const string& fileLocation, SType type) : file(0) {
+    FileOutput::FileOutput(const string& fileLocation, StreamType type) : file(0) {
         Open(fileLocation, type);
     }
 
@@ -227,7 +227,7 @@ namespace mge {
     }
 
     // Open/Close file
-    FileOutput& FileOutput::Open(const string& fileLocation, SType type) {
+    FileOutput& FileOutput::Open(const string& fileLocation, StreamType type) {
         // If the file is already open, close it
         if(file)
             Close();

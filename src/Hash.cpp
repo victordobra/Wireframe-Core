@@ -1,7 +1,7 @@
 #include "Hash.hpp"
 #include "string.hpp"
 
-namespace mge {
+namespace wfe {
     constexpr uint32_t LARGEST_PRIME = 4294967291u;
 
     template<>

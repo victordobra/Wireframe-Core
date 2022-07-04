@@ -2,7 +2,7 @@
 #include <string.h>
 #include <assert.h>
 
-namespace mge {
+namespace wfe {
     //Operators
     string& string::operator=(const string& other) {
         //If the other string is the same as this string, exit the function

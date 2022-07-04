@@ -1,7 +1,7 @@
 #include "IO.hpp"
 #include <stdio.h>
 
-namespace mge {
+namespace wfe {
     namespace console {
         FileOutput logFile;
         vector<Message> messages = {};
