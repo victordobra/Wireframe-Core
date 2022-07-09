@@ -203,23 +203,23 @@ namespace wfe {
     }
 
     //sto_ functions
-    sint32_t  stoi  (const string& str, char_t** endPtr, size_t base) {
-        return strtol(str.c_str(), endPtr, (sint32_t)base);
+    int32_t  stoi  (const string& str, char_t** endPtr, size_t base) {
+        return strtol(str.c_str(), endPtr, (int32_t)base);
     }
-    sint32_t  stol  (const string& str, char_t** endPtr, size_t base) {
-        return strtol(str.c_str(), endPtr, (sint32_t)base);
+    int32_t  stol  (const string& str, char_t** endPtr, size_t base) {
+        return strtol(str.c_str(), endPtr, (int32_t)base);
     }
-    sint64_t  stoll (const string& str, char_t** endPtr, size_t base) {
-        return strtoll(str.c_str(), endPtr, (sint32_t)base);
+    int64_t  stoll (const string& str, char_t** endPtr, size_t base) {
+        return strtoll(str.c_str(), endPtr, (int32_t)base);
     }
     uint32_t  stoui (const string& str, char_t** endPtr, size_t base) {
-        return strtoul(str.c_str(), endPtr, (sint32_t)base);
+        return strtoul(str.c_str(), endPtr, (int32_t)base);
     }
     uint32_t  stoul (const string& str, char_t** endPtr, size_t base) {
-        return strtoul(str.c_str(), endPtr, (sint32_t)base);
+        return strtoul(str.c_str(), endPtr, (int32_t)base);
     }
     uint64_t  stoull(const string& str, char_t** endPtr, size_t base) {
-        return strtoull(str.c_str(), endPtr, (sint32_t)base);
+        return strtoull(str.c_str(), endPtr, (int32_t)base);
     }
     float32_t stof  (const string& str, char_t** endPtr) {
         return strtof(str.c_str(), endPtr);
@@ -230,7 +230,7 @@ namespace wfe {
     
     //ToString overloads
     template<> 
-    string ToString(sint8_t   number) {
+    string ToString(int8_t   number) {
         if(!number)
             return "0";
 
@@ -251,7 +251,7 @@ namespace wfe {
         return str;
     }
     template<> 
-    string ToString(sint16_t  number) {
+    string ToString(int16_t  number) {
         if(!number)
             return "0";
 
@@ -272,7 +272,7 @@ namespace wfe {
         return str;
     }
     template<> 
-    string ToString(sint32_t  number) {
+    string ToString(int32_t  number) {
         if(!number)
             return "0";
 
@@ -293,7 +293,7 @@ namespace wfe {
         return str;
     }
     template<> 
-    string ToString(sint64_t  number) {
+    string ToString(int64_t  number) {
         if(!number)
             return "0";
 

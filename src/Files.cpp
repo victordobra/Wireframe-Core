@@ -26,7 +26,7 @@ namespace wfe {
 
         // Chose the creation tags
         string tags = "r";
-        if(type & StreamType::BINARY)
+        if(type & STREAM_TYPE_BINARY)
             tags.append(1, 'b');
         
         // Open the file
@@ -37,7 +37,7 @@ namespace wfe {
             return *this;
         
         // Move the file pointer to the end, if needed
-        if(type & StreamType::AT_THE_END)
+        if(type & STREAM_TYPE_BINARY)
             fseek(file, 0, SEEK_END);
         
         return *this;
@@ -77,7 +77,7 @@ namespace wfe {
         bool8_t exitError = false;
         
         do {
-            sint32_t charTemp = fgetc(file);
+            int32_t charTemp = fgetc(file);
             if(charTemp == EOF)
                 break;
             character = (char_t)charTemp;
@@ -89,28 +89,28 @@ namespace wfe {
     }
 
     // Read functions
-    FileInput& FileInput::Read(sint8_t  & num, const char_t* sep) { 
+    FileInput& FileInput::Read(int8_t  & num, const char_t* sep) { 
         string str;
         Read(str, sep);
-        num = (sint8_t)stoll(str);
+        num = (int8_t)stoll(str);
         
         return *this;
     }
-    FileInput& FileInput::Read(sint16_t & num, const char_t* sep) { 
+    FileInput& FileInput::Read(int16_t & num, const char_t* sep) { 
         string str;
         Read(str, sep);
-        num = (sint16_t)stoll(str);
+        num = (int16_t)stoll(str);
 
         return *this;
     }
-    FileInput& FileInput::Read(sint32_t & num, const char_t* sep) { 
+    FileInput& FileInput::Read(int32_t & num, const char_t* sep) { 
         string str;
         Read(str, sep);
-        num = (sint32_t)stoll(str);
+        num = (int32_t)stoll(str);
 
         return *this;
     }
-    FileInput& FileInput::Read(sint64_t & num, const char_t* sep) { 
+    FileInput& FileInput::Read(int64_t & num, const char_t* sep) { 
         string str;
         Read(str, sep);
         num = stoll(str);
@@ -163,7 +163,7 @@ namespace wfe {
         char_t c;
 
         do {
-            sint32_t charTemp = fgetc(file);
+            int32_t charTemp = fgetc(file);
             if(charTemp < 0)
                 break;
             c = (char_t)charTemp;
@@ -174,7 +174,7 @@ namespace wfe {
     }
 
     FileInput& FileInput::Seek(ptrdiff_t pos, SeekRelative relative) {
-        fseek(file, (sint32_t)pos, relative);
+        fseek(file, (int32_t)pos, relative);
         return *this;
     }
 
@@ -234,12 +234,12 @@ namespace wfe {
 
         // Chose the creation tags
         string tags;
-        if(type & StreamType::APPEND)
+        if(type & STREAM_TYPE_APPEND)
             tags = "a";
         else
             tags = "w";
         
-        if(type & StreamType::BINARY)
+        if(type & STREAM_TYPE_BINARY)
             tags.append(1, 'b');
         
         // Open the file
@@ -250,7 +250,7 @@ namespace wfe {
             return *this;
         
         // Move the file pointer to the end, if needed
-        if(type & StreamType::AT_THE_END)
+        if(type & STREAM_TYPE_AT_THE_END)
             fseek(file, 0, SEEK_END);
         
         return *this;
@@ -294,7 +294,7 @@ namespace wfe {
     }
     bool8_t FileOutput::IsAtTheEnd() const {
         FILE* tempFile = file;
-        sint32_t result = fgetc(file);
+        int32_t result = fgetc(file);
         return result == EOF;
     }
     bool8_t FileOutput::IsBad() const {

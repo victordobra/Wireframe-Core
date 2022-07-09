@@ -5,19 +5,19 @@ namespace wfe {
     constexpr uint32_t LARGEST_PRIME = 4294967291u;
 
     template<>
-    void GetHashCode(sint8_t val, size_t& hash) {
+    void GetHashCode(int8_t val, size_t& hash) {
         hash = (size_t)val;
     }
     template<>
-    void GetHashCode(sint16_t val, size_t& hash) {
+    void GetHashCode(int16_t val, size_t& hash) {
         hash = (size_t)val;
     }
     template<>
-    void GetHashCode(sint32_t val, size_t& hash) {
+    void GetHashCode(int32_t val, size_t& hash) {
         hash = (size_t)val;
     }
     template<>
-    void GetHashCode(sint64_t val, size_t& hash) {
+    void GetHashCode(int64_t val, size_t& hash) {
 #ifdef ARCH_x86
         hash = (size_t)(val % LARGEST_PRIME);
 #else
