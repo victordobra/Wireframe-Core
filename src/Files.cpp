@@ -37,7 +37,7 @@ namespace wfe {
             return *this;
         
         // Move the file pointer to the end, if needed
-        if(type & STREAM_TYPE_BINARY)
+        if(type & STREAM_TYPE_AT_THE_END)
             fseek(file, 0, SEEK_END);
         
         return *this;
