@@ -72,18 +72,14 @@ namespace wfe {
     }
 
     FileInput& FileInput::ReadLine(string& str, size_t size, char_t sep) {
-        char_t character; 
-        size_t ind = 0;
-        bool8_t exitError = false;
-        
-        do {
-            int32_t charTemp = fgetc(file);
-            if(charTemp == EOF)
+        str = "";
+
+        for(size_t i = 0; i < size; ++i) {
+            int32_t character = fgetc(file);
+            if(character == EOF || character == sep)
                 break;
-            character = (char_t)charTemp;
             str.append(1, (char_t)character);
-            ++ind;
-        } while(character != sep && ind < size && file);
+        }
 
         return *this;
     }
@@ -283,7 +279,7 @@ namespace wfe {
         return *this;
     }
     FileOutput& FileOutput::Write(const string& str) { 
-        fprintf(file, str.c_str());
+        fputs(str.c_str(), file);
 
         return *this;
     }
@@ -293,9 +289,7 @@ namespace wfe {
         return file;
     }
     bool8_t FileOutput::IsAtTheEnd() const {
-        FILE* tempFile = file;
-        int32_t result = fgetc(file);
-        return result == EOF;
+        return feof(file);
     }
     bool8_t FileOutput::IsBad() const {
         return !file;

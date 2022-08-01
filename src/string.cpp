@@ -40,12 +40,12 @@ namespace wfe {
     string& string::operator+=(string&& other) noexcept {
         return append(other);
     }
-    string string::operator+(const string& other) {
+    string string::operator+(const string& other) const {
         string result(*this);
         result.append(other);
         return result;
     }
-    string string::operator+(string&& other) {
+    string string::operator+(string&& other) const {
         string result(*this);
         result.append(other);
         return result;
