@@ -380,14 +380,14 @@ namespace wfe {
     template<> 
     string ToString(float32_t number) {
         char_t buf[50];
-        gcvt(number, 15, buf);
+        char_t* result = gcvt(number, 15, buf);
         string str = buf;
         return str;
     }
     template<> 
     string ToString(float64_t number) {
         char_t buf[50];
-        gcvt(number, 15, buf);
+        char_t* result = gcvt(number, 15, buf);
         string str = buf;
         return str;
     }

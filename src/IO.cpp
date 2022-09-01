@@ -25,7 +25,7 @@ namespace wfe {
                 logFile.Write(c);
         }
         static void Output(const string& str) {
-            printf(str.c_str());
+            puts(str.c_str());
 
             if (logFile.IsOpen())
                 logFile.Write(str);

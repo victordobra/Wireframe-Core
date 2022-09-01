@@ -66,7 +66,7 @@ namespace wfe {
         return *this;
     }
     FileInput& FileInput::ReadBuffer(char_t* buffer, size_t count) {
-        fread(buffer, sizeof(char_t), count, file);
+        size_t result = fread(buffer, sizeof(char_t), count, file);
 
         return *this;
     }
