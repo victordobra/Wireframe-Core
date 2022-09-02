@@ -2,15 +2,15 @@
 #include <stdio.h>
 
 namespace wfe {
-    //----------------------FileInput----------------------
+    // ----------------------FileInput----------------------
 
-    //Constructors
+    // Constructors
     FileInput::FileInput() : file(0) { }
     FileInput::FileInput(const string& fileLocation, StreamType type) : file(0) {
         Open(fileLocation, type);
     }
 
-    //Operators
+    // Operators
     bool8_t FileInput::operator!() {
         return !file;
     }
@@ -18,7 +18,7 @@ namespace wfe {
         return file;
     }
 
-    //Open/Close file
+    // Open/Close file
     FileInput& FileInput::Open(const string& fileLocation, StreamType type) {
         // If the file is already open, close it
         if(file)
@@ -47,6 +47,7 @@ namespace wfe {
             return *this;
 
         fclose(file);
+        file = nullptr;
 
         return *this;
     }
@@ -208,7 +209,7 @@ namespace wfe {
 
     //----------------------FileOutput---------------------
 
-    //Constructors
+    // Constructors
     FileOutput::FileOutput() : file(0) { }
     FileOutput::FileOutput(const string& fileLocation, StreamType type) : file(0) {
         Open(fileLocation, type);
@@ -256,6 +257,7 @@ namespace wfe {
             return *this;
 
         fclose(file);
+        file = nullptr;
 
         return *this;
     }
@@ -309,6 +311,6 @@ namespace wfe {
 
     // Destructor
     FileOutput::~FileOutput() {
-        fclose(file);
+        Close();
     }
 }

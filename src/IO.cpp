@@ -6,7 +6,7 @@ namespace wfe {
         FileOutput logFile;
         vector<Message> messages = {};
 
-        //Log file functions
+        // Log file functions
         void OpenLogFile(const string& path) {
             logFile.Open(path);
         }
@@ -17,54 +17,53 @@ namespace wfe {
             return logFile;
         }
 
-        //Internal helper functions
+        // Internal helper functions
         static void Output(char_t c) {
             putchar(c);
 
-            if (logFile.IsOpen())
+            if(logFile.IsOpen())
                 logFile.Write(c);
         }
         static void Output(const string& str) {
             puts(str.c_str());
 
-            if (logFile.IsOpen())
+            if(logFile.IsOpen())
                 logFile.Write(str);
         }
         static void OutputMessage(const Message& message) {
+            string output = "";
+
             if(messages.size())
                 if(messages.back().type != message.type)
-                    Output('\n');
+                    output.append(1, '\n');
             
             messages.push_back(message);
 
-            switch (message.type) {
+            switch(message.type) {
             case MessageType::MESSAGE:
-                Output("[MESSAGE");
+                output += "[MESSAGE";
                 break;
             case MessageType::WARNING:
-                Output("[WARNING");
+                output += "[WARNING";
                 break;
             case MessageType::ERROR:
-                Output("[ERROR");
+                output += "[ERROR";
                 break;
             case MessageType::FATAL_ERROR:
-                Output("[FATAL ERROR");
-                break;
-            default:
+                output += "[FATAL ERROR";
                 break;
             }
 
-            if (message.line != -1)
-                Output((string)" LINE: " + ToString(message.line));
-            if (message.sourceFile.length())
-                Output((string)" FILE: " + message.sourceFile);
+            if(message.line != -1)
+                output += (string)" LINE: " + ToString(message.line);
+            if(message.sourceFile.length())
+                output += (string)" FILE: " + message.sourceFile;
 
-            Output("] ");
-            Output(message.message);
-            Output('\n');
+            output += (string)"] " + message.message + "\n";
+            Output(output);
         }
 
-        //Output functions
+        // Output functions
         void OutMessageFunction   (const string& message,                    size_t line, const string& sourceFile) {
             Message msg = { MessageType::MESSAGE, message, line, sourceFile };
             OutputMessage(msg);
@@ -83,7 +82,7 @@ namespace wfe {
             exit(returnCode);
         }
 
-        //Other functions
+        // Other functions
         vector<Message> GetMessages() {
             return messages;
         }
