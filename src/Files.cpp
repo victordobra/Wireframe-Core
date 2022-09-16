@@ -286,6 +286,11 @@ namespace wfe {
         return *this;
     }
 
+    FileOutput& FileOutput::Flush() {
+        fflush(file);
+        return *this;
+    }
+
     // Const functions
     bool8_t FileOutput::IsOpen() const {
         return file;
