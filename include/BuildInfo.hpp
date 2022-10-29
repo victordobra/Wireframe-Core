@@ -2,45 +2,75 @@
 
 #include <stddef.h>
 
-// Platform detection
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) 
-//Windows
-#define PLATFORM_WINDOWS 1
-#elif defined(__linux__) || defined(__gnu_linux__)
-// Linux OS
-#define PLATFORM_LINUX 1
-#if defined(__ANDROID__)
-#define PLATFORM_ANDROID 1
-#endif
-#elif defined(__unix__)
-// Catch anything not caught by the above.
-#define PLATFORM_UNIX 1
-#elif defined(_POSIX_VERSION)
-// Posix
-#define PLATFORM_POSIX 1
-#elif __APPLE__
-// Apple platforms
-#define PLATFORM_APPLE 1
-#include <TargetConditionals.h>
-#if TARGET_IPHONE_SIMULATOR
-// iOS Simulator
-#define PLATFORM_IOS 1
-#define PLATFORM_IOS_SIMULATOR 1
-#elif TARGET_OS_IPHONE
-#define PLATFORM_IOS 1
-// iOS device
-#elif TARGET_OS_MAC
-// Other kinds of Mac OS
-#else
-#error "Unknown Apple platform"
-#endif
-#else
-#error "Unknown platform!"
+// Windows
+#if defined(WIN32) | defined(_WIN32) | defined(__WIN32__)
+/// @brief Defined when building for Windows.
+#define WFE_PLATFORM_WINDOWS
 #endif
 
-//Architecture detection
-#ifdef __i386__
-#define ARCH_X86
+// Linux
+#if defined(__linux__) || defined(__gnu_linux__)
+/// @brief Defined when building for Linux.
+#define WFE_PLATFORM_LINUX
+#endif
+
+// Android
+#if defined(__ANDROID__)
+/// @brief Defined when building for Android.
+#define WFE_PLATFORM_ANDROID
+#endif
+
+// Unix
+#if defined(__unix__)
+/// @brief Defined when building for Unix.
+#define WFE_PLATFORM_UNIX
+#endif
+
+// Posix
+#if defined(_POSIX_VERSION)
+/// @brief Defined when building for Posix.
+#define WFE_PLATFORM_POSIX
+#endif
+
+// Apple platforms
+#if defined(__APPLE__)
+/// @brief Defined when building for an Apple platform.
+#define WFE_PLATFORM_APPLE
+
+#include <TargetConditionals.h>
+
+// IOS simulator
+#if TARGET_IPHONE_SIMULATOR
+/// @brief Defined when building for IOS.
+#define WFE_PLATFORM_IOS
+/// @brief Defined when building for an IOS simulator.
+#define WFE_PLATFORM_IOS_SIMULATOR
+#endif
+
+// IOS
+#if TARGET_OS_IPHONE
+/// @brief Defined when building for IOS.
+#define WFE_PLATFORM_IOS
+#endif
+
+// Other kinds of Mac OS
+#if TARGET_OS_MAC && !TARGET_IPHONE_SIMULATOR && !TARGET_OS_IPHONE
+/// @brief Defined when building for other kinds of Mac OS
+#define WFE_PLATFORM_MAC_OS
 #else
-#define ARCH_X64
+#error "Failed to find the target Apple platform!"
+#endif
+
+#endif
+
+// Check if the target platform was detected
+#if !defined(WFE_PLATFORM_WINDOWS) && !defined(WFE_PLATFORM_LINUX) && !defined(WFE_PLATFORM_ANDROID) && !defined(WFE_PLATFORM_UNIX) && !defined(WFE_PLATFORM_POSIX) && !defined(WFE_PLATFORM_APPLE)
+#error "Failed to find the target platform!"
+#endif
+
+// Architecture
+#if defined(__i386__)
+#define WFE_ARCHITECTURE_X86_64
+#else
+#define WFE_ARCHITECTURE_X64
 #endif
