@@ -3,10 +3,15 @@
 #include "Defines.hpp"
 
 namespace wfe {
+    /// @brief Specifies what a block of memory is used for.
     typedef enum {
+        /// @brief Default memory usage type for when no memory type is specified.
         MEMORY_USAGE_OTHER,
+        /// @brief Array memory usage type.
         MEMORY_USAGE_ARRAY,
+        /// @brief String memory usage type.
         MEMORY_USAGE_STRING,
+        /// @brief The number of possible memory usages.
         MEMORY_USAGE_COUNT
     } MemoryUsage;
 
