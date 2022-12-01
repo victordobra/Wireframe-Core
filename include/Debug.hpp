@@ -4,48 +4,48 @@
 #include <stdarg.h>
 
 namespace wfe {
-    /// @brief Formats the given string.
-    /// @param dest The target string for the format.
-    /// @param maxSize The max size of the target string.
-    /// @param format The format to write to the string.
-    void FormatString(char_t* dest, size_t maxSize, const char_t* format, ...);
-    /// @brief Formats the given string, using the given args list.
-    /// @param dest The target string for the format.
-    /// @param maxSize The max size of the target string.
-    /// @param format The format to write to the string.
-    /// @param args The arguments to use for the format.
-    void FormatStringV(char_t* dest, size_t maxSize, const char_t* format, va_list args);
+	/// @brief Formats the given string.
+	/// @param dest The target string for the format.
+	/// @param maxSize The max size of the target string.
+	/// @param format The format to write to the string.
+	void FormatString(char_t* dest, size_t maxSize, const char_t* format, ...);
+	/// @brief Formats the given string, using the given args list.
+	/// @param dest The target string for the format.
+	/// @param maxSize The max size of the target string.
+	/// @param format The format to write to the string.
+	/// @param args The arguments to use for the format.
+	void FormatStringV(char_t* dest, size_t maxSize, const char_t* format, va_list args);
 
-    typedef enum {
-        LOG_LEVEL_FATAL,
-        LOG_LEVEL_ERROR,
-        LOG_LEVEL_WARNING,
-        LOG_LEVEL_INFO,
-        LOG_LEVEL_DEBUG,
-        LOG_LEVEL_TRACE
-    } LogLevel;
+	typedef enum {
+		LOG_LEVEL_FATAL,
+		LOG_LEVEL_ERROR,
+		LOG_LEVEL_WARNING,
+		LOG_LEVEL_INFO,
+		LOG_LEVEL_DEBUG,
+		LOG_LEVEL_TRACE
+	} LogLevel;
 
-    /// @brief Creates the debug logger.
-    void CreateLogger();
-    /// @brief Deletes the debug logger.
-    void DeleteLogger();
+	/// @brief Creates the debug logger.
+	void CreateLogger();
+	/// @brief Deletes the debug logger.
+	void DeleteLogger();
 
-    /// @brief Logs a message.
-    /// @param level The message level.
-    /// @param format The message string format.
-    void LogMessage(LogLevel level, const char_t* format, ...);
-    /// @brief Logs a message, using the given args list to format it.
-    /// @param level The message level.
-    /// @param format The message string format.
-    /// @param args The message string format args.
-    void LogMessageV(LogLevel level, const char_t* format, va_list args);
+	/// @brief Logs a message.
+	/// @param level The message level.
+	/// @param format The message string format.
+	void LogMessage(LogLevel level, const char_t* format, ...);
+	/// @brief Logs a message, using the given args list to format it.
+	/// @param level The message level.
+	/// @param format The message string format.
+	/// @param args The message string format args.
+	void LogMessageV(LogLevel level, const char_t* format, va_list args);
 
-    /// @brief Reports an assertion failure.
-    /// @param expression The expression that failed the assertion.
-    /// @param message The message to use when logging the assertion failure.
-    /// @param file The file where the failure occured.
-    /// @param line The line where the failure occured.
-    void ReportAssertionFailure(const char_t* expression, const char_t* message = nullptr, const char_t* file = nullptr, size_t line = -1);
+	/// @brief Reports an assertion failure.
+	/// @param expression The expression that failed the assertion.
+	/// @param message The message to use when logging the assertion failure.
+	/// @param file The file where the failure occured.
+	/// @param line The line where the failure occured.
+	void ReportAssertionFailure(const char_t* expression, const char_t* message = nullptr, const char_t* file = nullptr, size_t line = -1);
 
 #ifdef _MSC_VER
 #include <intrin.h>
