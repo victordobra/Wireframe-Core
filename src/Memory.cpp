@@ -728,10 +728,10 @@ namespace wfe {
 			size_t segment = *(size_t*)ptrChar;
 
 			const char_t* segmentPtr = (const char_t*)&segment + sizeof(size_t) - 1;
-			for(size_t i = sizeof(size_t) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_t i = sizeof(size_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the wanted character is in this segment
 				if(*segmentPtr == (char_t)c)
-					return ptrChar + sizeof(size_t) - i - 1;
+					return ptrChar + i;
 
 				// Decrement the pointer
 				--segmentPtr;
@@ -751,10 +751,10 @@ namespace wfe {
 			uint32_t segment = *(uint32_t*)ptrChar;
 
 			const char_t* segmentPtr = (const char_t*)&segment + sizeof(uint32_t) - 1;
-			for(size_t i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_t i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the wanted character is in this segment
 				if(*segmentPtr == (char_t)c)
-					return ptrChar + sizeof(uint32_t) - i - 1;
+					return ptrChar + i;
 
 				// Decrement the pointer
 				--segmentPtr;
@@ -773,10 +773,10 @@ namespace wfe {
 			uint16_t segment = *(uint16_t*)ptrChar;
 
 			const char_t* segmentPtr = (const char_t*)&segment + sizeof(uint16_t) - 1;
-			for(size_t i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_t i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the wanted character is in this segment
 				if(*segmentPtr == (char_t)c)
-					return ptrChar + sizeof(uint16_t) - i - 1;
+					return ptrChar + i;
 
 				// Decrement the pointer
 				--segmentPtr;
@@ -963,8 +963,9 @@ namespace wfe {
 		return originalDest;
 	}
 	char_t* strncpy(char_t* dest, const char_t* src, size_t size) {
-		// memccpy works in this case
-		return (char_t*)memccpy(dest, src, 0, size);
+		// Copy using memccpy
+		memccpy(dest, src, 0, size);
+		return dest;
 	}
 	char_t* strcat(char_t* dest, const char_t* src) {
 		// Copy the source string at the end of the destination string
@@ -1032,6 +1033,11 @@ namespace wfe {
 		// Exit if the strings are the same; nothing needs to be compared
 		if(str1 == str2)
 			return 0;
+		
+		// Save the original pointers
+		const char_t* oldStr1 = str1;
+		const char_t* oldStr2 = str2;
+		size_t oldSize = size;
 		
 		// Compare the strings in segments of size_t
 		while(size >= sizeof(size_t)) {
@@ -1180,6 +1186,10 @@ namespace wfe {
 			str1 += sizeof(uint8_t);
 			str2 += sizeof(uint8_t);
 		}
+
+		// Exit the function if size characters were compared
+		if(str1 - oldStr1 == oldSize)
+			return 0;
 
 		// Both string are equal up to the first end; check which one is longer
 		if(*str1 && !*str2)
@@ -1484,7 +1494,7 @@ namespace wfe {
 				}
 
 				// Add the current character to the appearence vector
-				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
+				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)(*segmentPtr) & 7);
 
 				// Increment the segment pointer
 				++segmentPtr;
@@ -1511,7 +1521,7 @@ namespace wfe {
 					return nullptr;
 				
 				// Check if a character fron accept wasn't found
-				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7)))
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return str + i;
 				
 				// Increment the segment pointer
@@ -1573,7 +1583,7 @@ namespace wfe {
 					return nullptr;
 				
 				// Check if a character fron accept wasn't found
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return str + i;
 				
 				// Increment the segment pointer
@@ -1784,7 +1794,7 @@ namespace wfe {
 		size_t stringSize = 0;
 
 		// Look for the null termination character in segments of size_t
-		while(true) {
+		while(size >= sizeof(size_t)) {
 			// Save a size_t segment
 			size_t segment = *(const size_t*)str;
 
@@ -1865,13 +1875,15 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to search in
-		if(size >= sizeof(uint32_t)) {
+		if(size >= sizeof(uint8_t)) {
 			// Check if the current character is the null termination character
 			if(!*str)
 				return stringSize;
+			
+			++stringSize;
 		}
 
 		// No null termination character was found; return the given max size
-		return size;
+		return stringSize;
 	}
 }

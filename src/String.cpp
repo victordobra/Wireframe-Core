@@ -235,11 +235,11 @@ namespace wfe {
 		// Resize the string
 		resize(strSize + 1);
 		
-		// Generate a uint16_t to hold what needs to be added
-		uint16_t segment = ((uint8_t)c) << 8;
+		// Add the given character at the end of the string
+		strData[strSize - 1] = c;
 
-		// Append the segment to this string
-		*(uint16_t*)(strData + strSize - 1) = segment;
+		// Add a null termination character at the end
+		strData[strSize] = 0;
 
 		return *this;
 	}
@@ -269,7 +269,10 @@ namespace wfe {
 		resize(strSize + sublen);
 
 		// Append the substring's contents to this string.
-		memcpy(strData + oldSize, str.strData + subpos, sublen + 1);
+		memcpy(strData + oldSize, str.strData + subpos, sublen);
+
+		// Add a null termination character at the end
+		strData[strSize] = 0;
 
 		return *this;
 	}
@@ -322,11 +325,11 @@ namespace wfe {
 		// Resize the string
 		resize(strSize + 1);
 		
-		// Generate a uint16_t to hold what needs to be added
-		uint16_t segment = ((uint8_t)c) << 8;
+		// Add the given character at the end of the string
+		strData[strSize - 1] = c;
 
-		// Append the segment to this string
-		*(uint16_t*)(strData + strSize - 1) = segment;
+		// Add a null termination character at the end
+		strData[strSize] = 0;
 	}
 	string& string::assign(const string& str) {
 		// If the given string is the same as this string, exit the function.
@@ -378,7 +381,10 @@ namespace wfe {
 		resize(sublen);
 
 		// Copy the substring's contents
-		memcpy(strData, str.strData + subpos, sublen + 1);
+		memcpy(strData, str.strData + subpos, sublen);
+
+		// Add a null termination character at the end
+		strData[strSize] = 0;
 
 		return *this;
 	}
@@ -560,17 +566,14 @@ namespace wfe {
 		// Assert that the position to erase from must be lower than the string's length
 		WFE_ASSERT(pos < strSize, "The position to erase from must be lower than the string's length!")
 
-		// Save the string's old size
-		size_type oldSize = strSize;
-
 		// Set the actual length of the substring
 		len = (len > (strSize - pos)) ? (strSize - pos) : len;
 
+		// Move part of the string backwards to erase the wanted substring
+		memcpy(strData + pos, strData + pos + len, strSize - pos - len + 1);
+
 		// Resize the string
 		resize(strSize - len);
-
-		// Move part of the string backwards to erase the wanted substring
-		memcpy(strData + pos, strData + pos + len, oldSize - pos - len + 1);
 
 		return *this;
 	}
@@ -578,11 +581,11 @@ namespace wfe {
 		// Assert that the position to erase from must be in range
 		WFE_ASSERT(pos >= begin() && pos < end(), "The position to erase from must be in range!")
 
-		// Resize the string
-		resize(strSize - 1);
-
 		// Move part of the string backwards to erase the wanted character
 		memcpy((pointer)pos, pos + 1, end() - pos + 1);
+
+		// Resize the string
+		resize(strSize - 1);
 
 		return (pointer)pos;
 	}
@@ -596,11 +599,11 @@ namespace wfe {
 		// Get the size of the erased substring
 		size_type sublen = last - first;
 
-		// Resize the string
-		resize(strSize - sublen);
-
 		// Move part of the string backwards to erase the wanted character
 		memcpy((pointer)first, last, end() + sublen - last);
+
+		// Resize the string
+		resize(strSize - sublen);
 
 		return (pointer)first;
 	}
@@ -611,11 +614,14 @@ namespace wfe {
 		// Set the actual length of the substring
 		len = (len > (strSize - pos)) ? (strSize - pos) : len;
 
+		// Save the string's old size
+		size_type oldSize = strSize;
+
 		// Resize the string
 		resize(strSize + str.strSize - len);
 
 		// Move part of the string to make room for the inserted string
-		memmove(strData + pos + str.strSize, strData + pos + len, strSize - pos - len + 1);
+		memmove(strData + pos + str.strSize, strData + pos + len, oldSize - pos - len + 1);
 
 		// Copy the string into the new empty space
 		memcpy(strData + pos, str.strData, str.strSize);
@@ -633,11 +639,14 @@ namespace wfe {
 		size_type pos = first - strData;
 		size_type len = last - first;
 
+		// Save the string's old size
+		size_type oldSize = strSize;
+
 		// Resize the string
 		resize(strSize + str.strSize - len);
 
 		// Move part of the string to make room for the inserted string
-		memmove(strData + pos + str.strSize, strData + pos + len, strSize - pos - len + 1);
+		memmove(strData + pos + str.strSize, strData + pos + len, oldSize - pos - len + 1);
 
 		// Copy the string into the new empty space
 		memcpy(strData + pos, str.strData, str.strSize);
@@ -655,11 +664,14 @@ namespace wfe {
 		len = (len > (strSize - pos)) ? (strSize - pos) : len;
 		sublen = (sublen > (str.strSize - subpos)) ? (str.strSize - subpos) : sublen;
 
+		// Save the string's old size
+		size_type oldSize = strSize;
+
 		// Resize the string
 		resize(strSize + sublen - len);
 
 		// Move part of the string to make room for the inserted substring
-		memmove(strData + pos + sublen, strData + pos + len, strSize - pos - len + 1);
+		memmove(strData + pos + sublen, strData + pos + len, oldSize - pos - len + 1);
 
 		// Copy the substring into the new empty space
 		memcpy(strData + pos, str.strData + subpos, sublen);
@@ -676,11 +688,14 @@ namespace wfe {
 		// Calculate the length of the given string
 		size_type givenStrSize = strlen(str);
 
+		// Save the string's old size
+		size_type oldSize = strSize;
+
 		// Resize the string
 		resize(strSize + givenStrSize - len);
 
 		// Move part of the string to make room for the inserted string
-		memmove(strData + pos + givenStrSize, strData + pos + len, strSize - pos - len + 1);
+		memmove(strData + pos + givenStrSize, strData + pos + len, oldSize - pos - len + 1);
 
 		// Copy the string into the new empty space
 		memcpy(strData + pos, str, givenStrSize);
@@ -698,11 +713,14 @@ namespace wfe {
 		// Calculate the size of the given string
 		size_type givenStrSize = strlen(str);
 
+		// Save the string's old size
+		size_type oldSize = strSize;
+
 		// Resize the string
 		resize(strSize + givenStrSize - len);
 
 		// Move part of the string to make room for the inserted string
-		memmove(strData + pos + givenStrSize, strData + pos + len, strSize - pos - len + 1);
+		memmove(strData + pos + givenStrSize, strData + pos + len, oldSize - pos - len + 1);
 
 		// Copy the string into the new empty space
 		memcpy(strData + pos, str, givenStrSize);
@@ -716,11 +734,14 @@ namespace wfe {
 		// Set the actual length of the substring
 		len = (len > (strSize - pos)) ? (strSize - pos) : len;
 
+		// Save the string's old size
+		size_type oldSize = strSize;
+
 		// Resize the string
 		resize(strSize + size - len);
 
 		// Move part of the string to make room for the inserted string
-		memmove(strData + pos + size, strData + pos + len, strSize - pos - len + 1);
+		memmove(strData + pos + size, strData + pos + len, oldSize - pos - len + 1);
 
 		// Copy the string into the new empty space
 		memcpy(strData + pos, str, size);
@@ -735,11 +756,14 @@ namespace wfe {
 		size_type pos = first - strData;
 		size_type len = last - first;
 
+		// Save the string's old size
+		size_type oldSize = strSize;
+
 		// Resize the string
 		resize(strSize + size - len);
 
 		// Move part of the string to make room for the inserted string
-		memmove(strData + pos + size, strData + pos + len, strSize - pos - len + 1);
+		memmove(strData + pos + size, strData + pos + len, oldSize - pos - len + 1);
 
 		// Copy the string into the new empty space
 		memcpy(strData + pos, str, size);
@@ -753,11 +777,14 @@ namespace wfe {
 		// Set the actual length of the substring
 		len = (len > (strSize - pos)) ? (strSize - pos) : len;
 
+		// Save the string's old size
+		size_type oldSize = strSize;
+
 		// Resize the string
 		resize(strSize + n - len);
 
 		// Move part of the string to make room for the inserted string
-		memmove(strData + pos + n, strData + pos + len, strSize - pos - len + 1);
+		memmove(strData + pos + n, strData + pos + len, oldSize - pos - len + 1);
 
 		// Fill the string's new empty space with the given character
 		memset(strData + pos, c, n);
@@ -772,11 +799,14 @@ namespace wfe {
 		size_type pos = first - strData;
 		size_type len = last - first;
 
+		// Save the string's old size
+		size_type oldSize = strSize;
+
 		// Resize the string
 		resize(strSize + n - len);
 
 		// Move part of the string to make room for the inserted string
-		memmove(strData + pos + n, strData + pos + len, strSize - pos - len + 1);
+		memmove(strData + pos + n, strData + pos + len, oldSize - pos - len + 1);
 
 		// Fill the string's new empty space with the given character
 		memset(strData + pos, c, n);
@@ -847,6 +877,9 @@ namespace wfe {
 		// Assert that the given size must be lower than the maximum size
 		WFE_ASSERT(newSize < max_size(), "The string's size must be lower than max_size()!")
 
+		// Save the string's old size
+		size_type oldSize = strSize;
+
 		// Set the string's new size
 		strSize = newSize;
 
@@ -874,8 +907,10 @@ namespace wfe {
 				WFE_LOG_FATAL("Failed to allocate string memory!");
 		}
 
-		// Add a null termination character at the end
-		strData[strSize] = 0;
+		if(strSize > oldSize) {
+			// Add a null termination character at the end
+			strData[strSize] = 0;
+		}
 	}
 	void string::resize(size_type newSize, value_type c) {
 		// Save the string's old size
@@ -1443,7 +1478,7 @@ namespace wfe {
 					candidate = table[candidate];
 			}
 
-			++pos;
+			++position;
 			++candidate;
 		}
 		table[position] = candidate;
@@ -1454,6 +1489,12 @@ namespace wfe {
 		size_type size = pos + 1;
 
 		while(size >= sizeof(size_type)) {
+			// Decrement the string pointer by the size of size_type
+			ptr -= sizeof(size_type);
+			
+			// Decrement the string's size by the size of size_type
+			size -= sizeof(size_type);
+
 			// Save a size_type segment
 			size_type segment = *(size_type*)ptr;
 
@@ -1470,7 +1511,7 @@ namespace wfe {
 						// Free the KMP table
 						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 
-						return strSize - size + i - wantedLength;
+						return size + i;
 					}
 				} else {
 					// Start over at the highest match possible
@@ -1481,17 +1522,17 @@ namespace wfe {
 					}
 				}
 			}
-
-			// Increment the string pointer by the size of size_type
-			ptr += sizeof(size_type);
-			
-			// Decrement the string's size by the size of size_type
-			size -= sizeof(size_type);
 		}
 
 #if defined(WFE_ARCHITECTURE_X64)
 		// Check if there is a 4 byte region left to look in
 		if(size >= sizeof(uint32_t)) {
+			// Decrement the string pointer by the size of uint32_t
+			ptr -= sizeof(uint32_t);
+			
+			// Decrement the string's size by the size of uint32_t
+			size -= sizeof(uint32_t);
+
 			// Save an uint32_t segment
 			uint32_t segment = *(uint32_t*)ptr;
 
@@ -1508,7 +1549,7 @@ namespace wfe {
 						// Free the KMP table
 						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 
-						return strSize - size + i - wantedLength;
+						return size + i;
 					}
 				} else {
 					// Start over at the highest match possible
@@ -1519,16 +1560,16 @@ namespace wfe {
 					}
 				}
 			}
-
-			// Increment the string pointer by the size of uint32_t
-			ptr += sizeof(uint32_t);
-			
-			// Decrement the string's size by the size of uint32_t
-			size -= sizeof(uint32_t);
 		}
 #endif
 		// Check if there is a 2 byte region left to look in
 		if(size >= sizeof(uint16_t)) {
+			// Decrement the string pointer by the size of uint16_t
+			ptr -= sizeof(uint16_t);
+			
+			// Decrement the string's size by the size of uint16_t
+			size -= sizeof(uint16_t);
+
 			// Save an uint16_t segment
 			uint16_t segment = *(uint16_t*)ptr;
 
@@ -1545,7 +1586,7 @@ namespace wfe {
 						// Free the KMP table
 						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 
-						return strSize - size + i - wantedLength;
+						return size + i;
 					}
 				} else {
 					// Start over at the highest match possible
@@ -1556,12 +1597,6 @@ namespace wfe {
 					}
 				}
 			}
-
-			// Increment the string pointer by the size of uint16_t
-			ptr += sizeof(uint16_t);
-			
-			// Decrement the string's size by the size of uint16_t
-			size -= sizeof(uint16_t);
 		}
 
 		// Check if there is a 1 byte region left to look in
@@ -1594,7 +1629,7 @@ namespace wfe {
 					candidate = table[candidate];
 			}
 
-			++pos;
+			++position;
 			++candidate;
 		}
 		table[position] = candidate;
@@ -1605,6 +1640,12 @@ namespace wfe {
 		size_type size = pos + 1;
 
 		while(size >= sizeof(size_type)) {
+			// Decrement the string pointer by the size of size_type
+			ptr -= sizeof(size_type);
+			
+			// Decrement the string's size by the size of size_type
+			size -= sizeof(size_type);
+
 			// Save a size_type segment
 			size_type segment = *(size_type*)ptr;
 
@@ -1621,7 +1662,7 @@ namespace wfe {
 						// Free the KMP table
 						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 
-						return strSize - size + i - wantedLength;
+						return size + i;
 					}
 				} else {
 					// Start over at the highest match possible
@@ -1632,17 +1673,17 @@ namespace wfe {
 					}
 				}
 			}
-
-			// Increment the string pointer by the size of size_type
-			ptr += sizeof(size_type);
-			
-			// Decrement the string's size by the size of size_type
-			size -= sizeof(size_type);
 		}
 
 #if defined(WFE_ARCHITECTURE_X64)
 		// Check if there is a 4 byte region left to look in
 		if(size >= sizeof(uint32_t)) {
+			// Decrement the string pointer by the size of uint32_t
+			ptr -= sizeof(uint32_t);
+			
+			// Decrement the string's size by the size of uint32_t
+			size -= sizeof(uint32_t);
+
 			// Save an uint32_t segment
 			uint32_t segment = *(uint32_t*)ptr;
 
@@ -1659,7 +1700,7 @@ namespace wfe {
 						// Free the KMP table
 						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 
-						return strSize - size + i - wantedLength;
+						return size + i;
 					}
 				} else {
 					// Start over at the highest match possible
@@ -1670,16 +1711,16 @@ namespace wfe {
 					}
 				}
 			}
-
-			// Increment the string pointer by the size of uint32_t
-			ptr += sizeof(uint32_t);
-			
-			// Decrement the string's size by the size of uint32_t
-			size -= sizeof(uint32_t);
 		}
 #endif
 		// Check if there is a 2 byte region left to look in
 		if(size >= sizeof(uint16_t)) {
+			// Decrement the string pointer by the size of uint16_t
+			ptr -= sizeof(uint16_t);
+			
+			// Decrement the string's size by the size of uint16_t
+			size -= sizeof(uint16_t);
+
 			// Save an uint16_t segment
 			uint16_t segment = *(uint16_t*)ptr;
 
@@ -1696,7 +1737,7 @@ namespace wfe {
 						// Free the KMP table
 						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 
-						return strSize - size + i - wantedLength;
+						return size + i;
 					}
 				} else {
 					// Start over at the highest match possible
@@ -1707,12 +1748,6 @@ namespace wfe {
 					}
 				}
 			}
-
-			// Increment the string pointer by the size of uint16_t
-			ptr += sizeof(uint16_t);
-			
-			// Decrement the string's size by the size of uint16_t
-			size -= sizeof(uint16_t);
 		}
 
 		// Check if there is a 1 byte region left to look in
@@ -1745,7 +1780,7 @@ namespace wfe {
 					candidate = table[candidate];
 			}
 
-			++pos;
+			++position;
 			++candidate;
 		}
 		table[position] = candidate;
@@ -1756,6 +1791,12 @@ namespace wfe {
 		size_type size = pos + 1;
 
 		while(size >= sizeof(size_type)) {
+			// Decrement the string pointer by the size of size_type
+			ptr -= sizeof(size_type);
+			
+			// Decrement the string's size by the size of size_type
+			size -= sizeof(size_type);
+
 			// Save a size_type segment
 			size_type segment = *(size_type*)ptr;
 
@@ -1772,7 +1813,7 @@ namespace wfe {
 						// Free the KMP table
 						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 
-						return strSize - size + i - wantedLength;
+						return size + i;
 					}
 				} else {
 					// Start over at the highest match possible
@@ -1783,17 +1824,17 @@ namespace wfe {
 					}
 				}
 			}
-
-			// Increment the string pointer by the size of size_type
-			ptr += sizeof(size_type);
-			
-			// Decrement the string's size by the size of size_type
-			size -= sizeof(size_type);
 		}
 
 #if defined(WFE_ARCHITECTURE_X64)
 		// Check if there is a 4 byte region left to look in
 		if(size >= sizeof(uint32_t)) {
+			// Decrement the string pointer by the size of uint32_t
+			ptr -= sizeof(uint32_t);
+			
+			// Decrement the string's size by the size of uint32_t
+			size -= sizeof(uint32_t);
+
 			// Save an uint32_t segment
 			uint32_t segment = *(uint32_t*)ptr;
 
@@ -1810,7 +1851,7 @@ namespace wfe {
 						// Free the KMP table
 						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 
-						return strSize - size + i - wantedLength;
+						return size + i;
 					}
 				} else {
 					// Start over at the highest match possible
@@ -1821,16 +1862,16 @@ namespace wfe {
 					}
 				}
 			}
-
-			// Increment the string pointer by the size of uint32_t
-			ptr += sizeof(uint32_t);
-			
-			// Decrement the string's size by the size of uint32_t
-			size -= sizeof(uint32_t);
 		}
 #endif
 		// Check if there is a 2 byte region left to look in
 		if(size >= sizeof(uint16_t)) {
+			// Decrement the string pointer by the size of uint16_t
+			ptr -= sizeof(uint16_t);
+			
+			// Decrement the string's size by the size of uint16_t
+			size -= sizeof(uint16_t);
+
 			// Save an uint16_t segment
 			uint16_t segment = *(uint16_t*)ptr;
 
@@ -1847,7 +1888,7 @@ namespace wfe {
 						// Free the KMP table
 						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 
-						return strSize - size + i - wantedLength;
+						return size + i;
 					}
 				} else {
 					// Start over at the highest match possible
@@ -1858,12 +1899,6 @@ namespace wfe {
 					}
 				}
 			}
-
-			// Increment the string pointer by the size of uint16_t
-			ptr += sizeof(uint16_t);
-			
-			// Decrement the string's size by the size of uint16_t
-			size -= sizeof(uint16_t);
 		}
 
 		// Check if there is a 1 byte region left to look in
@@ -1880,7 +1915,7 @@ namespace wfe {
 		pos = (pos >= strSize) ? (strSize - 1) : pos;
 
 		// Use memrchr to find the wanted character
-		const_pointer ptr = (const_pointer)memrchr(strData + pos, c, pos + 1);
+		const_pointer ptr = (const_pointer)memrchr(strData, c, pos + 1);
 
 		// Return the character's position relative to the string's data
 		if(ptr)
@@ -1987,7 +2022,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -2012,7 +2047,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -2036,7 +2071,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -2109,7 +2144,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -2134,7 +2169,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -2158,7 +2193,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -2267,7 +2302,7 @@ namespace wfe {
 
 		// Look through this string in segments of size_type
 		ptr = strData + pos;
-		size = pos + 1;
+		size = strSize - pos;
 
 		while(size >= sizeof(size_type)) {
 			// Save a size_type segment
@@ -2278,7 +2313,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -2303,7 +2338,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -2327,7 +2362,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -2355,7 +2390,7 @@ namespace wfe {
 	}
 	string::size_type string::find_last_of(const string& str, size_type pos) const {
 		// Set the actual position to start searching at.
-		pos = (pos >= strSize) ? (strSize - 1) : pos;
+		pos = (pos > strSize) ? strSize : pos;
 
 		// Create an appearance vecotr for every character in the given string
 		uint8_t appears[32];
@@ -2440,7 +2475,7 @@ namespace wfe {
 
 		// Look through this string in segments of size_type
 		ptr = strData + pos;
-		size = strSize - pos;
+		size = pos;
 
 		while(size >= sizeof(size_type)) {
 			// Decrement the string pointer by the size of size_type
@@ -2452,16 +2487,16 @@ namespace wfe {
 			// Save a size_type segment
 			size_type segment = *(const size_type*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(size_type) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
-					return ptr + i - strData;
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
+					return size + i;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 
@@ -2477,16 +2512,16 @@ namespace wfe {
 			// Save a uint32_t segment
 			uint32_t segment = *(const uint32_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint32_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
-					return ptr + i - strData;
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
+					return size + i;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 #endif
@@ -2501,21 +2536,21 @@ namespace wfe {
 			// Save a uint16_t segment
 			uint16_t segment = *(const uint16_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint16_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
-					return ptr + i - strData;
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
+					return size + i;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 		// Check if there is a 1 byte region left to check in
 		if(size >= sizeof(uint8_t)) {
-			if(appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
+			if(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7)))
 				return 0;
 		}
 
@@ -2524,7 +2559,7 @@ namespace wfe {
 	}
 	string::size_type string::find_last_of(const_pointer str, size_type pos) const {
 		// Set the actual position to start searching at.
-		pos = (pos >= strSize) ? (strSize - 1) : pos;
+		pos = (pos > strSize) ? strSize : pos;
 
 		// Create an appearance vecotr for every character in the given string
 		uint8_t appears[32];
@@ -2562,7 +2597,7 @@ namespace wfe {
 
 		// Look through this string in segments of size_type
 		const_pointer ptr = strData + pos;
-		size_type size = pos + 1;
+		size_type size = pos;
 
 		while(size >= sizeof(size_type)) {
 			// Decrement the string pointer by the size of size_type
@@ -2574,16 +2609,16 @@ namespace wfe {
 			// Save a size_type segment
 			size_type segment = *(const size_type*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(size_type) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
-					return ptr + i - strData;
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
+					return size + i;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 
@@ -2599,16 +2634,16 @@ namespace wfe {
 			// Save a uint32_t segment
 			uint32_t segment = *(const uint32_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint32_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
-					return ptr + i - strData;
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
+					return size + i;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 #endif
@@ -2623,21 +2658,21 @@ namespace wfe {
 			// Save a uint16_t segment
 			uint16_t segment = *(const uint16_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint16_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
-					return ptr + i - strData;
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
+					return size + i;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 		// Check if there is a 1 byte region left to check in
 		if(size >= sizeof(uint8_t)) {
-			if(appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
+			if(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7)))
 				return 0;
 		}
 
@@ -2646,14 +2681,14 @@ namespace wfe {
 	}
 	string::size_type string::find_last_of(const_pointer str, size_type pos, size_type n) const {
 		// Set the actual position to start searching at.
-		pos = (pos >= strSize) ? (strSize - 1) : pos;
+		pos = (pos > strSize) ? strSize : pos;
 
 		// Create an appearance vecotr for every character in the given string
 		uint8_t appears[32];
 		memset(appears, 0, 32 * sizeof(uint8_t));
 
 		// Look through the given string in segments of size_type
-		const_pointer ptr = strData;
+		const_pointer ptr = str;
 		size_type size = n;
 
 		while(size >= sizeof(size_type)) {
@@ -2729,39 +2764,9 @@ namespace wfe {
 			appears[(uint8_t)(*ptr) >> 3] |= 1 << ((uint8_t)*ptr & 7);
 		}
 
-		// Look through the given string in segments of size_type
-		while(true) {
-			// Save a size_type segment
-			size_type segment = *(const size_type*)str;
-
-			const_pointer segmentPtr = (const_pointer)&segment;
-
-			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
-				// Check if the null termination character was found
-				if(!*segmentPtr) {
-					// Move the given string pointer up to the null termination character and exit the loop
-					str += i;
-					break;
-				}
-
-				// Add the current character to the appearence vector
-				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
-
-				// Increment the segment pointer
-				++segmentPtr;
-			}
-			// Exit the loop if the null termination character was found
-			if(!*str)
-				break;
-			
-			// Increment the given string pointer by the size of size_type
-			str += sizeof(size_type);
-		}
-
 		// Look through this string in segments of size_type
 		ptr = strData + pos;
-		size = pos + 1;
+		size = pos;
 
 		while(size >= sizeof(size_type)) {
 			// Decrement the string pointer by the size of size_type
@@ -2773,16 +2778,16 @@ namespace wfe {
 			// Save a size_type segment
 			size_type segment = *(const size_type*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(size_type) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
-					return ptr + i - strData;
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
+					return size + i;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 
@@ -2798,16 +2803,16 @@ namespace wfe {
 			// Save a uint32_t segment
 			uint32_t segment = *(const uint32_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint32_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
-					return ptr + i - strData;
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
+					return size + i;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 #endif
@@ -2822,21 +2827,21 @@ namespace wfe {
 			// Save a uint16_t segment
 			uint16_t segment = *(const uint16_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint16_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
-					return ptr + i - strData;
+				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
+					return size + i;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
-		// Check if there is a 1 byte region left to look in
+		// Check if there is a 1 byte region left to check in
 		if(size >= sizeof(uint8_t)) {
-			if(appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
+			if(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7)))
 				return 0;
 		}
 
@@ -2945,7 +2950,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -2970,7 +2975,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -2994,7 +2999,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -3009,7 +3014,7 @@ namespace wfe {
 		}
 		// Check if there is a 1 byte region left to check in
 		if(size >= sizeof(uint8_t)) {
-			if(!appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
+			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7))))
 				return strSize - 1;
 		}
 
@@ -3067,7 +3072,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -3092,7 +3097,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -3116,7 +3121,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -3131,7 +3136,7 @@ namespace wfe {
 		}
 		// Check if there is a 1 byte region left to check in
 		if(size >= sizeof(uint8_t)) {
-			if(!appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
+			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7)))
 				return strSize - 1;
 		}
 
@@ -3225,7 +3230,7 @@ namespace wfe {
 
 		// Look through this string in segments of size_type
 		ptr = strData + pos;
-		size = pos + 1;
+		size = strSize - pos;
 
 		while(size >= sizeof(size_type)) {
 			// Save a size_type segment
@@ -3236,7 +3241,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -3261,7 +3266,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -3285,7 +3290,7 @@ namespace wfe {
 			// Check every character in the segment
 			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
-				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
 				// Increment the segment pointer
@@ -3300,7 +3305,7 @@ namespace wfe {
 		}
 		// Check if there is a 1 byte region left to check in
 		if(size >= sizeof(uint8_t)) {
-			if(appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
+			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7)))
 				return strSize - 1;
 		}
 
@@ -3394,7 +3399,7 @@ namespace wfe {
 	}
 	string::size_type string::find_last_not_of(const string& str, size_type pos) const {
 		// Set the actual position to start searching at.
-		pos = (pos >= strSize) ? (strSize - 1) : pos;
+		pos = (pos > strSize) ? strSize : pos;
 
 		// Create an appearance vecotr for every character in the given string
 		uint8_t appears[32];
@@ -3479,7 +3484,7 @@ namespace wfe {
 
 		// Look through this string in segments of size_type
 		ptr = strData + pos;
-		size = strSize - pos;
+		size = pos;
 
 		while(size >= sizeof(size_type)) {
 			// Decrement the string pointer by the size of size_type
@@ -3491,16 +3496,16 @@ namespace wfe {
 			// Save a size_type segment
 			size_type segment = *(const size_type*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(size_type) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 
@@ -3516,16 +3521,16 @@ namespace wfe {
 			// Save a uint32_t segment
 			uint32_t segment = *(const uint32_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint32_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 #endif
@@ -3540,21 +3545,21 @@ namespace wfe {
 			// Save a uint16_t segment
 			uint16_t segment = *(const uint16_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint16_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 		// Check if there is a 1 byte region left to check in
 		if(size >= sizeof(uint8_t)) {
-			if(!appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
+			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7))))
 				return 0;
 		}
 
@@ -3563,7 +3568,7 @@ namespace wfe {
 	}
 	string::size_type string::find_last_not_of(const_pointer str, size_type pos) const {
 		// Set the actual position to start searching at.
-		pos = (pos >= strSize) ? (strSize - 1) : pos;
+		pos = (pos > strSize) ? strSize : pos;
 
 		// Create an appearance vecotr for every character in the given string
 		uint8_t appears[32];
@@ -3601,7 +3606,7 @@ namespace wfe {
 
 		// Look through this string in segments of size_type
 		const_pointer ptr = strData + pos;
-		size_type size = pos + 1;
+		size_type size = pos;
 
 		while(size >= sizeof(size_type)) {
 			// Decrement the string pointer by the size of size_type
@@ -3613,16 +3618,16 @@ namespace wfe {
 			// Save a size_type segment
 			size_type segment = *(const size_type*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(size_type) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 
@@ -3638,16 +3643,16 @@ namespace wfe {
 			// Save a uint32_t segment
 			uint32_t segment = *(const uint32_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint32_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 #endif
@@ -3662,21 +3667,21 @@ namespace wfe {
 			// Save a uint16_t segment
 			uint16_t segment = *(const uint16_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint16_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 		// Check if there is a 1 byte region left to check in
 		if(size >= sizeof(uint8_t)) {
-			if(!appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
+			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7))))
 				return 0;
 		}
 
@@ -3685,14 +3690,14 @@ namespace wfe {
 	}
 	string::size_type string::find_last_not_of(const_pointer str, size_type pos, size_type n) const {
 		// Set the actual position to start searching at.
-		pos = (pos >= strSize) ? (strSize - 1) : pos;
+		pos = (pos > strSize) ? strSize : pos;
 
 		// Create an appearance vecotr for every character in the given string
 		uint8_t appears[32];
 		memset(appears, 0, 32 * sizeof(uint8_t));
 
 		// Look through the given string in segments of size_type
-		const_pointer ptr = strData;
+		const_pointer ptr = str;
 		size_type size = n;
 
 		while(size >= sizeof(size_type)) {
@@ -3770,7 +3775,7 @@ namespace wfe {
 
 		// Look through this string in segments of size_type
 		ptr = strData + pos;
-		size = pos + 1;
+		size = pos;
 
 		while(size >= sizeof(size_type)) {
 			// Decrement the string pointer by the size of size_type
@@ -3782,16 +3787,16 @@ namespace wfe {
 			// Save a size_type segment
 			size_type segment = *(const size_type*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(size_type) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 
@@ -3807,16 +3812,16 @@ namespace wfe {
 			// Save a uint32_t segment
 			uint32_t segment = *(const uint32_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint32_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 #endif
@@ -3831,21 +3836,21 @@ namespace wfe {
 			// Save a uint16_t segment
 			uint16_t segment = *(const uint16_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint16_t) - 1;
 
 			// Check every character in the segment
-			for(size_type i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; ++i) {
+			for(size_type i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if the current character is in the appearence vector
-				if(!appears[(uint8_t)(*segmentPtr) >> 3] & (1 << (uint8_t)(*segmentPtr) & 7))
+				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
 
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
-		// Check if there is a 1 byte region left to look in
+		// Check if there is a 1 byte region left to check in
 		if(size >= sizeof(uint8_t)) {
-			if(!appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
+			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7))))
 				return 0;
 		}
 
@@ -3853,12 +3858,12 @@ namespace wfe {
 		return SIZE_T_MAX;
 	}
 	string::size_type string::find_last_not_of(value_type c, size_type pos) const {
-		// Assert that the position to start searching from must be lower than the string's size
-		WFE_ASSERT(pos < strSize, "The position to start searching from must be lower than the string's size!")
+		// Set the actual position to start searching at.
+		pos = (pos > strSize) ? strSize : pos;
 
 		// Look through this string in segments of size_type
 		const_pointer ptr = strData + pos;
-		size_type size = strSize - pos;
+		size_type size = pos;
 
 		while(size >= sizeof(size_type)) {
 			// Decrement the string pointer by the size of size_type
@@ -3870,15 +3875,15 @@ namespace wfe {
 			// Save a size_type segment
 			size_type segment = *(const size_type*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(size_type) - 1;
 
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = sizeof(size_type) - 1; i != SIZE_T_MAX; --i) {
 				// Check if a character different to the wanted character is in this segment
 				if(*segmentPtr != c)
-					return ptr + i - strData;
+					return size + i;
 				
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 
@@ -3894,15 +3899,15 @@ namespace wfe {
 			// Save a uint32_t segment
 			uint32_t segment = *(const uint32_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint32_t) - 1;
 
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = sizeof(uint32_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if a character different to the wanted character is in this segment
 				if(*segmentPtr != c)
-					return ptr + i - strData;
+					return size + i;
 				
-				// Increment the segment pointer
-				++segmentPtr;
+				// Dncrement the segment pointer
+				--segmentPtr;
 			}
 		}
 #endif
@@ -3917,15 +3922,15 @@ namespace wfe {
 			// Save a uint16_t segment
 			uint16_t segment = *(const uint16_t*)ptr;
 
-			const_pointer segmentPtr = (const_pointer)&segment;
+			const_pointer segmentPtr = (const_pointer)&segment + sizeof(uint16_t) - 1;
 
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = sizeof(uint16_t) - 1; i != SIZE_T_MAX; --i) {
 				// Check if a character different to the wanted character is in this segment
 				if(*segmentPtr != c)
-					return ptr + i - strData;
+					return size + i;
 				
-				// Increment the segment pointer
-				++segmentPtr;
+				// Decrement the segment pointer
+				--segmentPtr;
 			}
 		}
 
@@ -3936,6 +3941,15 @@ namespace wfe {
 		
 		// No instance of a wanted character was found; return SIZE_T_MAX
 		return SIZE_T_MAX;
+	}
+	string string::substr(size_type pos, size_type len) const {
+		// Assert that the position to start comparing at must be lower than the string's size
+		WFE_ASSERT(pos < strSize, "The position to start comparing at must be lower than the string's size!")
+	
+		// Set the actual length of the substring
+		len = (len > (strSize - pos)) ? (strSize - pos) : len;
+
+		return string(strData + pos, len);
 	}
 	int32_t string::compare(const string& str) const {
 		// Set the smallest length of both strings		
