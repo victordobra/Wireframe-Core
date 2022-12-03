@@ -3,7 +3,6 @@
 #include "Defines.hpp"
 #include "Memory.hpp"
 #include "Debug.hpp"
-#include <any>
 
 namespace wfe {
     /// @brief Creates a new object.

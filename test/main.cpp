@@ -2,7 +2,6 @@
 #include "Tests.hpp"
 #include <stdio.h>
 #include <time.h>
-#include <vector>
 
 namespace wfe {
 	typedef const char_t*(*TestsCallback)();
