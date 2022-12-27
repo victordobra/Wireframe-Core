@@ -36,6 +36,7 @@ namespace wfe {
 	void RunTests() {
 		RunTest("memory", MemoryTests, MemoryTestsResult);
 		RunTest("string", StringTests, StringTestsResult);
+		RunTest("vector", VectorTests, VectorTestsResult);
 	}
 }
 

@@ -12,7 +12,7 @@ namespace wfe {
     /// @param ...args The args to create the object with.
     /// @return A pointer to the new object.
     template<class T, class... Args>
-    WFE_INLINE T* NewObject(MemoryUsage memoryUsage, Args... args) {
+    WFE_INLINE T* NewObject(MemoryUsage memoryUsage, Args&&... args) {
         // Allocate memory for the new object
         T* newObject = calloc(1, sizeof(T), memoryUsage);
         

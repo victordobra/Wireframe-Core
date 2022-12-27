@@ -928,7 +928,7 @@ namespace wfe {
 		return strCapacity;
 	}
 	void string::reserve(size_type newCapacity) {
-		// Make the size higher than the string's size
+		// Make the capacity higher than the string's size
 		newCapacity = (newCapacity <= strSize) ? (strSize + 1) : newCapacity;
 
 		if(strData) { 

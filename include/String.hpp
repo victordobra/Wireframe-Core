@@ -2,6 +2,7 @@
 #include <string>
 
 namespace wfe {
+	/// @brief Holds a string of characters.
 	class string {
 	public:
 		/// @brief The string's value.
@@ -19,7 +20,7 @@ namespace wfe {
 		/// @brief Used for holding sizes.
 		typedef size_t size_type;
 
-		/// @brief Creates an empty string with the length 0.
+		/// @brief Creates an empty string.
 		constexpr string() = default;
 		/// @brief Copies the given string.
 		/// @param other The string to copy.
@@ -269,14 +270,14 @@ namespace wfe {
 		/// @param c The character whose copies to replace the string with.
 		/// @return A reference to this string.
 		string& replace(size_type pos, size_type len, size_type n, value_type c);
-		/// @brief Replace the region between the two given pointers with the given number of consecutive copies of the given character.
+		/// @brief Replaces the region between the two given pointers with the given number of consecutive copies of the given character.
 		/// @param first A pointer to the first character of the region.
 		/// @param last A pointer right after the last character of the region.
 		/// @param n The number of consecutive copies of the given character to replace the region with.
 		/// @param c The character whose copies to replace the string with.
 		/// @return A reference to this string.
 		string& replace(const_pointer first, const_pointer last, size_type n, value_type c);
-		/// @brief Swap the two string's contents.
+		/// @brief Swaps the two string's contents.
 		/// @param str The string to swap with.
 		void swap(string& str);
 		/// @brief Removes the last element of the string.
