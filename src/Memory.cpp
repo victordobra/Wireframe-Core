@@ -39,27 +39,11 @@ namespace wfe {
 		// TODO: Implement dynamic allocator pool once wfa is finished.
 		::free(ptr);
 	}
-	char_t* strmem() {
-		char_t buffer[8192];
-
-		size_t totalUsed = 0, offset = 0;
-		// Write every memory type usage        
-		for(size_t i = 0; i < MEMORY_USAGE_COUNT; ++i) {
-			// Increase the total used memory
-			totalUsed += totalMemoryUsage[i];
-
-			// TODO: Create custom string formatter
-			offset += snprintf(buffer + offset, 8192, "%s: %llu\n", MEMORY_USAGE_TYPE_NAMES[i], (unsigned long long)totalMemoryUsage[i]);
-		}
-		// Write the total memory used
-		offset += snprintf(buffer + offset, 8192, "Total: %llu\n", (unsigned long long)totalUsed);
-
-		// Duplicate the given string to the heap
-		size_t length = strnlen(buffer, 8192);
-		char_t* str = (char_t*)malloc(length + 1, MEMORY_USAGE_STRING);
-		memcpy(str, buffer, length + 1);
-	
-		return str;
+	size_t* GetMemoryUsage() {
+		return totalMemoryUsage;
+	}
+	size_t GetMemoryUsage(MemoryUsage memoryUsage) {
+		return totalMemoryUsage[memoryUsage];
 	}
 
 	void* memcpy(void* dest, const void* src, size_t size) {

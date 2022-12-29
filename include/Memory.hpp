@@ -33,9 +33,13 @@ namespace wfe {
 	/// @brief Frees the given memory block.
 	/// @param ptr The memory block to free.
 	void free(void* ptr, size_t size, MemoryUsage memoryUsage = MEMORY_USAGE_OTHER);
-	/// @brief Generates a debug string specifying the total usage memory for multiple systems.
-	/// @return The specified allocated string.
-	char_t* strmem();
+	/// @brief Gets the memory usage of the entire application.
+	/// @return A pointer to a size_t array of size MEMORY_USAGE_COUNT, specifying the memory usage for every single type.
+	size_t* GetMemoryUsage();
+	/// @brief Gets the memory usage for the given type.
+	/// @param memoryUsage The memory usage type to check for.
+	/// @return The total memory usage for the given type.
+	size_t GetMemoryUsage(MemoryUsage memoryUsage);
 
 	/// @brief Copies from one specified memory block to another.
 	/// @param dest The target memory block.
