@@ -20,8 +20,10 @@ namespace wfe {
 		WFE_ASSERT(strSize < max_size(), "The string's size must be lower than max_size()!")
 
 		// Set the capacity to the lowest power of 2 higher than the string's size
-		while(strCapacity < strSize)
-			strCapacity <<= 1;
+		for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+			if((strCapacity << step) < strSize)
+				strCapacity <<= step;
+		strCapacity <<= 1;
 		
 		// Allocate the string's data
 		strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
@@ -36,8 +38,10 @@ namespace wfe {
 		WFE_ASSERT(strSize < max_size(), "The string's size must be lower than max_size()!")
 
 		// Set the capacity to the lowest power of 2 higher than the string's size
-		while(strCapacity < strSize)
-			strCapacity <<= 1;
+		for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+			if((strCapacity << step) < strSize)
+				strCapacity <<= step;
+		strCapacity <<= 1;
 		
 		// Allocate the string's data
 		strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
@@ -55,8 +59,10 @@ namespace wfe {
 		WFE_ASSERT(strSize < max_size(), "The string's size must be lower than max_size()!")
 
 		// Set the capacity to the lowest power of 2 higher than the string's size
-		while(strCapacity < strSize)
-			strCapacity <<= 1;
+		for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+			if((strCapacity << step) < strSize)
+				strCapacity <<= step;
+		strCapacity <<= 1;
 		
 		// Allocate the string's data
 		strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
@@ -891,8 +897,10 @@ namespace wfe {
 			// Find the lowest power of two higher than the string's size
 			strCapacity = 1;
 
-			while(strCapacity <= strSize)
-				strCapacity <<= 1;
+			for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+				if((strCapacity << step) < strSize)
+					strCapacity <<= step;
+			strCapacity <<= 1;
 
 			if(strData) { 
 				// Reallocate the string
