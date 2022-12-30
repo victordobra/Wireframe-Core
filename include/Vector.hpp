@@ -8,7 +8,7 @@
 
 namespace wfe {
     /// @brief Holds a vector of elements.
-    /// @tparam T The type of the vector's value.
+    /// @tparam T The type of the vector's values.
     template<class T>
     class vector {
     public:
@@ -53,8 +53,10 @@ namespace wfe {
             WFE_ASSERT(vecSize < max_size(), "The vector's size must be lower than the maximum possible size!")
 
             // Set the capacity to the lowest power of 2 higher than the vector's size
-            while(vecCapacity < vecSize)
-                vecCapacity <<= 1;
+            for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                if((vecCapacity << step) < vecSize)
+                    vecCapacity <<= step;
+            vecCapacity <<= 1;
             
             // Allocate the vector's data
             vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
@@ -75,8 +77,10 @@ namespace wfe {
             WFE_ASSERT(vecSize < max_size(), "The vector's size must be lower than the maximum possible size!")
 
             // Set the capacity to the lowest power of 2 higher than the vector's size
-            while(vecCapacity < vecSize)
-                vecCapacity <<= 1;
+            for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                if((vecCapacity << step) < vecSize)
+                    vecCapacity <<= step;
+            vecCapacity <<= 1;
             
             // Allocate the vector's data
             vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
@@ -96,8 +100,10 @@ namespace wfe {
             WFE_ASSERT(vecSize < max_size(), "The vector's size must be lower than the maximum possible size!")
 
             // Set the capacity to the lowest power of 2 higher than the vector's size
-            while(vecCapacity < vecSize)
-                vecCapacity <<= 1;
+            for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                if((vecCapacity << step) < vecSize)
+                    vecCapacity <<= step;
+            vecCapacity <<= 1;
             
             // Allocate the vector's data
             vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
@@ -206,8 +212,10 @@ namespace wfe {
             WFE_ASSERT(vecSize < max_size(), "The vector's size must be lower than the maximum possible size!")
 
             // Set the capacity to the lowest power of 2 higher than the vector's size
-            while(vecCapacity < vecSize)
-                vecCapacity <<= 1;
+            for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                if((vecCapacity << step) < vecSize)
+                    vecCapacity <<= step;
+            vecCapacity <<= 1;
 
             // Allocate the vector's data
             vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
@@ -318,8 +326,10 @@ namespace wfe {
             WFE_ASSERT(vecSize < max_size(), "The vector's size must be lower than the maximum possible size!")
 
             // Set the capacity to the lowest power of 2 higher than the vector's size
-            while(vecCapacity < vecSize)
-                vecCapacity <<= 1;
+            for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                if((vecCapacity << step) < vecSize)
+                    vecCapacity <<= step;
+            vecCapacity <<= 1;
 
             // Allocate the vector's data
             vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
@@ -353,9 +363,11 @@ namespace wfe {
             // Assert that the vector's size must be lower than the maximum possible size
             WFE_ASSERT(vecSize < max_size(), "The vector's size must be lower than the maximum possible size!")
 
-            // Set the capacity to the lowest power of 2 higher than the vector's size
-            while(vecCapacity < vecSize)
-                vecCapacity <<= 1;
+            // Set the capacity to the lowest power of 2 higher than the vector's size            
+            for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                if((vecCapacity << step) < vecSize)
+                    vecCapacity <<= step;
+            vecCapacity <<= 1;
 
             // Allocate the vector's data
             vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
@@ -384,8 +396,10 @@ namespace wfe {
                 // Set the capacity to the lowest power of 2 higher than the vector's size
                 size_type newCapacity = 1;
 
-                while(newCapacity < vecSize)
-                    newCapacity <<= 1;
+                for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                    if((vecCapacity << step) < vecSize)
+                        vecCapacity <<= step;
+                vecCapacity <<= 1;
                 
                 // Allocate the new space in the vector
                 reserve(newCapacity);
@@ -408,8 +422,10 @@ namespace wfe {
                 // Set the capacity to the lowest power of 2 higher than the vector's size
                 size_type newCapacity = 1;
 
-                while(newCapacity < vecSize)
-                    newCapacity <<= 1;
+                for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                    if((newCapacity << step) < vecSize)
+                        newCapacity <<= step;
+                newCapacity <<= 1;
                 
                 // Allocate the new space in the vector
                 reserve(newCapacity);
@@ -448,8 +464,10 @@ namespace wfe {
                 // Set the capacity to the lowest power of 2 higher than the vector's size
                 size_type newCapacity = 1;
 
-                while(newCapacity < vecSize)
-                    newCapacity <<= 1;
+                for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                    if((newCapacity << step) < vecSize)
+                        newCapacity <<= step;
+                newCapacity <<= 1;
                 
                 // Allocate the new space in the vector
                 reserve(newCapacity);
@@ -485,8 +503,10 @@ namespace wfe {
                 // Set the capacity to the lowest power of 2 higher than the vector's size
                 size_type newCapacity = 1;
 
-                while(newCapacity < vecSize)
-                    newCapacity <<= 1;
+                for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                    if((newCapacity << step) < vecSize)
+                        newCapacity <<= step;
+                newCapacity <<= 1;
                 
                 // Allocate the new space in the vector
                 reserve(newCapacity);
@@ -526,8 +546,10 @@ namespace wfe {
                 // Set the capacity to the lowest power of 2 higher than the vector's size
                 size_type newCapacity = 1;
 
-                while(newCapacity < vecSize)
-                    newCapacity <<= 1;
+                for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                    if((newCapacity << step) < vecSize)
+                        newCapacity <<= step;
+                newCapacity <<= 1;
                 
                 // Allocate the new space in the vector
                 reserve(newCapacity);
@@ -568,8 +590,10 @@ namespace wfe {
                 // Set the capacity to the lowest power of 2 higher than the vector's size
                 size_type newCapacity = 1;
 
-                while(newCapacity < vecSize)
-                    newCapacity <<= 1;
+                for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                    if((newCapacity << step) < vecSize)
+                        newCapacity <<= step;
+                newCapacity <<= 1;
                 
                 // Allocate the new space in the vector
                 reserve(newCapacity);
@@ -605,9 +629,9 @@ namespace wfe {
 
             return (pointer)pos;
         }
-        /// @brief Erases the values between the two given pointer.
-        /// @param first A pointer to the virst erased value.
-        /// @param last A pointer right after the last erased value.
+        /// @brief Erases the values between the two given pointers.
+        /// @param first A pointer to the first erased value.
+        /// @param last A pointer to right after the last erased value.
         /// @return A pointer to the space occupied by the first erased value.
         pointer erase(const_pointer first, const_pointer last) {
             // Assert that the given pointers must be in range
@@ -692,8 +716,10 @@ namespace wfe {
                 // Set the capacity to the lowest power of 2 higher than the vector's size
                 size_type newCapacity = 1;
 
-                while(newCapacity < vecSize)
-                    vecCapacity <<= 1;
+                for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                    if((newCapacity << step) < vecSize)
+                        newCapacity <<= step;
+                newCapacity <<= 1;
                 
                 // Allocate the new space in the vector
                 reserve(newCapacity);
@@ -723,8 +749,10 @@ namespace wfe {
                 // Set the capacity to the lowest power of 2 higher than the vector's size
                 size_type newCapacity = 1;
 
-                while(newCapacity < vecSize)
-                    vecCapacity <<= 1;
+                for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                    if((newCapacity << step) < vecSize)
+                        newCapacity <<= step;
+                newCapacity <<= 1;
                 
                 // Allocate the new space in the vector
                 reserve(newCapacity);
@@ -797,8 +825,10 @@ namespace wfe {
                     // Set the capacity to the lowest power of 2 higher than the vector's size
                     size_type newCapacity = 1;
 
-                    while(newCapacity < vecSize)
-                        vecCapacity <<= 1;
+                    for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                        if((newCapacity << step) < vecSize)
+                            newCapacity <<= step;
+                    newCapacity <<= 1;
                     
                     // Allocate the new space in the vector
                     reserve(newCapacity);
@@ -841,8 +871,10 @@ namespace wfe {
                     // Set the capacity to the lowest power of 2 higher than the vector's size
                     size_type newCapacity = 1;
 
-                    while(newCapacity < vecSize)
-                        vecCapacity <<= 1;
+                    for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+                        if((newCapacity << step) < vecSize)
+                            newCapacity <<= step;
+                    newCapacity <<= 1;
                     
                     // Allocate the new space in the vector
                     reserve(newCapacity);
@@ -868,7 +900,7 @@ namespace wfe {
             return vecCapacity;
         }
         /// @brief Tests if the vector is empty.
-        /// @return True if the vector's empty, otherwise false.
+        /// @return True if the vector is empty, otherwise false.
         bool8_t empty() const {
             return !vecSize;
         }
