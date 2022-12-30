@@ -2,6 +2,7 @@
 
 #include "Defines.hpp"
 #include "Memory.hpp"
+#include <utility>
 
 namespace wfe {
     /// @brief Holds a pair of values.
@@ -26,7 +27,7 @@ namespace wfe {
         pair(const pair& other) : first(other.first), second(other.second) { }
         /// @brief Moves the contents of a pair to another pair.
         /// @param other THe pair to move from.
-        pair(pair&& other) : first(other.first), second(other.second) { }
+        pair(pair&& other) noexcept : first(other.first), second(other.second) { }
         /// @brief Creates a pair from the given values.
         /// @param x The first value in the pair.
         /// @param y The second value in the pair.
@@ -35,6 +36,9 @@ namespace wfe {
         /// @param x The first value in the pair.
         /// @param y The second value in the pair.
         pair(first_type&& x, second_type&& y) : first(x), second(y) { }
+        /// @brief Copies the given std library pair into this pair.
+        /// @param other The std library pair to copy.
+        pair(const std::pair<first_type, second_type>& other) : first(other.first), second(other.second) { }
 
         /// @brief Copies the given pair into this pair.
         /// @param other The pair to copy from.
@@ -59,6 +63,11 @@ namespace wfe {
             second = other.second;
 
             return *this;
+        }
+
+        /// @brief Converts the pair to an std library pair.
+        operator std::pair<first_type, second_type>() {
+            return std::pair<first_type, second_type>(first, second);
         }
 
         /// @brief Swaps the two pair's contents.
