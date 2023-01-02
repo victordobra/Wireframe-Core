@@ -95,7 +95,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to copy
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			// Copy one uint8_t segment
 			*(uint8_t*)destChar = *(uint8_t*)srcChar;
 		}
@@ -154,7 +154,7 @@ namespace wfe {
 				size -= sizeof(uint16_t);
 			}
 			// Check if there is a 1 byte region left to copy
-			if(size >= sizeof(uint8_t)) {
+			if(size) {
 				// Decrement the pointers by the size of uint8_t
 				destChar -= sizeof(uint8_t);
 				srcChar -= sizeof(uint8_t);
@@ -183,7 +183,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Try to match the character with every byte in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				if(*segmentPtr == (char_t)c) {
 					// Check if it's the last bit in the segment
 					if(i == sizeof(size_t) - 1) {
@@ -226,7 +226,7 @@ namespace wfe {
 
 			// Try to match the character with every byte in the segment
 			char_t* segmentPtr = (char_t*)&segment;
-			for(size_t i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint32_t); ++i) {
 				if(*segmentPtr == (char_t)c) {
 					// Check if it's the last bit in the segment
 					if(i == sizeof(uint32_t) - 1) {
@@ -266,7 +266,7 @@ namespace wfe {
 
 			// Try to match the character with every byte in the segment
 			char_t* segmentPtr = (char_t*)&segment;
-			for(size_t i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint16_t); ++i) {
 				if(*segmentPtr == (char_t)c) {
 					// Check if it's the last bit in the segment
 					if(i == sizeof(uint16_t) - 1) {
@@ -299,7 +299,7 @@ namespace wfe {
 			}
 		}
 		// Check if there is a 1 byte region left to copy
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			// Save an uint8_t segment
 			uint8_t segment = (uint8_t)*srcChar;
 
@@ -318,7 +318,7 @@ namespace wfe {
 
 		// Generate a size_t segment with all bytes set to c's value
 		size_t segment = 0;
-		for(size_t i = 0; i < sizeof(size_t); ++i)
+		for(size_t i = 0; i != sizeof(size_t); ++i)
 			segment |= ((size_t)(uint8_t)c) << (8 * i);
 		
 		// Set everything in segments of size_t
@@ -358,7 +358,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to set
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			// Copy one uint8_t segment
 			*(uint8_t*)ptrChar = (uint8_t)segment;
 		}
@@ -385,7 +385,7 @@ namespace wfe {
 			const char_t* segment2Ptr = (const char_t*)&segment2;
 
 			// Compare all characters
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Compare both characters
 				if(*segment1Ptr > *segment2Ptr)
 					return 1;
@@ -416,7 +416,7 @@ namespace wfe {
 			const char_t* segment2Ptr = (const char_t*)&segment2;
 
 			// Compare all characters
-			for(size_t i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint32_t); ++i) {
 				// Compare both characters
 				if(*segment1Ptr < *segment2Ptr)
 					return -1;
@@ -446,7 +446,7 @@ namespace wfe {
 			const char_t* segment2Ptr = (const char_t*)&segment2;
 
 			// Compare all characters
-			for(size_t i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint16_t); ++i) {
 				// Compare both characters
 				if(*segment1Ptr < *segment2Ptr)
 					return -1;
@@ -466,7 +466,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to compare
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			// Save the two current characters
 			char_t char1 = *ptr1Char, char2 = *ptr2Char;
 
@@ -489,7 +489,7 @@ namespace wfe {
 			size_t segment = *(size_t*)ptrChar;
 
 			const char_t* segmentPtr = (const char_t*)&segment;
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the wanted character is in this segment
 				if(*segmentPtr == (char_t)c)
 					return ptrChar + i;
@@ -512,7 +512,7 @@ namespace wfe {
 			uint32_t segment = *(uint32_t*)ptrChar;
 
 			const char_t* segmentPtr = (const char_t*)&segment;
-			for(size_t i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint32_t); ++i) {
 				// Check if the wanted character is in this segment
 				if(*segmentPtr == (char_t)c)
 					return ptrChar + i;
@@ -534,7 +534,7 @@ namespace wfe {
 			uint16_t segment = *(uint16_t*)ptrChar;
 
 			const char_t* segmentPtr = (const char_t*)&segment;
-			for(size_t i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint16_t); ++i) {
 				// Check if the wanted character is in this segment
 				if(*segmentPtr == (char_t)c)
 					return ptrChar + i;
@@ -550,7 +550,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to search in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			// Check if the current character is the wanted character
 			if(*ptrChar == (char_t)c)
 				return ptrChar;
@@ -570,7 +570,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the character in the given segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the wanted character is in this segment
 				if(*segmentPtr == (char_t)c)
 					return ptrChar + i;
@@ -595,7 +595,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the character in the given segment
-			for(size_t i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint32_t); ++i) {
 				// Check if the wanted character is in this segment
 				if(*segmentPtr == (char_t)c)
 					return ptrChar + i;
@@ -619,7 +619,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the character in the given segment
-			for(size_t i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint16_t); ++i) {
 				// Check if the wanted character is in this segment
 				if(*segmentPtr == (char_t)c)
 					return ptrChar + i;
@@ -635,7 +635,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to search in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			// Check if the current character is the wanted character
 			if(*ptrChar == (char_t)c)
 				return ptrChar;
@@ -655,7 +655,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the character in the given segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the wanted character is in this segment
 				if(*segmentPtr == (char_t)c)
 					return ptrChar + i;
@@ -683,7 +683,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the character in the given segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the wanted character is in this segment
 				if(*segmentPtr == (char_t)c)
 					return ptrChar + i;
@@ -770,7 +770,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to search in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			// Decrement the char pointer by the size of uint8_t
 			ptrChar -= sizeof(uint8_t);
 
@@ -853,7 +853,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to search in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			// Decrement the char pointer by the size of uint8_t
 			ptrChar -= sizeof(uint8_t);
 
@@ -884,7 +884,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the null termination character in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				if(!*segmentPtr) {
 					leftoverSize = i + 1;
 					if(leftoverSize == sizeof(size_t)) {
@@ -939,7 +939,7 @@ namespace wfe {
 			leftoverSize -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to copy
-		if(leftoverSize >= sizeof(uint8_t)) {
+		if(leftoverSize) {
 			// Copy one uint8_t segment
 			*(uint8_t*)dest = *(uint8_t*)src;
 		}
@@ -975,7 +975,7 @@ namespace wfe {
 			const char_t* segment2Ptr = (const char_t*)&segment2;
 
 			// Compare all characters
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Exit the loop if the null termination character was found
 				if(!*segment1Ptr || !*segment2Ptr) {
 					// Move thw two strings up to the null termination character
@@ -1033,7 +1033,7 @@ namespace wfe {
 			const char_t* segment2Ptr = (const char_t*)&segment2;
 
 			// Compare all characters
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Exit the loop if the null termination character was found
 				if(!*segment1Ptr || !*segment2Ptr) {
 					// Set the size to zero; nothing else needs to be compared
@@ -1079,7 +1079,7 @@ namespace wfe {
 			const char_t* segment2Ptr = (const char_t*)&segment2;
 
 			// Compare all characters
-			for(size_t i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint32_t); ++i) {
 				// Exit the loop if the null termination character was found
 				if(!*segment1Ptr || !*segment2Ptr) {
 					// Set the size to zero; nothing else needs to be compared
@@ -1123,7 +1123,7 @@ namespace wfe {
 			const char_t* segment2Ptr = (const char_t*)&segment2;
 
 			// Compare all characters
-			for(size_t i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint16_t); ++i) {
 				// Exit the loop if the null termination was found
 				if(!*segment1Ptr || !*segment2Ptr) {
 					// Set the size to zero; nothing else needs to be compared
@@ -1156,7 +1156,7 @@ namespace wfe {
 			}
 		}
 		// Check if there is a 1 byte region left to compare
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			// Save the two current characters
 			char_t char1 = *str1, char2 = *str2;
 
@@ -1193,7 +1193,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the wanted character in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr)
 					return nullptr;
@@ -1222,7 +1222,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the wanted character in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr)
 					return nullptr;
@@ -1254,7 +1254,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the wanted character in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr) {
 					// Move the string pointer up to the null termination character and exit the loop
@@ -1292,7 +1292,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the wanted character in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr) {
 					// Move the string pointer up to the null termination character and exit the loop
@@ -1331,7 +1331,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr) {
 					// Move the reject string pointer up to the null termination character and exit the loop
@@ -1364,7 +1364,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Check every character in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr)
 					return size;
@@ -1400,7 +1400,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr) {
 					// Move the accept string pointer up to the null termination character and exit the loop
@@ -1433,7 +1433,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Check every character in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr)
 					return size;
@@ -1469,7 +1469,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr) {
 					// Move the accept string pointer up to the null termination character and exit the loop
@@ -1499,7 +1499,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Check every character in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr)
 					return nullptr;
@@ -1531,7 +1531,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr) {
 					// Move the accept string pointer up to the null termination character and exit the loop
@@ -1561,7 +1561,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Check every character in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr)
 					return nullptr;
@@ -1613,7 +1613,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the wanted string in the given segment
-			for(size_t i = 0; i < sizeof(size_t);) {
+			for(size_t i = 0; i != sizeof(size_t);) {
 				// Exit the function if the null termination character was found
 				if(!segmentPtr[i]) {
 					free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
@@ -1680,7 +1680,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the wanted string in the given segment
-			for(size_t i = 0; i < sizeof(size_t);) {
+			for(size_t i = 0; i != sizeof(size_t);) {
 				// Exit the function if the null termination character was found
 				if(!segmentPtr[i]) {
 					free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
@@ -1755,7 +1755,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the null termination character in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the current character is the null termination character
 				if(!*segmentPtr)
 					return size + i;
@@ -1785,7 +1785,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the null termination character in the segment
-			for(size_t i = 0; i < sizeof(size_t); ++i) {
+			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the current character is the null termination character
 				if(!*segmentPtr)
 					return stringSize + i;
@@ -1813,7 +1813,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the null termination character in the segment
-			for(size_t i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint32_t); ++i) {
 				// Check if the current character is the null termination character
 				if(!*segmentPtr)
 					return stringSize + i;
@@ -1840,7 +1840,7 @@ namespace wfe {
 			const char_t* segmentPtr = (const char_t*)&segment;
 
 			// Look for the null termination character in the segment
-			for(size_t i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_t i = 0; i != sizeof(uint16_t); ++i) {
 				// Check if the current character is the null termination character
 				if(!*segmentPtr)
 					return stringSize + i;
@@ -1859,7 +1859,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to search in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			// Check if the current character is the null termination character
 			if(!*str)
 				return stringSize;

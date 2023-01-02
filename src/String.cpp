@@ -1029,7 +1029,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(size_type i = 0; i < sizeof(size_type);) {
+			for(size_type i = 0; i != sizeof(size_type);) {
 				if(wanted[position] == segmentPtr[i]) {
 					// Move on to the next character
 					++i;
@@ -1067,7 +1067,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(uint32_t i = 0; i < sizeof(uint32_t);) {
+			for(uint32_t i = 0; i != sizeof(uint32_t);) {
 				if(wanted[position] == segmentPtr[i]) {
 					// Move on to the next character
 					++i;
@@ -1104,7 +1104,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(uint16_t i = 0; i < sizeof(uint16_t);) {
+			for(uint16_t i = 0; i != sizeof(uint16_t);) {
 				if(wanted[position] == segmentPtr[i]) {
 					// Move on to the next character
 					++i;
@@ -1135,7 +1135,7 @@ namespace wfe {
 		}
 
 		// Check if there is a 1 byte region left to look in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(wanted[position] == *ptr && position == wantedLength - 1)
 				return strSize - 1 - wantedLength;
 		}
@@ -1180,7 +1180,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(size_type i = 0; i < sizeof(size_type);) {
+			for(size_type i = 0; i != sizeof(size_type);) {
 				if(wanted[position] == segmentPtr[i]) {
 					// Move on to the next character
 					++i;
@@ -1218,7 +1218,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(uint32_t i = 0; i < sizeof(uint32_t);) {
+			for(uint32_t i = 0; i != sizeof(uint32_t);) {
 				if(wanted[position] == segmentPtr[i]) {
 					// Move on to the next character
 					++i;
@@ -1255,7 +1255,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(uint16_t i = 0; i < sizeof(uint16_t);) {
+			for(uint16_t i = 0; i != sizeof(uint16_t);) {
 				if(wanted[position] == segmentPtr[i]) {
 					// Move on to the next character
 					++i;
@@ -1289,7 +1289,7 @@ namespace wfe {
 		free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 
 		// Check if there is a 1 byte region left to look in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(wanted[position] == *ptr && position == wantedLength - 1)
 				return strSize - 1 - wantedLength;
 		}
@@ -1334,7 +1334,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(size_type i = 0; i < sizeof(size_type);) {
+			for(size_type i = 0; i != sizeof(size_type);) {
 				if(wanted[position] == segmentPtr[i]) {
 					// Move on to the next character
 					++i;
@@ -1372,7 +1372,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(uint32_t i = 0; i < sizeof(uint32_t);) {
+			for(uint32_t i = 0; i != sizeof(uint32_t);) {
 				if(wanted[position] == segmentPtr[i]) {
 					// Move on to the next character
 					++i;
@@ -1409,7 +1409,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(uint16_t i = 0; i < sizeof(uint16_t);) {
+			for(uint16_t i = 0; i != sizeof(uint16_t);) {
 				if(wanted[position] == segmentPtr[i]) {
 					// Move on to the next character
 					++i;
@@ -1443,7 +1443,7 @@ namespace wfe {
 		free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 
 		// Check if there is a 1 byte region left to look in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(wanted[position] == *ptr && position == wantedLength - 1)
 				return strSize - 1 - wantedLength;
 		}
@@ -1608,7 +1608,7 @@ namespace wfe {
 		}
 
 		// Check if there is a 1 byte region left to look in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(wanted[wantedLength - position - 1] == *ptr && position == wantedLength - 1)
 				return 0;
 		}
@@ -1759,7 +1759,7 @@ namespace wfe {
 		}
 
 		// Check if there is a 1 byte region left to look in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(wanted[wantedLength - position - 1] == *ptr && position == wantedLength - 1)
 				return 0;
 		}
@@ -1910,7 +1910,7 @@ namespace wfe {
 		}
 
 		// Check if there is a 1 byte region left to look in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(wanted[wantedLength - position - 1] == *ptr && position == wantedLength - 1)
 				return 0;
 		}
@@ -1951,7 +1951,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -1975,7 +1975,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -1998,7 +1998,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2013,7 +2013,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to add
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			appears[(uint8_t)(*ptr) >> 3] |= 1 << ((uint8_t)*ptr & 7);
 		}
 
@@ -2028,7 +2028,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
 				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
@@ -2053,7 +2053,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
@@ -2077,7 +2077,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
@@ -2093,7 +2093,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
 				return strSize - 1;
 		}
@@ -2117,7 +2117,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr) {
 					// Move the given string pointer up to the null termination character and exit the loop
@@ -2150,7 +2150,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
 				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
@@ -2175,7 +2175,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
@@ -2199,7 +2199,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
@@ -2215,7 +2215,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
 				return strSize - 1;
 		}
@@ -2242,7 +2242,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2266,7 +2266,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2289,7 +2289,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2304,7 +2304,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to add
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			appears[(uint8_t)(*ptr) >> 3] |= 1 << ((uint8_t)*ptr & 7);
 		}
 
@@ -2319,7 +2319,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
 				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
@@ -2344,7 +2344,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
@@ -2368,7 +2368,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7)))
 					return ptr + i - strData;
@@ -2384,7 +2384,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7))
 				return strSize - 1;
 		}
@@ -2415,7 +2415,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2439,7 +2439,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2462,7 +2462,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2477,7 +2477,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to add
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			appears[(uint8_t)(*ptr) >> 3] |= 1 << ((uint8_t)*ptr & 7);
 		}
 
@@ -2557,7 +2557,7 @@ namespace wfe {
 			}
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7)))
 				return 0;
 		}
@@ -2581,7 +2581,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr) {
 					// Move the given string pointer up to the null termination character and exit the loop
@@ -2679,7 +2679,7 @@ namespace wfe {
 			}
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7)))
 				return 0;
 		}
@@ -2706,7 +2706,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2730,7 +2730,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2753,7 +2753,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2768,7 +2768,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to add
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			appears[(uint8_t)(*ptr) >> 3] |= 1 << ((uint8_t)*ptr & 7);
 		}
 
@@ -2848,7 +2848,7 @@ namespace wfe {
 			}
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7)))
 				return 0;
 		}
@@ -2879,7 +2879,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2903,7 +2903,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2926,7 +2926,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -2941,7 +2941,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to add
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			appears[(uint8_t)(*ptr) >> 3] |= 1 << ((uint8_t)*ptr & 7);
 		}
 
@@ -2956,7 +2956,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
 				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
@@ -2981,7 +2981,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
@@ -3005,7 +3005,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
@@ -3021,7 +3021,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7))))
 				return strSize - 1;
 		}
@@ -3045,7 +3045,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr) {
 					// Move the given string pointer up to the null termination character and exit the loop
@@ -3078,7 +3078,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
 				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
@@ -3103,7 +3103,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
@@ -3127,7 +3127,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
@@ -3143,7 +3143,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7)))
 				return strSize - 1;
 		}
@@ -3170,7 +3170,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -3194,7 +3194,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -3217,7 +3217,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -3232,7 +3232,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to add
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			appears[(uint8_t)(*ptr) >> 3] |= 1 << ((uint8_t)*ptr & 7);
 		}
 
@@ -3247,7 +3247,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Check if the current character is in the appearence vector
 				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
@@ -3272,7 +3272,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
@@ -3296,7 +3296,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Check every character in the segment
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Check if the current character is in the appearence vector
 				if(!(appears[(uint8_t)(*segmentPtr) >> 3] & (1 << ((uint8_t)(*segmentPtr) & 7))))
 					return ptr + i - strData;
@@ -3312,7 +3312,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << (uint8_t)(*ptr) & 7)))
 				return strSize - 1;
 		}
@@ -3334,7 +3334,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Check if a character different to the wanted character is in this segment
 				if(*segmentPtr != c)
 					return ptr + i - strData;
@@ -3358,7 +3358,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Check if a character different to the wanted character is in this segment
 				if(*segmentPtr != c)
 					return ptr + i - strData;
@@ -3381,7 +3381,7 @@ namespace wfe {
 
 			const_pointer segmentPtr = (const_pointer)&segment;
 
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Check if a character different to the wanted character is in this segment
 				if(*segmentPtr != c)
 					return ptr + i - strData;
@@ -3398,7 +3398,7 @@ namespace wfe {
 		}
 
 		// Check if there is a 1 byte region left to look in
-		if(size >= sizeof(uint8_t))
+		if(size)
 			if(*ptr != c)
 				return strSize - 1;
 		
@@ -3424,7 +3424,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -3448,7 +3448,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -3471,7 +3471,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -3486,7 +3486,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to add
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			appears[(uint8_t)(*ptr) >> 3] |= 1 << ((uint8_t)*ptr & 7);
 		}
 
@@ -3566,7 +3566,7 @@ namespace wfe {
 			}
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7))))
 				return 0;
 		}
@@ -3590,7 +3590,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Check if the null termination character was found
 				if(!*segmentPtr) {
 					// Move the given string pointer up to the null termination character and exit the loop
@@ -3688,7 +3688,7 @@ namespace wfe {
 			}
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7))))
 				return 0;
 		}
@@ -3715,7 +3715,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(size_type); ++i) {
+			for(size_type i = 0; i != sizeof(size_type); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -3739,7 +3739,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint32_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint32_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -3762,7 +3762,7 @@ namespace wfe {
 			const_pointer segmentPtr = (const_pointer)&segment;
 
 			// Add the characters in the segment to the appearence vector
-			for(size_type i = 0; i < sizeof(uint16_t); ++i) {
+			for(size_type i = 0; i != sizeof(uint16_t); ++i) {
 				// Add the current character to te appearence vector
 				appears[(uint8_t)(*segmentPtr) >> 3] |= 1 << ((uint8_t)*segmentPtr & 7);
 
@@ -3777,7 +3777,7 @@ namespace wfe {
 			size -= sizeof(uint16_t);
 		}
 		// Check if there is a 1 byte region left to add
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			appears[(uint8_t)(*ptr) >> 3] |= 1 << ((uint8_t)*ptr & 7);
 		}
 
@@ -3857,7 +3857,7 @@ namespace wfe {
 			}
 		}
 		// Check if there is a 1 byte region left to check in
-		if(size >= sizeof(uint8_t)) {
+		if(size) {
 			if(!(appears[(uint8_t)(*ptr) >> 3] & (1 << ((uint8_t)(*ptr) & 7))))
 				return 0;
 		}
@@ -3943,7 +3943,7 @@ namespace wfe {
 		}
 
 		// Check if there is a 1 byte region left to look in
-		if(size >= sizeof(uint8_t))
+		if(size)
 			if(*ptr != c)
 				return 0;
 		

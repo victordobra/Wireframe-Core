@@ -126,7 +126,7 @@ namespace wfe {
 				WFE_LOG_FATAL("Failed to allocate vector memory!");
 			
 			// Copy every value from the given vector
-			for(size_type i = 0; i < vecSize; ++i)
+			for(size_type i = 0; i != vecSize; ++i)
 				new(vecData + i) value_type(other[i]);
 		}
 
@@ -159,7 +159,7 @@ namespace wfe {
 				WFE_LOG_FATAL("Failed to allocate vector memory!");
 
 			// Copy every value from the given vector
-			for(size_type i = 0; i < vecSize; ++i)
+			for(size_type i = 0; i != vecSize; ++i)
 				new(vecData + i) value_type(other[i]);
 
 			return *this;
