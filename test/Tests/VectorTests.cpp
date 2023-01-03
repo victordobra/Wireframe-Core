@@ -1,87 +1,152 @@
-#include "Tests.hpp"
+#include "UnitTests.hpp"
 
 namespace wfe {
-	const char_t* VectorTests() {
-		// Test the copy functions
-		vector<int32_t> copySrc{ 1, 2, 3, 4, 5 };
-		vector<int32_t> copyDst{ 6, 7, 8 };
-
-		copyDst = copySrc;
-
-		// Test assign
-		vector<int32_t> assignTest1{ 1, 3, 5, 7, 9 };
-		vector<int32_t> assignTest2{ 0, 2, 4, 6, 8 };
-
-		assignTest1.assign({ 2, 3, 5, 7 }); // 2 3 5 7
-		assignTest2.assign(7, 1); // 1 1 1 1 1 1 1
-
-		// Test push_back
-		vector<int32_t> pushBackTest{ 1, 2, 3, 4 };
-
-		pushBackTest.push_back(5); // 1 2 3 4 5
-
-		// Test pop_back
-		vector<int32_t> popBackTest{ 1, 2, 3, 4, 10 };
-
-		popBackTest.pop_back(); // 1 2 3 4
-
-		// Test insert
-		vector<int32_t> insertTest{ 1, 3, 5, 9 };
-
-		insertTest.insert(insertTest.begin() + 1, 2); // 1 2 3 5 9
-		insertTest.insert(insertTest.begin() + 3, 3, 4); // 1 2 3 4 4 4 5 9
-		insertTest.insert(insertTest.begin() + 7, { 6, 7, 8 }); // 1 2 3 4 4 4 5 6 7 8 9
-
-		// Test erase
-		vector<int32_t> eraseTest{ 1, 0, 2, 7, 8, 9, 3, 4, 5 };
-
-		eraseTest.erase(eraseTest.begin() + 1); // 1 2 7 8 9 3 4 5
-		eraseTest.erase(eraseTest.begin() + 2, eraseTest.begin() + 5); // 1 2 3 4 5
-
-		// Test swap
-		vector<int32_t> swapTest1{ 1, 3, 5, 7, 9 };
-		vector<int32_t> swapTest2{ 0, 2, 4, 6, 8 };
-
-		swapTest1.swap(swapTest2);
-
-		// Test clear
-		vector<int32_t> clearTest{ 1, 2, 3, 4, 5 };
-
-		clearTest.clear();
-
-		// Test resize
-		vector<int32_t> resizeTest{ 1, 2, 3, 4, 5 };
-
-		resizeTest.resize(3); // 1 2 3
-		resizeTest.resize(5, 4); // 1 2 3 4 4
-
-		// Test comparison
-		vector<int32_t> compareTest1{ 1, 2, 3, 4, 5 };
-		vector<int32_t> compareTest2{ 1, 2, 3, 4, 6 };
-
-		int32_t resultEqual = (int32_t)(compareTest1 == compareTest2); // 0
-		int32_t resultSmaller = (int32_t)(compareTest1 < compareTest2); // 1
-		int32_t resultBigger = (int32_t)(compareTest1 > compareTest2); // 0
-		int32_t resultSmallerEqual = (int32_t)(compareTest1 <= compareTest2); // 1
-		int32_t resultBiggerEqual = (int32_t)(compareTest1 >= compareTest2); // 0
-
-		// Format the final string
-		char_t result[8000];
-		FormatString(result, 8000, "copy: %i %i %i\nassign: %i %i\npush_back: %llu\npop_back: %llu\ninsert: %i %i %i %i %i %i %i %i %i %i %i\nerase: %i %i %i %i %i\nswap: %i %i\nclear: %llu\nresize: %i\ncompare: %i %i %i %i %i\n", copyDst[0], copyDst[1], copyDst[2], assignTest1[0], assignTest2[0], (unsigned long long)pushBackTest.size(), (unsigned long long)popBackTest.size(), insertTest[0], insertTest[1], insertTest[2], insertTest[3], insertTest[4], insertTest[5], insertTest[6], insertTest[7], insertTest[8], insertTest[9], insertTest[10], eraseTest[0], eraseTest[1], eraseTest[2], eraseTest[3], eraseTest[4], swapTest1[0], swapTest2[0], (unsigned long long)clearTest.size(), resizeTest[4], resultEqual, resultSmaller, resultBigger, resultSmallerEqual, resultBiggerEqual);
-
-		// Copy the final string to the heap
-		size_t resultLength = strnlen(result, 8000) + 1;
-
-		char_t* resultHeap = (char_t*)malloc(resultLength, MEMORY_USAGE_STRING);
-		if(!resultHeap)
-			WFE_LOG_FATAL("Failed to allocate string memory!");
+	void VectorUnitTestCallback(UnitTestList& unitTestList) {
+		unitTestList.name = "Vector";
 		
-		memcpy(resultHeap, result, resultLength);
+		/* Test copying */ {
+			// Test 1
+			vector<int32_t> test1Src{ 1, 2, 3, 4, 5 };
+			vector<int32_t> test1Dst{ 6, 7, 8 };
 
-		// Return the heap string
-		return resultHeap;
+			test1Dst = test1Src;
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "copying 1";
+			unitTest1.FormatResult("%i %i %i %i %i", test1Dst[0], test1Dst[1], test1Dst[2], test1Dst[3], test1Dst[4]);
+			unitTest1.wantedResult = "1 2 3 4 5";
+		}
+		/* Test assign */ {
+			// Test 1
+			vector<int32_t> test1{ 1, 3, 5, 7, 9 };
+
+			test1.assign({ 2, 3, 5, 7, 11 });
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "assign 1";
+			unitTest1.FormatResult("%i %i %i %i %i", test1[0], test1[1], test1[2], test1[3], test1[4]);
+			unitTest1.wantedResult = "2 3 5 7 11";
+			
+			// Test 2
+			vector<int32_t> test2{ 0, 2, 4, 6, 8 };
+
+			test2.assign(5, 1);
+
+			UnitTest& unitTest2 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest2.name = "assign 2";
+			unitTest2.FormatResult("%i %i %i %i %i", test2[0], test2[1], test2[2], test2[3], test2[4]);
+			unitTest2.wantedResult = "1 1 1 1 1";
+		}
+		/* Test push_back */ {
+			// Test 1
+			vector<int32_t> test1{ 1, 2, 3, 4 };
+
+			test1.push_back(5);
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "push_back 1";
+			unitTest1.FormatResult("%i", test1[4]);
+			unitTest1.wantedResult = "5";
+		}
+		/* Test pop_back */ {
+			// Test 1
+			vector<int32_t> test1{ 1, 2, 3, 4, 10 };
+
+			test1.pop_back();
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "pop_back 1";
+			unitTest1.FormatResult("%llu", (unsigned long long)test1.size());
+			unitTest1.wantedResult = "4";
+		}
+		/* Test insert */ {
+			// Test 1
+			vector<int32_t> test1{ 1, 3, 5, 9 };
+
+			test1.insert(test1.begin() + 1, 2); // 1 2 3 5 9
+			test1.insert(test1.begin() + 3, 3, 4); // 1 2 3 4 4 4 5 9
+			test1.insert(test1.begin() + 7, { 6, 7, 8 }); // 1 2 3 4 4 4 5 6 7 8 9
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "insert 1";
+			unitTest1.FormatResult("%i %i %i %i %i %i %i %i %i %i %i", test1[0], test1[1], test1[2], test1[3], test1[4], test1[5], test1[6], test1[7], test1[8], test1[9], test1[10]);
+			unitTest1.wantedResult = "1 2 3 4 4 4 5 6 7 8 9";
+		}
+		/* Test erase */ {
+			// Test 1
+			vector<int32_t> test1{ 1, 0, 2, 7, 8, 9, 3, 4, 5 };
+
+			test1.erase(test1.begin() + 1);
+			test1.erase(test1.begin() + 2, test1.begin() + 5);
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "erase 1";
+			unitTest1.FormatResult("%i %i %i %i %i", test1[0], test1[1], test1[2], test1[3], test1[4]);
+			unitTest1.wantedResult = "1 2 3 4 5";
+		}
+		/* Test swap */ {
+			// Test 1
+			vector<int32_t> test1Vec1{ 1, 3, 5, 7, 9 };
+			vector<int32_t> test1Vec2{ 0, 2, 4, 6, 8 };
+
+			test1Vec1.swap(test1Vec2);
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "swap 1";
+			unitTest1.FormatResult("%i %i %i %i %i %i %i %i %i %i", test1Vec1[0], test1Vec1[1], test1Vec1[2], test1Vec1[3], test1Vec1[4], test1Vec2[0], test1Vec2[1], test1Vec2[2], test1Vec2[3], test1Vec2[4]);
+			unitTest1.wantedResult = "0 2 4 6 8 1 3 5 7 9";
+		}
+		/* Test clear */ {
+			// Test 1
+			vector<int32_t> test1{ 1, 2, 3, 4, 5 };
+
+			test1.clear();
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "clear 1";
+			unitTest1.FormatResult("%llu", (unsigned long long)test1.size());
+			unitTest1.wantedResult = "0";
+		}
+		/* Test resize */ {
+			// Test 1
+			vector<int32_t> test1{ 1, 2, 3, 4, 5 };
+
+			test1.resize(3);
+			test1.resize(5, 4);
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "resize 1";
+			unitTest1.FormatResult("%i %i %i %i %i", test1[0], test1[1], test1[2], test1[3], test1[4]);
+			unitTest1.wantedResult = "1 2 3 4 4";
+		}
+		/* Test comparison */ {
+			// Test 1
+			vector<int32_t> test1Vec1{ 1, 2, 3, 4, 5 };
+			vector<int32_t> test1Vec2{ 1, 2, 3, 4, 6 };
+
+			int32_t test1ResultEqual = (int32_t)(test1Vec1 == test1Vec2); // 0
+			int32_t test1ResultSmaller = (int32_t)(test1Vec1 < test1Vec2); // 1
+			int32_t test1ResultBigger = (int32_t)(test1Vec1 > test1Vec2); // 0
+			int32_t test1ResultSmallerEqual = (int32_t)(test1Vec1 <= test1Vec2); // 1
+			int32_t test1ResultBiggerEqual = (int32_t)(test1Vec1 >= test1Vec2); // 0
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "comparison 1";
+			unitTest1.FormatResult("%i %i %i %i %i", test1ResultEqual, test1ResultSmaller, test1ResultBigger, test1ResultSmallerEqual, test1ResultBiggerEqual);
+			unitTest1.wantedResult = "0 1 0 1 0";
+		}
 	}
-	const char_t* VectorTestsResult() {
-		return "copy: 1 2 3\nassign: 2 1\npush_back: 5\npop_back: 4\ninsert: 1 2 3 4 4 4 5 6 7 8 9\nerase: 1 2 3 4 5\nswap: 0 1\nclear: 0\nresize: 4\ncompare: 0 1 0 1 0\n";
-	}
+	
+	WFE_ADD_UNIT_TEST_CALLBACK(VectorUnitTestCallback)
 }

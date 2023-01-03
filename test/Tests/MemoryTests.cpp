@@ -1,148 +1,296 @@
-#include "Tests.hpp"
+#include "UnitTests.hpp"
 
 namespace wfe {
-	const char_t* MemoryTests() {
-		// Test memcpy
-		char_t memcpySource[7] = "memcpy";
-		char_t memcpyTarget[7];
+	void MemoryUnitTestCallback(UnitTestList& unitTestList) {
+		unitTestList.name = "Memory";
 
-		memcpy(memcpyTarget, memcpySource, 7);
+		/* Test memcpy */ {
+			// Test 1
+			char_t test1Src[7] = "memcpy";
+			char_t test1Dst[7];
 
-		// Test memmove
-		char_t memmoveTest[] = "memmove";
+			memcpy(test1Dst, test1Src, 7);
 
-		memmove(memmoveTest + 1, memmoveTest, 3);
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		// Test memccpy
-		char_t memccpySource[8] = "memccpy";
-		char_t memccpyTarget[8] = "   test";
+			unitTest1.name = "memcpy 1";
+			unitTest1.FormatResult("%s", test1Dst);
+			unitTest1.wantedResult = "memcpy";
+		}
+		/* Test memmove */ {
+			// Test 1
+			char_t test1[] = "memmove";
 
-		memccpy(memccpyTarget, memccpySource, 'c', 8);
+			memmove(test1 + 1, test1, 3);
 
-		// Test memset
-		char_t memsetTest[] = "memset";
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		memset(memsetTest, 'e', 3);
+			unitTest1.name = "memmove 1";
+			unitTest1.FormatResult("%s", test1);
+			unitTest1.wantedResult = "mmemove";
+		}
+		/* Test memccpy */ {
+			// Test 1
+			char_t test1Src[8] = "memccpy";
+			char_t test1Dst[8] = "   test";
 
-		// Test memcmp
-		char_t memcmpTest1[] = "aaaa";
-		char_t memcmpTest2[] = "aaab";
+			memccpy(test1Dst, test1Src, 'c', 8);
 
-		int32_t memcmpResult = memcmp(memcmpTest1, memcmpTest2, 4);
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		// Test memchr
-		char_t memchrTest[] = "memchr";
+			unitTest1.name = "memccpy 1";
+			unitTest1.FormatResult("%s", test1Dst);
+			unitTest1.wantedResult = "memcest";
+		}
+		/* Test memset */ {
+			// Test 1
+			char_t test1[] = "memset";
 
-		char_t* memchrResult = (char_t*)memchr(memchrTest, 'c', 6);
+			memset(test1, 'e', 3);
 
-		// Test rawmemchr
-		char_t rawmemchrTest[] = "rawmemchr";
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		char_t* rawmemchrResult = (char_t*)rawmemchr(rawmemchrTest, 'c');
+			unitTest1.name = "memset 1";
+			unitTest1.FormatResult("%s", test1);
+			unitTest1.wantedResult = "eeeset";
+		}
+		/* Test memcmp */ {
+			// Test 1
+			char_t test1Str1[] = "aaaa";
+			char_t test1Str2[] = "aaab";
 
-		// Test memrchr
-		char_t memrchrTest[] = "memrchr";
+			int32_t test1Result = memcmp(test1Str1, test1Str2, 4);
 
-		char_t* memrchrResult = (char_t*)memrchr(memrchrTest, 'm', 7);
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		// Test strcpy
-		char_t strcpySource[16] = "strcpy\0unwanted";
-		char_t strcpyTarget[16];
+			unitTest1.name = "memcmp 1";
+			unitTest1.FormatResult("%i", test1Result);
+			unitTest1.wantedResult = "-1";
+		}
+		/* Test memchr */ {
+			// Test 1
+			char_t test1[] = "memchr";
 
-		strcpy(strcpyTarget, strcpySource);
+			char_t* test1Result = (char_t*)memchr(test1, 'c', 6);
 
-		// Test strncpy
-		char_t strncpySource[13] = "strncpy test";
-		char_t strncpyTarget[13] = "aaaaaaaaaaaa";
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		strncpy(strncpyTarget, strncpySource, 7);
+			unitTest1.name = "memchr 1";
+			unitTest1.FormatResult("%s", test1Result);
+			unitTest1.wantedResult = "chr";
+		}
+		/* Test rawmemchr */ {
+			// Test 1
+			char_t test1[] = "rawmemchr";
 
-		// Test strcat
-		char_t strcatSource[7] = "cat";
-		char_t strcatTarget[7] = "str";
+			char_t* test1Result = (char_t*)rawmemchr(test1, 'c');
 
-		strcat(strcatTarget, strcatSource);
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		// Test strncat
-		char_t strncatSource[13] = "ncat test";
-		char_t strncatTarget[13] = "str";
+			unitTest1.name = "rawmemchr 1";
+			unitTest1.FormatResult("%s", test1Result);
+			unitTest1.wantedResult = "chr";
+		}
+		/* Test memrchr */ {
+			// Test 1
+			char_t test1[] = "memrchr";
 
-		strncat(strncatTarget, strncatSource, 4);
+			char_t* test1Result = (char_t*)memrchr(test1, 'm', 7);
 
-		// Test strcmp
-		char_t strcmpTest1[] = "aaaa";
-		char_t strcmpTest2[] = "aaaaa";
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		int32_t strcmpResult = strcmp(strcmpTest1, strcmpTest2);
+			unitTest1.name = "memrchr 1";
+			unitTest1.FormatResult("%s", test1Result);
+			unitTest1.wantedResult = "mrchr";
+		}
+		/* Test strcpy */ {
+			// Test 1
+			char_t test1Src[7] = "strcpy";
+			char_t test1Dst[7];
 
-		// Test strncmp
-		char_t strncmpTest1[] = "aaaa";
-		char_t strncmpTest2[] = "aaaaa";
+			strcpy(test1Dst, test1Src);
 
-		int32_t strncmpResult = strncmp(strncmpTest1, strncmpTest2, 4);
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		// Test strchr
-		char_t strchrTest[] = "strchr";
+			unitTest1.name = "strcpy 1";
+			unitTest1.FormatResult("%s", test1Dst);
+			unitTest1.wantedResult = "strcpy";
+		}
+		/* Test strncpy */ {
+			// Test 1
+			char_t test1Src[13] = "strncpy test";
+			char_t test1Dst[13] = "aaaaaaaaaaaa";
 
-		char_t* strchrResult = strchr(strchrTest, 'h');
+			strncpy(test1Dst, test1Src, 7);
 
-		// Test strrchr
-		char_t strrchrTest[] = "strrchr";
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		char_t* strrchrResult = strrchr(strrchrTest, 'r');
+			unitTest1.name = "strncpy 1";
+			unitTest1.FormatResult("%s", test1Dst);
+			unitTest1.wantedResult = "strncpyaaaaa";
+		}
+		/* Test strcat */ {
+			// Test 1
+			char_t test1Src[7] = "cat";
+			char_t test1Dst[7] = "str";
 
-		// Test strcspn
-		char_t strcspnTest[] = "strcspn";
+			strcat(test1Dst, test1Src);
 
-		size_t strcspnResult = strcspn(strcspnTest, "cr");
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		// Test strspn
-		char_t strspnTest[] = "strspn";
+			unitTest1.name = "strcat 1";
+			unitTest1.FormatResult("%s", test1Dst);
+			unitTest1.wantedResult = "strcat";
+		}
+		/* Test strncat */ {
+			// Test 1
+			char_t test1Src[13] = "ncat test";
+			char_t test1Dst[13] = "str";
 
-		size_t strspnResult = strspn(strspnTest, "str");
+			strncat(test1Dst, test1Src, 4);
 
-		// Test strpbrk
-		char_t strpbrkTest[] = "strpbrk";
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		char_t* strpbrkResult = strpbrk(strpbrkTest, "bkr");
+			unitTest1.name = "strncat 1";
+			unitTest1.FormatResult("%s", test1Dst);
+			unitTest1.wantedResult = "strncat";
+		}
+		/* Test strcmp */ {
+			// Test 1
+			char_t test1Str1[] = "aaaa";
+			char_t test1Str2[] = "aaaaa";
 
-		// Test strstr
-		char_t strstrTest[] = "strstr";
+			int32_t test1Result = strcmp(test1Str1, test1Str2);
 
-		char_t* strstrResult = strstr(strstrTest, "trst");
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		// Test strtok
-		char_t strtokTest[] = "- strtok; test";
+			unitTest1.name = "strcmp 1";
+			unitTest1.FormatResult("%i", test1Result);
+			unitTest1.wantedResult = "-1";
+		}
+		/* Test strncmp */ {
+			// Test 1
+			char_t test1Str1[] = "aaaa";
+			char_t test1Str2[] = "aaaaa";
 
-		char_t* strtokResult = strtok(strtokTest, "- ;");
+			int32_t test1Result = strncmp(test1Str1, test1Str2, 4);
 
-		// Test strlen
-		char_t strlenTest[] = "strlen";
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		size_t strlenResult = strlen(strlenTest);
+			unitTest1.name = "strncmp 1";
+			unitTest1.FormatResult("%i", test1Result);
+			unitTest1.wantedResult = "0";
+		}
+		/* Test strchr */ {
+			// Test 1
+			char_t test1[] = "strchr";
 
-		// Test strnlen
-		char_t strnlenTest[] = "strnlen";
+			char_t* test1Result = strchr(test1, 'h');
 
-		size_t strnlenResult = strnlen(strnlenTest, 6);
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		// Format the final string
-		char_t result[8000];
-		FormatString(result, 8000, "memcpy: %s\nmemmove: %s\nmemccpy: %s\nmemset: %s\nmemcmp: %i\nmemchr: %s\nrawmemchr: %s\nmemrchr: %s\nstrcpy: %s\nstrncpy: %s\nstrcat: %s\nstrncat: %s\nstrcmp: %i\nstrncmp: %i\nstrchr: %s\nstrrchr: %s\nstrcspn: %llu\nstrspn: %llu\nstrpbrk: %s\nstrstr: %s\nstrtok: %s\nstrlen: %llu\nstrnlen: %llu\n", memcpyTarget, memmoveTest, memccpyTarget, memsetTest, memcmpResult, memchrResult, rawmemchrResult, memrchrResult, strcpyTarget, strncpyTarget, strcatTarget, strncatTarget, strcmpResult, strncmpResult, strchrResult, strrchrResult, (unsigned long long)strcspnResult, (unsigned long long)strspnResult, strpbrkResult, strstrResult, strtokResult, (unsigned long long)strlenResult, (unsigned long long)strnlenResult);
+			unitTest1.name = "strchr 1";
+			unitTest1.FormatResult("%s", test1Result);
+			unitTest1.wantedResult = "hr";
+		}
+		/* Test strrchr */ {
+			// Test 1
+			char_t test1[] = "strrchr";
 
-		// Copy the final string to the heap
-		size_t resultLength = strnlen(result, 8000) + 1;
+			char_t* test1Result = strrchr(test1, 'r');
 
-		char_t* resultHeap = (char_t*)malloc(resultLength, MEMORY_USAGE_STRING);
-		if(!resultHeap)
-			WFE_LOG_FATAL("Failed to allocate string memory!");
-		
-		memcpy(resultHeap, result, resultLength);
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-		// Return the heap string
-		return resultHeap;
+			unitTest1.name = "strrchr 1";
+			unitTest1.FormatResult("%s", test1Result);
+			unitTest1.wantedResult = "r";
+		}
+		/* Test strcspn */ {
+			// Test 1
+			char_t test1[] = "strcspn";
+
+			size_t test1Result = strcspn(test1, "cr");
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "strcspn 1";
+			unitTest1.FormatResult("%llu", (unsigned long long)test1Result);
+			unitTest1.wantedResult = "2";
+		}
+		/* Test strspn */ {
+			// Test 1
+			char_t test1[] = "strspn";
+
+			size_t test1Result = strspn(test1, "str");
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "strspn 1";
+			unitTest1.FormatResult("%llu", (unsigned long long)test1Result);
+			unitTest1.wantedResult = "4";
+		}
+		/* Test strpbrk */ {
+			// Test 1
+			char_t test1[] = "strpbrk";
+
+			char_t* test1Result = strpbrk(test1, "bkr");
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "strpbrk 1";
+			unitTest1.FormatResult("%s", test1Result);
+			unitTest1.wantedResult = "rpbrk";
+		}
+		/* Test strstr */ {
+			// Test 1
+			char_t test1[] = "strstr";
+
+			char_t* test1Result = strstr(test1, "trst");
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "strstr 1";
+			unitTest1.FormatResult("%s", test1Result);
+			unitTest1.wantedResult = "trstr";
+		}
+		/* Test strtok */ {
+			// Test 1
+			char_t test1[] = "- strtok; test";
+
+			char_t* test1Result1 = strtok(test1, "- ;");
+			char_t* test1Result2 = strtok(nullptr, "- ;");
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "strtok 1";
+			unitTest1.FormatResult("%s %s", test1Result1, test1Result2);
+			unitTest1.wantedResult = "strtok test";
+		}
+		/* Test strlen */ {
+			// Test 1
+			char_t test1[] = "strlen";
+
+			size_t test1Result = strlen(test1);
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "strlen 1";
+			unitTest1.FormatResult("%llu", (unsigned long long)test1Result);
+			unitTest1.wantedResult = "6";
+		}
+		/* Test strnlen */ {
+			// Test 1
+			char_t test1[] = "strnlen";
+
+			size_t test1Result = strnlen(test1, 6);
+
+			UnitTest& unitTest1 = unitTestList.unitTests[unitTestList.unitTestCount++];
+
+			unitTest1.name = "strnlen 1";
+			unitTest1.FormatResult("%llu", (unsigned long long)test1Result);
+			unitTest1.wantedResult = "6";
+		}
 	}
-	const char_t* MemoryTestsResult() {
-		return "memcpy: memcpy\nmemmove: mmemove\nmemccpy: memcest\nmemset: eeeset\nmemcmp: -1\nmemchr: chr\nrawmemchr: chr\nmemrchr: mrchr\nstrcpy: strcpy\nstrncpy: strncpyaaaaa\nstrcat: strcat\nstrncat: strncat\nstrcmp: -1\nstrncmp: 0\nstrchr: hr\nstrrchr: r\nstrcspn: 2\nstrspn: 4\nstrpbrk: rpbrk\nstrstr: trstr\nstrtok: strtok\nstrlen: 6\nstrnlen: 6\n";
-	}
+	
+	WFE_ADD_UNIT_TEST_CALLBACK(MemoryUnitTestCallback)
 }
