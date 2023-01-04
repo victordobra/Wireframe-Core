@@ -55,7 +55,10 @@ namespace wfe {
 			uint8_t isCorrect[MAX_UNIT_TEST_COUNT_LIST >> 3];
 			memset(isCorrect, 0, MAX_UNIT_TEST_COUNT_LIST >> 3);
 
-			size_t outCount = 0, nextOutIndex = unitTestList.unitTestCount / 10 - 1;
+			size_t outCount = 0, nextOutIndex = unitTestList.unitTestCount / 10;
+
+			if(nextOutIndex)
+				--nextOutIndex;
 
 			for(size_t j = 0; j < unitTestList.unitTestCount; ++j) {
 				// Check if the unit test result is correct
@@ -76,7 +79,10 @@ namespace wfe {
 					++outCount;
 
 					// Set the next out index
-					nextOutIndex = unitTestList.unitTestCount * (outCount + 1) / 10 - 1;
+					nextOutIndex = unitTestList.unitTestCount * (outCount + 1) / 10;
+
+					if(nextOutIndex)
+						--nextOutIndex;
 				}
 			}
 

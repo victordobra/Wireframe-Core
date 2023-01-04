@@ -5,5 +5,6 @@
 #include "Memory.hpp"
 #include "New.hpp"
 #include "Debug.hpp"
+#include "Set.hpp"
 #include "String.hpp"
 #include "Vector.hpp"
