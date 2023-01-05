@@ -935,13 +935,35 @@ namespace wfe {
 		/// @param val The value to compare with.
 		/// @return A pair containing the lower and upper bounds of the wanted range.
 		pair<pointer, pointer> equal_range(const_reference val) {
-			return { lower_bound(val), upper_bound(val) };
+			pair<pointer, pointer> range;
+
+			// Find the range's lower bound
+			range.first = lower_bound(val);
+
+			// Set the range's upper bound based on the lower bound
+			if(range.first != end() && val == *range.first)
+				range.second = range.first + 1;
+			else
+				range.second = range.first;
+			
+			return range;
 		}
 		/// @brief Finds the range that includes all elements in the container equal to the given value.
 		/// @param val The value to compare with.
 		/// @return A pair containing the lower and upper bounds of the wanted range.
 		pair<const_pointer, const_pointer> equal_range(const_reference val) const {
-			return { lower_bound(val), upper_bound(val) };
+			pair<pointer, pointer> range;
+
+			// Find the range's lower bound
+			range.first = lower_bound(val);
+
+			// Set the range's upper bound based on the lower bound
+			if(range.first != end() && val == *range.first)
+				range.second = range.first + 1;
+			else
+				range.second = range.first;
+			
+			return range;
 		}
 
 		/// @brief Deletes the set.
