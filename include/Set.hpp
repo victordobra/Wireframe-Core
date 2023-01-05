@@ -55,6 +55,9 @@ namespace wfe {
 		/// @brief Creates a vector with the elements from the given list.
 		/// @param list The list to copy from.
 		set(std::initializer_list<value_type> list) : setSize(0), setCapacity(1), setData(nullptr) {
+			// Assert that the set's size must be lower than the maximum possible size
+			WFE_ASSERT(list.size() < max_size(), "The set's size must be lower than the maximum possible size!")
+
 			// Set the capacity to the lowest power of 2 higher than the size
 			for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
 				if((setCapacity << step) < list.size())
@@ -90,6 +93,9 @@ namespace wfe {
 		/// @brief Copies the given std library set into this set.
 		/// @param other THe std library set to copy from.
 		set(const std::set<value_type>& other) : setSize(other.size()), setCapacity(1), setData(nullptr) {
+			// Assert that the set's size must be lower than the maximum possible size
+			WFE_ASSERT(setSize < max_size(), "The set's size must be lower than the maximum possible size!")
+
 			// Set the capacity to the lowest power of 2 higher than the size
 			for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
 				if((setCapacity << step) < other.size())
@@ -254,6 +260,9 @@ namespace wfe {
 			// Increment the set's size
 			++setSize;
 
+			// Assert that the set's size must be lower than the maximum possible size
+			WFE_ASSERT(setSize < max_size(), "The set's size must be lower than the maximum possible size!")
+
 			// Check if memory needs to be reallocated
 			if(setSize > setCapacity) {
 				// Save the set's old capacity
@@ -304,6 +313,9 @@ namespace wfe {
 			// Increment the set's size
 			++setSize;
 
+			// Assert that the set's size must be lower than the maximum possible size
+			WFE_ASSERT(setSize < max_size(), "The set's size must be lower than the maximum possible size!")
+
 			// Check if memory needs to be reallocated
 			if(setSize > setCapacity) {
 				// Save the set's old capacity
@@ -339,38 +351,15 @@ namespace wfe {
 			// Assert that the given position hint must be in range
 			WFE_ASSERT(pos >= begin() && pos <= end(), "The given position hint must be in range!");
 
-			// Check if the given value is the only one in the set
-			if(!setSize) {
-				// Increment the set's size
-				++setSize;
-
-				// Assert that the set's size must be lower than the maximum possible size
-				WFE_ASSERT(setSize < max_size(), "The set's size must be lower than the maximum possible size!")
-
-				// Check if memory needs to be reallocated
-				if(setSize > setCapacity) {
-					// Since the set's size is now 1, the set's capacity given by the binary search algorithm would be 2
-					setCapacity = 2;
-
-					// Allocate the set's memory
-					setData = (pointer)malloc(setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
-
-					if(!setData)
-						WFE_LOG_FATAL("Failed to allocate set memory!")
-				}
-
-				// Create the new value
-				new(setData) value_type(val);
-
-				return setData;
-			}
-
 			// Check if the position hint is correct
 			if(pos != end() && val == *pos)
 				return (pointer)pos;
 			if((pos != begin() && *(pos - 1) < val) && (pos != end() && val < *pos)) {
 				// Increment the set's size
 				++setSize;
+
+				// Assert that the set's size must be lower than the maximum possible size
+				WFE_ASSERT(setSize < max_size(), "The set's size must be lower than the maximum possible size!")
 
 				// Save the position hint's index relative to the set's data
 				size_type posInd = pos - setData;
@@ -438,6 +427,9 @@ namespace wfe {
 			
 			// Increment the set's size
 			++setSize;
+
+			// Assert that the set's size must be lower than the maximum possible size
+			WFE_ASSERT(setSize < max_size(), "The set's size must be lower than the maximum possible size!")
 
 			// Check if memory needs to be reallocated
 			if(setSize > setCapacity) {
@@ -474,32 +466,6 @@ namespace wfe {
 			// Assert that the given position hint must be in range
 			WFE_ASSERT(pos >= begin() && pos <= end(), "The given position hint must be in range!");
 
-			// Check if the given value is the only one in the set
-			if(!setSize) {
-				// Increment the set's size
-				++setSize;
-
-				// Assert that the set's size must be lower than the maximum possible size
-				WFE_ASSERT(setSize < max_size(), "The set's size must be lower than the maximum possible size!")
-
-				// Check if memory needs to be reallocated
-				if(setSize > setCapacity) {
-					// Since the set's size is now 1, the set's capacity given by the binary search algorithm would be 2
-					setCapacity = 2;
-
-					// Allocate the set's memory
-					setData = (pointer)malloc(setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
-
-					if(!setData)
-						WFE_LOG_FATAL("Failed to allocate set memory!")
-				}
-
-				// Create the new value
-				new(setData) value_type(val);
-
-				return setData;
-			}
-
 			// Check if the position hint is correct
 			if(pos != end() && val == *pos)
 				return (pointer)pos;
@@ -573,6 +539,9 @@ namespace wfe {
 			
 			// Increment the set's size
 			++setSize;
+
+			// Assert that the set's size must be lower than the maximum possible size
+			WFE_ASSERT(setSize < max_size(), "The set's size must be lower than the maximum possible size!")
 
 			// Check if memory needs to be reallocated
 			if(setSize > setCapacity) {
