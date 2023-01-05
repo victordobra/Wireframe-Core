@@ -44,7 +44,7 @@ namespace wfe {
 		unitTestList.unitTestCount = 0;
 
 		// Run every unit test callback
-		for(size_t i = 0; i < unitTestCallbackCount; ++i) {
+		for(size_t i = 0; i != unitTestCallbackCount; ++i) {
 			// Run the callback
 			unitTestCallbacks[i](unitTestList);
 
@@ -60,7 +60,7 @@ namespace wfe {
 			if(nextOutIndex)
 				--nextOutIndex;
 
-			for(size_t j = 0; j < unitTestList.unitTestCount; ++j) {
+			for(size_t j = 0; j != unitTestList.unitTestCount; ++j) {
 				// Check if the unit test result is correct
 				bool8_t correct = unitTestList.unitTests[j].IsCorrect();
 

@@ -772,7 +772,7 @@ namespace wfe {
 			if(!setSize)
 				return setData;
 			
-			// Set the binary search step to the highest power of 2 lower than the set's size
+			// Set the binary search step to the highest power of 2 lower than or equal to the set's size
 			size_type step = 1;
 			for(size_type stepStep = sizeof(size_type) << 2; stepStep; stepStep >>= 1)
 				if((step << stepStep) <= setSize)
@@ -955,7 +955,7 @@ namespace wfe {
 		/// @param val The value to compare with.
 		/// @return A pair containing the lower and upper bounds of the wanted range.
 		pair<const_pointer, const_pointer> equal_range(const_reference val) const {
-			pair<pointer, pointer> range;
+			pair<const_pointer, const_pointer> range;
 
 			// Find the range's lower bound
 			range.first = lower_bound(val);
