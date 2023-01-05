@@ -79,6 +79,9 @@ namespace wfe {
 				for(size_type step = setCapacity; step; step >>= 1)
 					if(pos >= step && !(setData[pos - step] < *ptr))
 						pos -= step;
+					
+				if(pos != setSize && setData[pos] == *ptr)
+					continue;
 				
 				// Move part of the set forward to make room for the new value
 				memmove(setData + pos + 1, setData + pos, (setSize - pos) * sizeof(value_type));
@@ -223,7 +226,7 @@ namespace wfe {
 						pos -= step;
 				
 				// Check if the current value is already in the set
-				if(*ptr == setData[pos])
+				if(pos != setSize && *ptr == setData[pos])
 					continue;
 				
 				// Move part of the set forward to make room for the new value
@@ -254,7 +257,7 @@ namespace wfe {
 					pos -= step;
 			
 			// Check if the value is already in the set
-			if(val == setData[pos])
+			if(pos != setSize && val == setData[pos])
 				return { setData + pos, false };
 			
 			// Increment the set's size
@@ -307,7 +310,7 @@ namespace wfe {
 					pos -= step;
 			
 			// Check if the value is already in the set
-			if(val == setData[pos])
+			if(pos != setSize && val == setData[pos])
 				return { setData + pos, false };
 			
 			// Increment the set's size
@@ -422,7 +425,7 @@ namespace wfe {
 					posInd -= step;
 	
 			// Check if the value is already in the set
-			if(val == setData[posInd])
+			if(posInd != setSize && val == setData[posInd])
 				return setData + posInd;
 			
 			// Increment the set's size
@@ -534,7 +537,7 @@ namespace wfe {
 					posInd -= step;
 	
 			// Check if the value is already in the set
-			if(val == setData[posInd])
+			if(posInd != setSize && val == setData[posInd])
 				return setData + posInd;
 			
 			// Increment the set's size
@@ -782,7 +785,7 @@ namespace wfe {
 					pos -= step;
 			
 			// Check if the wanted value was found
-			if(setData[pos] == val)
+			if(pos != setSize && setData[pos] == val)
 				return setData + pos;
 			
 			return end();
@@ -808,7 +811,7 @@ namespace wfe {
 					pos -= step;
 			
 			// Check if the wanted value was found
-			if(setData[pos] == val)
+			if(pos != setSize && setData[pos] == val)
 				return setData + pos;
 			
 			return end();
@@ -834,7 +837,7 @@ namespace wfe {
 					pos -= step;
 			
 			// Check if the wanted value was found
-			if(setData[pos] == val)
+			if(pos != setSize && setData[pos] == val)
 				return 1;
 			
 			return 0;
