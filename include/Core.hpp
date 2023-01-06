@@ -3,6 +3,7 @@
 #include "BuildInfo.hpp"
 #include "Defines.hpp"
 #include "Map.hpp"
+#include "Math.hpp"
 #include "Memory.hpp"
 #include "New.hpp"
 #include "Debug.hpp"
