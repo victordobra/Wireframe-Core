@@ -251,6 +251,16 @@ namespace wfe {
 			}
 		}
 
+		operator std::map<key_type, value_type>() const {
+			std::map<key_type, value_type> map;
+
+			const_pointer end = mapData + mapSize;
+			for(const_pointer ptr = mapData; ptr != end; ++ptr)
+				map.insert(*ptr);
+			
+			return map;
+		}
+
 		/// @brief Gets the value or creates a new one with the given key.
 		/// @param key The key to look for.
 		/// @return A reference to the wanted value.

@@ -240,6 +240,16 @@ namespace wfe {
 			}
 		}
 
+		operator std::set<value_type>() const {
+			std::set<value_type> set;
+			
+			const_pointer end = setData + setSize;
+			for(const_pointer ptr = setData; ptr != end; ++ptr)
+				set.insert(*ptr);
+			
+			return set;
+		}
+
 		/// @brief Inserts the given value into the set.
 		/// @param val The value to insert.
 		/// @return A pair containing a pointer to the inserted value or an identical value that was already in the set and a bool that is set to true if a new element was inserted, otherwise false.
