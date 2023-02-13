@@ -66,6 +66,7 @@ namespace wfe {
 	WFE_STATIC_ASSERT((sizeof(bool32_t)  == 4), "Expected bool32_t to be 4 bytes!");
 
 	// Numerical limits for types
+
 	/// @brief The minimum value an int8_t can hold.
 	constexpr int64_t INT8_T_MIN = -128;
 	/// @brief The maximum value an int8_t can hold.

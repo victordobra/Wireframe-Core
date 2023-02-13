@@ -988,7 +988,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the set's data
-				free(setData, setCapacity * sizeof(value_type));
+				free(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 			}
 		}
 	private:
