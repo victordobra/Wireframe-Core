@@ -9,4 +9,5 @@
 #include "Debug.hpp"
 #include "Set.hpp"
 #include "String.hpp"
+#include "UnorderedSet.hpp"
 #include "Vector.hpp"
