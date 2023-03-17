@@ -109,6 +109,9 @@ namespace wfe {
 		/// @return A reference to this hash.
 		Hash& operator=(Hash&& other) = default;
 
+		/// @brief Gets the hash's value.
+		operator uint64_t() const;
+
 		/// @brief Combines the given hash into this hash.
 		/// @param other The hash to combine.
 		/// @return A reference to this hash.

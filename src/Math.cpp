@@ -230,6 +230,10 @@ namespace wfe {
 		}
 	}
 
+	Hash::operator uint64_t() const {
+		return val;
+	}
+
 	Hash& Hash::operator|=(const Hash& other) {
 		val ^= other.val + 0x9e3779b9 + (val << 6) + (val >> 2);
 

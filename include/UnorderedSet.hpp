@@ -1107,7 +1107,7 @@ namespace wfe {
 		/// @return The bucket's index.
 		size_type bucket(const_reference value) const {
 			// Get the given value's hash
-			uint64_t hash = Hash(value).val;
+			uint64_t hash = Hash(value);
 
 			return hash % usetBucketCount;
 		}
