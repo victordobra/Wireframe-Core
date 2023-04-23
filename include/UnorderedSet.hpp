@@ -9,7 +9,7 @@
 #include <unordered_set>
 
 namespace wfe {
-	/// @brief Holds multiple buckets of unique elements
+	/// @brief Holds multiple buckets of unique elements.
 	/// @tparam T The type of the unordered set's values.
 	template<class T>
 	class unordered_set {    
@@ -318,38 +318,49 @@ namespace wfe {
 		/// @brief Constructs an unordered set with all the values in the given list.
 		/// @param list The list to copy from.
 		/// @param n The number of buckets.
-		unordered_set(std::initializer_list<value_type> list, size_type n = 16) : usetBucketCount(n), usetBuckets((node_type**)malloc(usetBucketCount * sizeof(node_type**) , MEMORY_USAGE_ARRAY)), usetSize(list.size()), usetCapacity(1), usetData(nullptr), usetMaxLoadFactor(1.f) {
+		unordered_set(std::initializer_list<value_type> list, size_type n = 16) : usetBucketCount(n), usetBuckets((node_type**)malloc(usetBucketCount * sizeof(node_type**) , MEMORY_USAGE_ARRAY)), usetSize(0), usetCapacity(1), usetData((node_type*)malloc(sizeof(node_type), MEMORY_USAGE_ARRAY)), usetMaxLoadFactor(1.f) {
 			// Check if the bucket list was allocated correctly
 			if(!usetBuckets)
 				WFE_LOG_FATAL("Failed to allocate unordered set buckets!")
 			
-			// Set all bucket pointer to nullptr
-			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type**));
-
-			// Set the capacity to the lowest power of 2 higher than the size
-			for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-				if((usetCapacity << step) < list.size())
-					usetCapacity <<= step;
-			usetCapacity <<= 1;
-
-			// Allocate the unordered set's data
-			usetData = (node_type*)malloc(usetCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+			// Check if the unordered set's data was allocated correctly
 			if(!usetData)
 				WFE_LOG_FATAL("Failed to allocate unordered set data!")
-			
-			// Insert every value from the list
-			for(size_type i = 0; i != usetSize; ++i) {
-				// Construct the node's value
-				new(&(usetData[i].val)) value_type(list.begin()[i]);
 
-				// Get the bucket for the value
-				size_type valBucket = bucket(usetData[i].val);
+			// Set all bucket pointers to nullptr
+			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type**));
 
-				// Set the node's next pointer
-				usetData[i].next = usetBuckets[valBucket];
+			// Loop through every value in the given list
+			const_pointer end = list.end();
+			for(const_pointer ptr = list.begin(); ptr != end; ++ptr) {
+				// Get the current value's bucket
+				size_type currentBucket = bucket(*ptr);
 
-				// Set the bucket's pointer
-				usetBuckets[valBucket] = usetData + i;
+				node_type** elem = usetBuckets + currentBucket;
+
+				// Look for the given value in the bucket
+				while(*elem) {
+					// Check if the current value is already in the unordered map
+					if((*elem)->val == *ptr)
+						continue;
+					
+					// Move on to the next value
+					elem = &((*elem)->next);
+				}
+
+				// Increment the set's size
+				++usetSize;
+
+				// Check if memory needs to be reallocated
+				if(usetSize > usetCapacity) 
+					reallocate(usetCapacity << 1);
+
+				// Copy the current value into the unordered set
+				new(&(usetData[usetSize - 1].val)) value_type(*ptr);
+
+				// Add the new value into the current bucket
+				usetData[usetSize - 1].next = nullptr;
+				*elem = usetData + usetSize - 1;
 			}
 		}
 		/// @brief Copies the given std library unordered set.
@@ -359,7 +370,7 @@ namespace wfe {
 			if(!usetBuckets)
 				WFE_LOG_FATAL("Failed to allocate unordered set buckets!")
 			
-			// Set all bucket pointer to nullptr
+			// Set all bucket pointers to nullptr
 			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type**));
 
 			// Set the capacity to the lowest power of 2 higher than the size
@@ -517,7 +528,7 @@ namespace wfe {
 			// Set the unordered set's new values
 			usetSize = list.size();
 			usetCapacity = 1;
-			usetMaxLoadFactor = 1;
+			usetMaxLoadFactor = 1.f;
 
 			// Set the bucket count and the capacity to the lowest power of 2 higher than or equal to the size
 			for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -531,7 +542,7 @@ namespace wfe {
 			if(!usetBuckets)
 				WFE_LOG_FATAL("Failed to allocate unordered set buckets!")
 			
-			// Set all bucket pointer to nullptr
+			// Set all bucket pointers to nullptr
 			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type**));
 
 			// Allocate the unordered set's data
@@ -726,27 +737,8 @@ namespace wfe {
 			++usetSize;
 
 			// Check if memory needs to be reallocated
-			if(usetSize > usetCapacity) {
-				// Save the old capacity
-				size_type oldCapacity = usetCapacity;
-
-				// Set the unordered set's capacity to the lowest power of 2 higher than the set's size
-				usetCapacity = 1;
-				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-					if(usetCapacity << step < usetSize)
-						usetCapacity <<= step;
-				usetCapacity <<= 1;
-
-				// Reallocate the unordered set's data
-				if(usetData)
-					usetData = (node_type*)realloc(usetData, oldCapacity * sizeof(node_type), usetCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
-				else
-					usetData = (node_type*)malloc(usetCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
-				
-				// Check if the memory was allocated correctly
-				if(!usetData)
-					WFE_LOG_FATAL("Failed to allocate unordered set memory!")
-			}
+			if(usetSize > usetCapacity) 
+				reallocate(usetCapacity << 1);
 
 			// Check if a rehash is required
 			if(usetSize > usetBucketCount * max_load_factor()) {
@@ -794,27 +786,8 @@ namespace wfe {
 			++usetSize;
 
 			// Check if memory needs to be reallocated
-			if(usetSize > usetCapacity) {
-				// Save the old capacity
-				size_type oldCapacity = usetCapacity;
-
-				// Set the unordered set's capacity to the lowest power of 2 higher than the set's size
-				usetCapacity = 1;
-				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-					if(usetCapacity << step < usetSize)
-						usetCapacity <<= step;
-				usetCapacity <<= 1;
-
-				// Reallocate the unordered set's data
-				if(usetData)
-					usetData = (node_type*)realloc(usetData, oldCapacity * sizeof(node_type), usetCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
-				else
-					usetData = (node_type*)malloc(usetCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
-				
-				// Check if the memory was allocated correctly
-				if(!usetData)
-					WFE_LOG_FATAL("Failed to allocate unordered set memory!")
-			}
+			if(usetSize > usetCapacity) 
+				reallocate(usetCapacity << 1);
 
 			// Check if a rehash is required
 			if(usetSize > usetBucketCount * max_load_factor()) {
@@ -1141,6 +1114,10 @@ namespace wfe {
 				usetBuckets = (node_type**)realloc(usetBuckets, oldBucketCount * sizeof(node_type*), usetBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
 			else
 				usetBuckets = (node_type**)malloc(usetBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+
+			// Check if the bucket list was allocated correctly
+			if(!usetBuckets)
+				WFE_LOG_FATAL("Failed to allocate unordered set buckets!")
 			
 			// Set every pointer in the bucket list to nullptr
 			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
@@ -1191,6 +1168,50 @@ namespace wfe {
 			}
 		}
 	private:
+		void reallocate(size_type newCapacity) {
+			// Store the unordered set's old data
+			node_type* oldData = usetData;
+
+			// Reallocate the unordered set's data
+			if(usetData)
+				usetData = (node_type*)realloc(usetData, usetCapacity * sizeof(node_type), newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+			else
+				usetData = (node_type*)malloc(newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+			
+			// Check if the memory was allocated correctly
+			if(!usetData)
+				WFE_LOG_FATAL("Failed to allocate unordered set memory!")
+			
+			// Set the unordered set's new capacity
+			usetCapacity = newCapacity;
+
+			// Reset every bucket relative to the new data
+			for(size_type i = 0; i != usetBucketCount; ++i) {
+				// Skip the current bucket if it is already set to nullptr
+				if(!usetBuckets[i])
+					continue;
+
+				// Get the bucket's index
+				size_type index = usetBuckets[i] - usetData;
+
+				// Set the bucket based on the index
+				usetBuckets[i] = usetData + index;
+			}
+
+			// Copy every node relative to the new data
+			for(size_type i = 0; i != usetSize; ++i) {
+				// Skip the current node if the next pointer is laready nullptr
+				if(!usetData[i].next)
+					continue;
+
+				// Get the next pointer's index
+				size_type index = usetData[i].next - usetData;
+
+				// Set the next pointer based on the index
+				usetData[i].next = usetData + index;
+			}
+		}
+
 		size_type usetBucketCount;
 		node_type** usetBuckets;
 		size_type usetSize;
