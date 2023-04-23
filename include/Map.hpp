@@ -20,13 +20,13 @@ namespace wfe {
 		typedef T mapped_type;
 		/// @brief A pair that holds the key and its coresponding value.
 		typedef pair<Key, T> value_type;
-		/// @brief A reference to the set's value.
+		/// @brief A reference to the map's value.
 		typedef value_type& reference;
-		/// @brief A const reference to the set's value.
+		/// @brief A const reference to the map's value.
 		typedef const value_type& const_reference;
-		/// @brief A pointer to the set's value.
+		/// @brief A pointer to the map's value.
 		typedef value_type* pointer;
-		/// @brief A const pointer to the set's value.
+		/// @brief A const pointer to the map's value.
 		typedef const value_type* const_pointer;
 		/// @brief Used for holding differences.
 		typedef ptrdiff_t difference_type;
