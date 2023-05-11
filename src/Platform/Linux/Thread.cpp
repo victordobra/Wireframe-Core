@@ -207,6 +207,15 @@ namespace wfe {
         // Free the allocated memory
         free(internalData, sizeof(pthread_mutex_t), MEMORY_USAGE_HEAP_OBJECT);
     }
+
+    Thread::ThreadID GetCurrentThreadID() {
+        // Get the ID using pthread_self
+        return (Thread::ThreadID)pthread_self();
+    }
+    void ExitCurrentThread(void* returnValue) {
+        // Exit the current thread using pthread_exit
+        pthread_exit(returnValue);
+    }
 }
 
 #endif

@@ -118,4 +118,11 @@ namespace wfe {
     private:
         void* internalData;
     };
+
+    /// @brief Gets the current thread's ID.
+    /// @return THe current thread's ID.
+    Thread::ThreadID GetCurrentThreadID();
+    /// @brief Exits the current thread, calcelling all processing on it.
+    /// @param returnValue The return value to be extracted on joining the thread.
+    void ExitCurrentThread(void* returnValue);
 }
