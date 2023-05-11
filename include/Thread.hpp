@@ -3,6 +3,7 @@
 #include "Defines.hpp"
 
 namespace wfe {
+    /// @brief An implementation of a processor thread.
     struct Thread {
     public:
         /// @brief All possible results for thread functions.
@@ -71,5 +72,50 @@ namespace wfe {
     private:
         void* internalData = nullptr;
         ThreadID threadID = 0;
+    };
+
+    /// @brief An implementation of a mutex.
+    struct Mutex {
+    public:
+        /// @brief All possible results from mutex functions.
+        typedef enum {
+            /// @brief The operation completed successfully
+            SUCCESS,
+            /// @brief The mutex to be locked was already locked.
+            ERROR_ALREADY_LOCKED,
+            /// @brief The current mutex is not valid.
+            ERROR_INVALID_MUTEX,
+            /// @brief The current mutex's max reccursive lock count has been exceeded.
+            ERROR_MAX_RECURSIVE_LOCK_COUNT_EXCEEDED,
+            /// @brief The current thread owns the mutex.
+            ERROR_MUTEX_OWNED,
+            /// @brief The current thread doesn't own the mutex.
+            ERROR_MUTEX_NOT_OWNED,
+            /// @brief An unknown or unhandled error prevented the requested mutex operation.
+            ERROR_UNKNOWN
+        } MutexResult;
+
+        /// @brief Creates a mutex object.
+        Mutex();
+        Mutex(const Mutex&) = delete;
+        Mutex(Mutex&&) noexcept = delete;
+
+        Mutex& operator=(const Mutex&) = delete;
+        Mutex& operator=(Mutex&&) noexcept = delete;
+
+        /// @brief Locks the mutex. If the mutex is already locked, the calling thread will wait for it to unlock.
+        /// @return Mutex::SUCCESS if the mutex was locked successfully, otherwise a corresponding error code.
+        MutexResult Lock();
+        /// @brief Locks the mutex. If the mutex is already locked, the function will return immediately Mutex::ERROR_ALREADY_LOCKED.
+        /// @return Mutex::SUCCESS if the mutex was locked successfully, otherwise a corresponding error code.
+        MutexResult TryLock();
+        /// @brief Unlocks the mutex.
+        /// @return Mutex::SUCCESS if the mutex was unlocked successfully, otherwise a corresponding error code.
+        MutexResult Unlock();
+
+        /// @brief Deletes the mutex.
+        ~Mutex();
+    private:
+        void* internalData;
     };
 }
