@@ -21,7 +21,7 @@ namespace wfe {
 
 		// Set the capacity to the lowest power of 2 higher than the string's size
 		for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-			if((strCapacity << step) < strSize)
+			if((strCapacity << step) <= strSize)
 				strCapacity <<= step;
 		strCapacity <<= 1;
 		
@@ -39,7 +39,7 @@ namespace wfe {
 
 		// Set the capacity to the lowest power of 2 higher than the string's size
 		for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-			if((strCapacity << step) < strSize)
+			if((strCapacity << step) <= strSize)
 				strCapacity <<= step;
 		strCapacity <<= 1;
 		
@@ -60,7 +60,7 @@ namespace wfe {
 
 		// Set the capacity to the lowest power of 2 higher than the string's size
 		for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-			if((strCapacity << step) < strSize)
+			if((strCapacity << step) <= strSize)
 				strCapacity <<= step;
 		strCapacity <<= 1;
 		
@@ -898,7 +898,7 @@ namespace wfe {
 			strCapacity = 1;
 
 			for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-				if((strCapacity << step) < strSize)
+				if((strCapacity << step) <= strSize)
 					strCapacity <<= step;
 			strCapacity <<= 1;
 

@@ -1,6 +1,5 @@
 #include "Memory.hpp"
-#include <stdlib.h>
-#include <stdio.h>
+#include "Platform.hpp"
 
 namespace wfe {
 	const char_t* MEMORY_USAGE_TYPE_NAMES[MEMORY_USAGE_COUNT] = {
@@ -15,14 +14,14 @@ namespace wfe {
 		totalMemoryUsage[memoryUsage] += size;
 
 		// TODO: Implement dynamic allocator pool once wfa is finished.
-		return ::malloc(size);
+		return PlatformAllocateMemory(size);
 	}
 	void* calloc(size_t nmemb, size_t size, MemoryUsage memoryUsage) {
 		// Increase the memory usage for the specified type
 		totalMemoryUsage[memoryUsage] += nmemb * size;
 
 		// TODO: Implement dynamic allocator pool once wfa is finished.
-		return ::calloc(nmemb, size);
+		return PlatformAllocateZeroMemory(nmemb, size);
 	}
 	void* realloc(void* ptr, size_t oldSize, size_t newSize, MemoryUsage memoryUsage) {
 		// Modify the memory usage for the specified type
@@ -30,14 +29,14 @@ namespace wfe {
 		totalMemoryUsage[memoryUsage] -= oldSize;
 
 		// TODO: Implement dynamic allocator pool once wfa is finished.
-		return ::realloc(ptr, newSize);
+		return PlatformReallocateMemory(ptr, oldSize, newSize);
 	}
 	void free(void* ptr, size_t size, MemoryUsage memoryUsage) {
 		// Decrease the memory usage for the specified type
 		totalMemoryUsage[memoryUsage] -= size;
 
 		// TODO: Implement dynamic allocator pool once wfa is finished.
-		::free(ptr);
+		PlatformFreeMemory(ptr, size);
 	}
 	size_t* GetMemoryUsage() {
 		return totalMemoryUsage;
