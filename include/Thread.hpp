@@ -10,6 +10,8 @@ namespace wfe {
         typedef enum {
             /// @brief The operation completed successfully.
             SUCCESS,
+            /// @brief The thread to be begun was already begun.
+            ERROR_THREAD_ALREADY_BEGUN,
             /// @brief The thread couldn't be created due to insufficient resources.
             ERROR_INSUFFICIENT_RESOURCES,
             /// @brief The current thread is not valid.
