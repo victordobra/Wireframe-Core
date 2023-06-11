@@ -114,7 +114,7 @@ namespace wfe {
 
 	Mutex::Mutex() {
 		// Allocate the required memory for the mutex
-		internalData = malloc(sizeof(pthread_mutex_t), MEMORY_USAGE_HEAP_OBJECT);
+		internalData = mallocAsync(sizeof(pthread_mutex_t), MEMORY_USAGE_HEAP_OBJECT);
 
 		// Check if the memory was allocated corectly
 		if(!internalData)

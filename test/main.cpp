@@ -2,5 +2,6 @@
 
 int main() {
 	wfe::RunUnitTests();
+
 	return 0;
 }

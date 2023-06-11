@@ -1,5 +1,6 @@
 #include "Memory.hpp"
 #include "Platform.hpp"
+#include "Thread.hpp"
 
 namespace wfe {
 	const char_t* MEMORY_USAGE_TYPE_NAMES[MEMORY_USAGE_COUNT] = {
@@ -9,35 +10,84 @@ namespace wfe {
 	};
 	size_t totalMemoryUsage[MEMORY_USAGE_COUNT];
 
+	Mutex allocMutex;
+
 	void* malloc(size_t size, MemoryUsage memoryUsage) {
+		// Lock the alloc mutex
+		allocMutex.Lock();
+
+		// Allocate the requested memory.
+		void* ptr = mallocAsync(size, memoryUsage);
+
+		// Unlock the alloc mutex
+		allocMutex.Unlock();
+
+		return ptr;
+	}
+	void* calloc(size_t nmemb, size_t size, MemoryUsage memoryUsage) {
+		// Lock the alloc mutex
+		allocMutex.Lock();
+
+		// Allocate the requested memory.
+		void* ptr = callocAsync(nmemb, size, memoryUsage);
+
+		// Unlock the alloc mutex
+		allocMutex.Unlock();
+
+		return ptr;
+	}
+	void* realloc(void* ptr, size_t oldSize, size_t newSize, MemoryUsage memoryUsage) {
+		// Lock the alloc mutex
+		allocMutex.Lock();
+
+		// Reallocate the given memory
+		void* newPtr = reallocAsync(ptr, oldSize, newSize, memoryUsage);
+
+		// Unlock the alloc mutex
+		allocMutex.Unlock();
+
+		return newPtr;
+	}
+	void free(void* ptr, size_t size, MemoryUsage memoryUsage) {
+		// Lock the alloc mutex
+		allocMutex.Lock();
+
+		// Free the given memory
+		freeAsync(ptr, size, memoryUsage);
+
+		// Unlock the alloc mutex
+		allocMutex.Unlock();
+	}
+
+	void* mallocAsync(size_t size, MemoryUsage memoryUsage) {
 		// Increase the memory usage for the specified type
 		totalMemoryUsage[memoryUsage] += size;
 
-		// TODO: Implement dynamic allocator pool once wfa is finished.
+		// Allocate the requested memory.
 		return PlatformAllocateMemory(size);
 	}
-	void* calloc(size_t nmemb, size_t size, MemoryUsage memoryUsage) {
+	void* callocAsync(size_t nmemb, size_t size, MemoryUsage memoryUsage) {
 		// Increase the memory usage for the specified type
 		totalMemoryUsage[memoryUsage] += nmemb * size;
 
-		// TODO: Implement dynamic allocator pool once wfa is finished.
+		// Allocate the requested memory.
 		return PlatformAllocateZeroMemory(nmemb, size);
 	}
-	void* realloc(void* ptr, size_t oldSize, size_t newSize, MemoryUsage memoryUsage) {
+	void* reallocAsync(void* ptr, size_t oldSize, size_t newSize, MemoryUsage memoryUsage) {
 		// Modify the memory usage for the specified type
-		totalMemoryUsage[memoryUsage] += newSize;
-		totalMemoryUsage[memoryUsage] -= oldSize;
+		totalMemoryUsage[memoryUsage] += newSize - oldSize;
 
-		// TODO: Implement dynamic allocator pool once wfa is finished.
+		// Reallocate the given memory
 		return PlatformReallocateMemory(ptr, oldSize, newSize);
 	}
-	void free(void* ptr, size_t size, MemoryUsage memoryUsage) {
+	void freeAsync(void* ptr, size_t size, MemoryUsage memoryUsage) {
 		// Decrease the memory usage for the specified type
 		totalMemoryUsage[memoryUsage] -= size;
 
-		// TODO: Implement dynamic allocator pool once wfa is finished.
+		// Free the given memory
 		PlatformFreeMemory(ptr, size);
 	}
+
 	size_t* GetMemoryUsage() {
 		return totalMemoryUsage;
 	}

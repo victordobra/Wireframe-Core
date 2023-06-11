@@ -35,6 +35,26 @@ namespace wfe {
 	/// @brief Frees the given memory block.
 	/// @param ptr The memory block to free.
 	void free(void* ptr, size_t size, MemoryUsage memoryUsage);
+	
+	/// @brief Allocates a memory block without taking thread safety precautions.
+	/// @param size The size of the memory block.
+	/// @return A pointer to the resulting memory block, or a nullptr if the block couldn't be allocated.
+	void* mallocAsync(size_t size, MemoryUsage memoryUsage);
+	/// @brief Allocates a memory block with nmemb members of size bytes each without taking thread safety precautions. Same as mallocAsync, however all bytes in the memory block are set to 0.
+	/// @param nmemb The number of members to allocate.
+	/// @param size The size of the memory block.
+	/// @return A pointer to the resulting memory block, or a nullptr if the block couldn't be allocated.
+	void* callocAsync(size_t nmemb, size_t size, MemoryUsage memoryUsage);
+	/// @brief Reallocates the given memory block without taking thread safety precautions.
+	/// @param ptr The memory block to reallocate.
+	/// @param oldSize The old size of the memory block.
+	/// @param newSize The new size of the memory block.
+	/// @return A pointer to the reallocated memory block.
+	void* reallocAsync(void* ptr, size_t oldSize, size_t newSize, MemoryUsage memoryUsage);
+	/// @brief Frees the given memory block without taking thread safety precautions.
+	/// @param ptr The memory block to free.
+	void freeAsync(void* ptr, size_t size, MemoryUsage memoryUsage);
+
 	/// @brief Gets the memory usage of the entire application.
 	/// @return A pointer to a size_t array of size MEMORY_USAGE_COUNT, specifying the memory usage for every single type.
 	size_t* GetMemoryUsage();
