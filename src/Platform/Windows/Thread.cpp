@@ -15,8 +15,6 @@ namespace wfe {
 		Thread::ThreadID threadID;
 		Thread::ThreadFunction func;
 		void* params;
-
-		Mutex threadIDMutex;
 	};
 	unordered_map<Thread::ThreadID, void*> threadReturns;
 	Mutex threadReturnsMutex;
@@ -24,10 +22,6 @@ namespace wfe {
 	DWORD WINAPI ThreadFunctionWrapper(LPVOID voidParams) {
 		// Convert the given params
 		ThreadParams* params = (ThreadParams*)voidParams;
-
-		// Wait for the thread's ID to be written
-		params->threadIDMutex.Lock();
-		params->threadIDMutex.Unlock();
 
 		// Call the given function using the given params
 		void* result = params->func(params->params);
@@ -38,7 +32,6 @@ namespace wfe {
 		threadReturnsMutex.Unlock();
 
 		// Free the given thread params
-		params->threadIDMutex.~Mutex();
 		free(params, sizeof(ThreadParams), MEMORY_USAGE_HEAP_OBJECT);
 
 		// Return the first bytes of the result
@@ -73,25 +66,49 @@ namespace wfe {
 		// Allocate the current thread's params
 		ThreadParams* params = (ThreadParams*)malloc(sizeof(ThreadParams), MEMORY_USAGE_HEAP_OBJECT);
 
+		// Check if the thread params allocated correctly
+		if(!params)
+			return ERROR_FAILED_HEAP_ALLOCATION;
+
 		params->func = func;
 		params->params = args;
-		new(&(params->threadIDMutex)) Mutex();
-
-		// Lock the thread ID mutex
-		params->threadIDMutex.Lock();
 
 		// Create the thread using CreateThread
-		internalData = (void*)CreateThread(NULL, 0, ThreadFunctionWrapper, params, 0, &threadIDWord);
+		internalData = (void*)CreateThread(NULL, 0, ThreadFunctionWrapper, params, CREATE_SUSPENDED, &threadIDWord);
 
 		// Set the thread's new ID
 		threadID = (ThreadID)threadIDWord;
 
 		// Write the thread's ID to the params
 		params->threadID = threadID;
-		params->threadIDMutex.Unlock();
 
 		// Convert the Win32 error code to a thread error code
 		DWORD error = GetLastError();
+
+		switch(error) {
+		case ERROR_SUCCESS:
+			break;
+		case ERROR_NOT_ENOUGH_MEMORY:
+		case ERROR_OUTOFMEMORY:
+		case ERROR_DS_THREAD_LIMIT_EXCEEDED:
+			return ERROR_INSUFFICIENT_RESOURCES;
+		case ERROR_INVALID_THREAD_ID:
+			return ERROR_INVALID_THREAD;
+		case ERROR_POSSIBLE_DEADLOCK:
+			return ERROR_DETECTED_DEADLOCK;
+		default:
+			return ERROR_UNKNOWN;
+		};
+
+		// Resume the thread from its suspended state
+		DWORD result = ResumeThread((HANDLE)internalData);
+
+		// Check if the function succeeded
+		if(result != (DWORD)-1)
+			return SUCCESS;
+
+		// Convert the Win32 error code to a thread error code
+		error = GetLastError();
 
 		switch(error) {
 		case ERROR_SUCCESS:
@@ -107,6 +124,7 @@ namespace wfe {
 		default:
 			return ERROR_UNKNOWN;
 		};
+
 	}
 	Thread::ThreadResult Thread::Detach() {
 		// Check if the thread was begun
