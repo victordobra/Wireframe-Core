@@ -84,21 +84,21 @@ namespace wfe {
 	/// @brief The maximum value an int64_t can hold.
 	constexpr int64_t INT64_T_MAX = 9223372036854775807;
 
-	/// @brief The minimum value an int8_t can hold.
+	/// @brief The minimum value an uint8_t can hold.
 	constexpr uint64_t UINT8_T_MIN = 0;
-	/// @brief The maximum value an int8_t can hold.
+	/// @brief The maximum value an uint8_t can hold.
 	constexpr uint64_t UINT8_T_MAX = 255;
-	/// @brief The minimum value an int16_t can hold.
+	/// @brief The minimum value an uint16_t can hold.
 	constexpr uint64_t UINT16_T_MIN = 0;
-	/// @brief The maximum value an int16_t can hold.
+	/// @brief The maximum value an uint16_t can hold.
 	constexpr uint64_t UINT16_T_MAX = 65536;
-	/// @brief The minimum value an int32_t can hold.
+	/// @brief The minimum value an uint32_t can hold.
 	constexpr uint64_t UINT32_T_MIN = 0;
-	/// @brief The maximum value an int32_t can hold.
+	/// @brief The maximum value an uint32_t can hold.
 	constexpr uint64_t UINT32_T_MAX = 4294967295;
-	/// @brief The minimum value an int64_t can hold.
+	/// @brief The minimum value an uint64_t can hold.
 	constexpr uint64_t UINT64_T_MIN = 0;
-	/// @brief The maximum value an int64_t can hold.
+	/// @brief The maximum value an uint64_t can hold.
 	constexpr uint64_t UINT64_T_MAX = 18446744073709551615ULL;
 
 	/// @brief The minimum absolute value a float32_t can hold.
