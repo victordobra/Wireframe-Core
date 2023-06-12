@@ -354,8 +354,17 @@ namespace wfe {
 				++umapSize;
 
 				// Check if memory needs to be reallocated
-				if(umapSize > umapCapacity) 
-					reallocate(umapCapacity << 1);
+				if(umapSize > umapCapacity) {
+					// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+					size_type newCapacity = 1;
+					for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+						if((newCapacity << step) < umapSize)
+							newCapacity <<= step;
+					newCapacity <<= 1;
+					
+					// Reallocate the map's data
+					reallocate(newCapacity);
+				}
 
 				// Copy the current value into the unordered map
 				new(&(umapData[umapSize - 1].val)) value_type(*ptr);
@@ -571,8 +580,17 @@ namespace wfe {
 				++umapSize;
 
 				// Check if memory needs to be reallocated
-				if(umapSize > umapCapacity) 
-					reallocate(umapCapacity << 1);
+				if(umapSize > umapCapacity) {
+					// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+					size_type newCapacity = 1;
+					for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+						if((newCapacity << step) < umapSize)
+							newCapacity <<= step;
+					newCapacity <<= 1;
+					
+					// Reallocate the map's data
+					reallocate(newCapacity);
+				}
 
 				// Copy the current value into the unordered set
 				new(&(umapData[umapSize - 1].val)) value_type(*ptr);
@@ -592,7 +610,7 @@ namespace wfe {
 			// Get the current key's bucket
 			size_type currentBucket = bucket(key);
 
-			node_type** elem = umapBucketCount + currentBucket;
+			node_type** elem = umapBuckets + currentBucket;
 
 			// Look for the given key in the bucket
 			while(*elem) {
@@ -609,7 +627,7 @@ namespace wfe {
 
 			// Check if a rehash is required
 			if(umapBucketCount * umapMaxLoadFactor < umapSize) {
-				// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+				// Set the unordered map's new bucket count to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
 				size_type newBucketCount = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
 					if((newBucketCount << step) * umapMaxLoadFactor < umapSize)
@@ -620,11 +638,20 @@ namespace wfe {
 			}
 
 			// Check if memory needs to be reallocated
-			if(umapSize > umapCapacity) 
-				reallocate(umapCapacity << 1);
+			if(umapSize > umapCapacity) {
+				// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+				size_type newCapacity = 1;
+				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+					if((newCapacity << step) < umapSize)
+						newCapacity <<= step;
+				newCapacity <<= 1;
+				
+				// Reallocate the map's data
+				reallocate(newCapacity);
+			}
 
 			// Initialize the value
-			new(&(umapData[umapSize - 1].val.first)) key_type(key);
+			new((void*)&(umapData[umapSize - 1].val.first)) key_type(key);
 			new(&(umapData[umapSize - 1].val.second)) mapped_type();
 
 			// Add the new value into the current bucket
@@ -657,7 +684,7 @@ namespace wfe {
 
 			// Check if a rehash is required
 			if(umapBucketCount * umapMaxLoadFactor < umapSize) {
-				// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+				// Set the unordered map's new bucket count to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
 				size_type newBucketCount = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
 					if((newBucketCount << step) * umapMaxLoadFactor < umapSize)
@@ -668,8 +695,17 @@ namespace wfe {
 			}
 
 			// Check if memory needs to be reallocated
-			if(umapSize > umapCapacity) 
-				reallocate(umapCapacity << 1);
+			if(umapSize > umapCapacity) {
+				// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+				size_type newCapacity = 1;
+				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+					if((newCapacity << step) < umapSize)
+						newCapacity <<= step;
+				newCapacity <<= 1;
+				
+				// Reallocate the map's data
+				reallocate(newCapacity);
+			}
 
 			// Initialize the value
 			new((void*)&(umapData[umapSize - 1].val.first)) key_type(key);
@@ -888,7 +924,7 @@ namespace wfe {
 
 			// Check if a rehash is required
 			if(umapBucketCount * umapMaxLoadFactor < umapSize) {
-				// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+				// Set the unordered map's new bucket count to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
 				size_type newBucketCount = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
 					if((newBucketCount << step) * umapMaxLoadFactor < umapSize)
@@ -899,8 +935,17 @@ namespace wfe {
 			}
 
 			// Check if memory needs to be reallocated
-			if(umapSize > umapCapacity) 
-				reallocate(umapCapacity << 1);
+			if(umapSize > umapCapacity) {
+				// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+				size_type newCapacity = 1;
+				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+					if((newCapacity << step) < umapSize)
+						newCapacity <<= step;
+				newCapacity <<= 1;
+				
+				// Reallocate the map's data
+				reallocate(newCapacity);
+			}
 
 			// Initialize the value
 			new(&(umapData[umapSize - 1].val)) value_type(val);
@@ -1227,7 +1272,7 @@ namespace wfe {
 		/// @brief Sets the unordered map's bucket count to the most appropriate to contain the given number of values.
 		/// @param n The requested number of values.
 		void reserve(size_type n) {
-			// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+			// Set the unordered map's new bucket count to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
 			size_type newBucketCount = 1;
 			for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
 				if((newBucketCount << step) * umapMaxLoadFactor < n)
@@ -1260,7 +1305,10 @@ namespace wfe {
 			node_type* oldData = umapData;
 
 			// Reallocate the unordered map's data
-			umapData = (node_type*)realloc(umapData, umapCapacity * sizeof(node_type), newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+			if(umapData)
+				umapData = (node_type*)realloc(umapData, umapCapacity * sizeof(node_type), newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+			else
+				umapData = (node_type*)malloc(newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
 
 			// Check if the unordered map's data was allocated correctly
 			if(!umapData)
