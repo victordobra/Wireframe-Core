@@ -4,11 +4,47 @@
 
 #include "Thread.hpp"
 #include "Debug.hpp"
+#include "Memory.hpp"
+#include "UnorderedMap.hpp"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 namespace wfe {
+	struct ThreadParams {
+		Thread::ThreadID threadID;
+		Thread::ThreadFunction func;
+		void* params;
+
+		Mutex threadIDMutex;
+	};
+	unordered_map<Thread::ThreadID, void*> threadReturns;
+	Mutex threadReturnsMutex;
+
+	DWORD WINAPI ThreadFunctionWrapper(LPVOID voidParams) {
+		// Convert the given params
+		ThreadParams* params = (ThreadParams*)voidParams;
+
+		// Wait for the thread's ID to be written
+		params->threadIDMutex.Lock();
+		params->threadIDMutex.Unlock();
+
+		// Call the given function using the given params
+		void* result = params->func(params->params);
+
+		// Write the result to the result map
+		threadReturnsMutex.Lock();
+		threadReturns[params->threadID] = result;
+		threadReturnsMutex.Unlock();
+
+		// Free the given thread params
+		params->threadIDMutex.~Mutex();
+		free(params, sizeof(ThreadParams), MEMORY_USAGE_HEAP_OBJECT);
+
+		// Return the first bytes of the result
+		return (DWORD)((uint64_t)result & UINT32_T_MAX);
+	}
+
 	bool8_t Thread::operator==(const Thread& other) const {
 		// Compare the two thread's IDs
 		return threadID == other.threadID;
@@ -34,11 +70,25 @@ namespace wfe {
 		// Create another variable to save the thread ID in
 		DWORD threadIDWord;
 
+		// Allocate the current thread's params
+		ThreadParams* params = (ThreadParams*)malloc(sizeof(ThreadParams), MEMORY_USAGE_HEAP_OBJECT);
+
+		params->func = func;
+		params->params = args;
+		new(&(params->threadIDMutex)) Mutex();
+
+		// Lock the thread ID mutex
+		params->threadIDMutex.Lock();
+
 		// Create the thread using CreateThread
-		internalData = (void*)CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)func, args, 0, &threadIDWord);
+		internalData = (void*)CreateThread(NULL, 0, ThreadFunctionWrapper, params, 0, &threadIDWord);
 
 		// Set the thread's new ID
 		threadID = (ThreadID)threadIDWord;
+
+		// Write the thread's ID to the params
+		params->threadID = threadID;
+		params->threadIDMutex.Unlock();
 
 		// Convert the Win32 error code to a thread error code
 		DWORD error = GetLastError();
@@ -172,8 +222,10 @@ namespace wfe {
 			}
 		}
 
-		// Save the result to the given pointer
-		*returnPtr = (void*)result;        
+		// Save the full result to the given pointer
+		threadReturnsMutex.Lock();
+		*returnPtr = threadReturns[threadID];
+		threadReturnsMutex.Unlock();
 		
 		// Close the thread's handle
 		WINBOOL closeResult = CloseHandle((HANDLE)internalData);
@@ -289,8 +341,12 @@ namespace wfe {
 			default:
 				return ERROR_UNKNOWN;
 			}
+
+			break;
 		}
 		}
+
+		return ERROR_UNKNOWN;
 	}
 	Mutex::MutexResult Mutex::Unlock() {
 		// Unlock the mutex using ReleaseMutex
@@ -326,8 +382,16 @@ namespace wfe {
 		return (Thread::ThreadID)GetCurrentThreadId();
 	}
 	void ExitCurrentThread(void* returnValue) {
-		// Exit the current thread using ExitThread
-		ExitThread((DWORD)returnValue);
+		// Get the current thread's ID
+		Thread::ThreadID threadID = GetCurrentThreadID();
+
+		// Write the return to the return map
+		threadReturnsMutex.Lock();
+		threadReturns[threadID] = returnValue;
+		threadReturnsMutex.Unlock();
+
+		// Exit the current thread using ExitThread and return the lower half of the return value
+		ExitThread((DWORD)((uint64_t)returnValue & UINT32_T_MAX));
 	}
 }
 
