@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Defines.hpp"
+#include "Vector2.hpp"
+#include "Vector3.hpp"
+#include "Vector4.hpp"
 
 namespace wfe {
 	/// @brief An approximation of pi.

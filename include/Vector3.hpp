@@ -1,0 +1,195 @@
+#pragma once
+
+#include "Defines.hpp"
+
+namespace wfe {
+	struct Vector2;
+	struct Vector4;
+
+	/// @brief A struct that holds a 2D vector
+	struct Vector3 {
+		/// @brief A Vector3 with all elements set to 0.
+		static const Vector3 zero;
+		/// @brief A Vector3 with all elements set to 1.
+		static const Vector3 one;
+		/// @brief A Vector3 pointing in the up direction.
+		static const Vector3 up;
+		/// @brief A Vector3 pointing in the down direction.
+		static const Vector3 down;
+		/// @brief A Vector3 pointing in the left direction.
+		static const Vector3 left;
+		/// @brief A Vector3 pointing in the right direction.
+		static const Vector3 right;
+		/// @brief A Vector3 pointing in the forward direction.
+		static const Vector3 forward;
+		/// @brief A Vector3 pointing in the back direction.
+		static const Vector3 back;
+
+		union {
+			/// @brief An array containing all of the vector's elements.
+			float32_t elements[3];
+
+			struct {
+				/// @brief The X dimension of the vector.
+				float32_t x;
+				/// @brief The Y dimension of the vector.
+				float32_t y;
+				/// @brief The Z dimension of the vector.
+				float32_t z;
+			};
+		};
+
+		/// @brief Constructs a Vector3 with all values set to 0.
+		Vector3();
+		/// @brief Copies the given Vector3.
+		/// @param other The Vector3 to copy.
+		Vector3(const Vector3& other) = default;
+		/// @brief Moves the given Vector3's contents.
+		/// @param other The Vector3 to move.
+		Vector3(Vector3&& other) noexcept = default;
+		/// @brief Creates a Vector3 with all dimensions set to the given value.
+		/// @param x The value to set every dimension to.
+		Vector3(float32_t x);
+		/// @brief Creates a Vector3 with the given dimensions.
+		/// @param x The X dimension of the Vector3.
+		/// @param y The Y dimension of the Vector3.
+		Vector3(float32_t x, float32_t y);
+		/// @brief Creates a Vector3 with the given dimensions.
+		/// @param x The X dimension of the Vector3.
+		/// @param y The Y dimension of the Vector3.
+		/// @param z The Z dimension of the Vector3.
+		Vector3(float32_t x, float32_t y, float32_t z);
+		/// @brief Creates a Vector3 with the given dimensions.
+		/// @param elements An array with the Vector3's elements
+		Vector3(float32_t elements[3]);
+
+		/// @brief Converts the given Vector2 into a Vector3.
+		/// @param other The Vector2 to convert.
+		Vector3(const Vector2& other);
+		/// @brief Converts the given Vector4 into a Vector3.
+		/// @param other The Vector4 to convert.
+		explicit Vector3(const Vector4& other);
+
+		/// @brief Copies the given Vector3's elements into this Vector3.
+		/// @param other The Vector3 to copy from.
+		/// @return A reference to this Vector3.
+		Vector3& operator=(const Vector3& other) = default;
+		/// @brief Moves the given Vector3's contents into this Vector3.
+		/// @param other The Vector3 to move from.
+		/// @return A reference to this Vector3.
+		Vector3& operator=(Vector3&& other) noexcept = default;
+
+		/// @brief Compares the two Vector3s.
+		/// @param other The Vector3 to compare with.
+		/// @return True if the two Vector3s are equal, otherwise false.
+		bool8_t operator==(const Vector3& other) const;
+		/// @brief Compares the two Vector3s.
+		/// @param other The Vector3 to compare with.
+		/// @return True if the two Vector3s are different, otherwise false.
+		bool8_t operator!=(const Vector3& other) const;
+
+		/// @brief Adds the two Vector3s together.
+		/// @param other The Vector3 to add.
+		/// @return The resulting Vector3, with each of its dimensions being the sum of both Vector3s' corresponding dimensions.
+		Vector3 operator+(const Vector3& other) const;
+		/// @brief Subtracts the two Vector3s.
+		/// @param other The Vector3 to subtract.
+		/// @return The resulting Vector3, with each of its dimensions being the difference of both Vector3s' corresponding dimensions.
+		Vector3 operator-(const Vector3& other) const;
+		/// @brief Calculates the Vector3's opposite dimensions.
+		/// @return The resulting Vector3, with each of its dimensions being the opposite of the corresponding dimension of this Vector3.
+		Vector3 operator-() const;
+		/// @brief Multiplies the two Vector3s together.
+		/// @param other The Vector3 to multiply.
+		/// @return The resulting Vector3, with each of its dimensions being the product of both Vector3s' corresponding dimensions.
+		Vector3 operator*(const Vector3& other) const;
+		/// @brief Divides the two Vector3s.
+		/// @param other The Vector3 to divide.
+		/// @return The resulting Vector3, with each of its dimensions being the dividend of both Vector3s' corresponding dimensions.
+		Vector3 operator/(const Vector3& other) const;
+
+		/// @brief Sums each of this Vector3's dimensions with the given Vector3's corresponding dimensions.
+		/// @param other The Vector3 to add to this Vector3.
+		/// @return A reference to this Vector3.
+		Vector3& operator+=(const Vector3& other);
+		/// @brief Subtracts from each of this Vector3's dimensions the given Vector3's corresponding dimensions.
+		/// @param other The Vector3 to subtract from this Vector3.
+		/// @return A reference to this Vector3.
+		Vector3& operator-=(const Vector3& other);
+		/// @brief Multiplies each of this Vector3's dimensions with the given Vector3's corresponding dimensions.
+		/// @param other The Vector3 to multiply to this Vector3.
+		/// @return A reference to this Vector3.
+		Vector3& operator*=(const Vector3& other);
+		/// @brief Multiplies each of this Vector3's dimensions with the given value.
+		/// @param other The value to multiply to this Vector3.
+		/// @return A reference to this Vector3.
+		Vector3& operator*=(float32_t other);
+		/// @brief Divides from each of this Vector3's dimensions the given Vector3's corresponding dimensions.
+		/// @param other The Vector3 to divide from this Vector3.
+		Vector3& operator/=(const Vector3& other);
+		/// @brief Divides from each of this Vector3's dimensions the given value.
+		/// @param other The value to divide from this Vector3.
+		/// @return A reference to this Vector3.
+		Vector3& operator/=(float32_t other);
+		
+		/// @brief Calculates the magnitude of this Vector3.
+		/// @return The magnitude of this Vector3.
+		float32_t Magnitude() const;
+		/// @brief Calculates the square of this Vector3's magnitude.
+		/// @return The square of this Vector3's magnitude.
+		float32_t SqrMagnitude() const;
+		/// @brief Calculates the inverse of this Vector3's magnitude.
+		/// @return The inverse of this Vector3's magnitude.
+		float32_t InvMagnitude() const;
+
+		/// @brief Reduces this Vector3's magnitude to 1 while maintaining its proportions.
+		/// @return A reference to this Vector3.
+		Vector3& Normalize();
+		/// @brief Calculates a Vector3 with a magnitude to 1 and the same proportions as this vector.
+		/// @return The resulting Vector3.
+		Vector3 Normalized() const;
+		/// @brief Flips this Vector3 by setting each coordinate to its opposite.
+		/// @return A reference to this Vector3.
+		Vector3& Flip();
+		/// @brief Calculates a Vector3 whose coordinates are the opposites the this Vector3's coordinates.
+		/// @return The resulting Vector3.
+		Vector3 Flipped() const;
+
+		/// @brief Calculates the dot product of the two Vector3s.
+		/// @param other The other Vector3.
+		/// @return The dot product of the two Vector3s.
+		float32_t Dot(const Vector3& other) const;
+		/// @brief Calculates the angle between the two Vector3s.
+		/// @param other The other Vector3.
+		/// @return The angle between the two Vector3s.
+		float32_t Angle(const Vector3& other) const;
+		/// @brief Calculates the cross product of the two Vector3s.
+		/// @param other The other Vector3.
+		/// @return The cross product of the two Vector3s.
+		Vector3 Cross(const Vector3& other) const;
+
+		/// @brief Deletes the Vector3.
+		~Vector3() = default;
+	};
+
+	/// @brief Multiplies the given Vector3 and the given value.
+	/// @param vec The vector to multiply.
+	/// @param val The value to multiply with.
+	/// @return The resulting Vector3, with each of its dimensions being the product between the given Vector3's corresponding dimension and the given value.
+	Vector3 operator*(const Vector3& vec, float32_t val);
+	/// @brief Multiplies the given Vector3 and the given value.
+	/// @param val The value to multiply with.
+	/// @param vec The vector to multiply.
+	/// @return The resulting Vector3, with each of its dimensions being the product between the given Vector3's corresponding dimension and the given value.
+	Vector3 operator*(float32_t val, const Vector3& vec);
+	/// @brief Divides the given value from the given Vector3.
+	/// @param vec The vector to divide from.
+	/// @param val The value to divide with.
+	/// @return The resulting Vector3, with each of its dimensions being the dividen of the given Vector3's corresponding dimension and the given value.
+	Vector3 operator/(const Vector3& vec, float32_t val);
+	/// @brief Divides the given value from the given Vector3.
+	/// @param vec The vector to divide from.
+	/// @param val The value to divide with.
+	/// @return The resulting Vector3, with each of its dimensions being the dividen of the given value and the given Vector3's corresponding dimension.
+	Vector3 operator/(float32_t val, const Vector3& vec);
+}
