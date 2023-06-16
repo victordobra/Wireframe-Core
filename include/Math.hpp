@@ -4,15 +4,16 @@
 #include "Vector2.hpp"
 #include "Vector3.hpp"
 #include "Vector4.hpp"
+#include "Quaternion.hpp"
 
 namespace wfe {
 	/// @brief An approximation of pi.
-	const float32_t PI = 3.14159265358979323846f;
+	constexpr float32_t PI = 3.14159265358979323846f;
 
 	/// @brief A multiplier used to convert radians to degrees.
-	const float32_t RAD_TO_DEG_MULTIPLIER = 180.f / PI;
+	constexpr float32_t RAD_TO_DEG_MULTIPLIER = 180.f / PI;
 	/// @brief A multiplier used to convert degrees to radians.
-	const float32_t DEG_TO_RAD_MULTIPLIER = PI / 180.f;
+	constexpr float32_t DEG_TO_RAD_MULTIPLIER = PI / 180.f;
 	
 	/// @brief Calculates the sine of the given number.
 	/// @param x The number whose sine to calculate.

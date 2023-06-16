@@ -10,6 +10,7 @@
 #include "New.hpp"
 #include "Pair.hpp"
 #include "Platform.hpp"
+#include "Quaternion.hpp"
 #include "Set.hpp"
 #include "String.hpp"
 #include "Thread.hpp"
