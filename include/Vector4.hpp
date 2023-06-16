@@ -5,6 +5,7 @@
 namespace wfe {
 	struct Vector2;
 	struct Vector3;
+	struct Quaternion;
 
 	/// @brief A struct that holds a 2D vector
 	struct Vector4 {
@@ -56,6 +57,9 @@ namespace wfe {
 		/// @brief Converts the given Vector3 into a Vector4.
 		/// @param other The Vector3 to convert.
 		Vector4(const Vector3& other);
+		/// @brief Converts the given quaternion into a Vector4.
+		/// @param other The quaternion to convert.
+		explicit Vector4(const Quaternion& other);
 
 		/// @brief Copies the given Vector4's elements into this Vector4.
 		/// @param other The Vector4 to copy from.

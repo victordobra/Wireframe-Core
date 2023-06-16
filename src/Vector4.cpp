@@ -11,6 +11,7 @@ namespace wfe {
 
 	Vector4::Vector4(const Vector2& other) : x(other.x), y(other.y), z(0.f), w(0.f) { }
 	Vector4::Vector4(const Vector3& other) : x(other.x), y(other.y), z(other.z), w(0.f) { }
+	Vector4::Vector4(const Quaternion& other) : x(other.x), y(other.y), z(other.z), w(other.w) { }
 
 	bool8_t Vector4::operator==(const Vector4& other) const {
 		// Compare each element
