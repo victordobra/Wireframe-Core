@@ -7,7 +7,7 @@ namespace wfe {
 	Vector4::Vector4() : x(0.f), y(0.f), z(0.f), w(0) { }
 	Vector4::Vector4(float32_t x) : x(x), y(x), z(x), w(x) { }
 	Vector4::Vector4(float32_t x, float32_t y, float32_t z, float32_t w) : x(x), y(y), z(z), w(w) { }
-	Vector4::Vector4(float32_t elements[4]) : x(elements[0]), y(elements[1]), z(elements[2]), w(elements[3]) { }
+	Vector4::Vector4(const float32_t elements[4]) : x(elements[0]), y(elements[1]), z(elements[2]), w(elements[3]) { }
 
 	Vector4::Vector4(const Vector2& other) : x(other.x), y(other.y), z(0.f), w(0.f) { }
 	Vector4::Vector4(const Vector3& other) : x(other.x), y(other.y), z(other.z), w(0.f) { }

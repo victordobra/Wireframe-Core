@@ -11,7 +11,7 @@ namespace wfe {
 	Vector2::Vector2() : x(0.f), y(0.f) { }
 	Vector2::Vector2(float32_t x) : x(x), y(x) { }
 	Vector2::Vector2(float32_t x, float32_t y) : x(x), y(y) { }
-	Vector2::Vector2(float32_t elements[2]) : x(elements[0]), y(elements[1]) { }
+	Vector2::Vector2(const float32_t elements[2]) : x(elements[0]), y(elements[1]) { }
 
 	Vector2::Vector2(const Vector3& other) : x(other.x), y(other.y) { }
 	Vector2::Vector2(const Vector4& other) : x(other.x), y(other.y) { }

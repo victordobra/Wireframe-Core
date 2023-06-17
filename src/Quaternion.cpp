@@ -6,6 +6,7 @@ namespace wfe {
 
 	Quaternion::Quaternion() : x(0.f), y(0.f), z(0.f), w(1.f) { }
 	Quaternion::Quaternion(float32_t x, float32_t y, float32_t z, float32_t w) : x(x), y(y), z(z), w(w) { } 
+	Quaternion::Quaternion(const float32_t elements[4]) : x(elements[0]), y(elements[1]), z(elements[2]), w(elements[3]) { }
 
 	Quaternion::Quaternion(const Vector4& other) : x(other.x), y(other.y), z(other.z), w(other.w) { }
 

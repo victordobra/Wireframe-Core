@@ -50,7 +50,7 @@ namespace wfe {
 		Vector2(float32_t x, float32_t y);
 		/// @brief Creates a Vector2 with the given dimensions.
 		/// @param elements An array with the Vector2's elements
-		Vector2(float32_t elements[2]);
+		Vector2(const float32_t elements[2]);
 
 		/// @brief Converts the given Vector3 into a Vector2.
 		/// @param other The Vector3 to convert.

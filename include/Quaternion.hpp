@@ -41,6 +41,9 @@ namespace wfe {
 		/// @param z The Z dimension of the quaternion.
 		/// @param w The W dimension of the quaternion.
 		Quaternion(float32_t x, float32_t y, float32_t z, float32_t w);
+		/// @brief Creates a quaternion with the given elements.
+		/// @param elements The elements of the quaternion.
+		Quaternion(const float32_t elements[4]);
 
 		/// @brief Converts the given Vector4 into a quaternion.
 		/// @param other The Vector4 to convert.

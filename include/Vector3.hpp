@@ -61,7 +61,7 @@ namespace wfe {
 		Vector3(float32_t x, float32_t y, float32_t z);
 		/// @brief Creates a Vector3 with the given dimensions.
 		/// @param elements An array with the Vector3's elements
-		Vector3(float32_t elements[3]);
+		Vector3(const float32_t elements[3]);
 
 		/// @brief Converts the given Vector2 into a Vector3.
 		/// @param other The Vector2 to convert.

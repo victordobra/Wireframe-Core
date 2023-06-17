@@ -14,7 +14,7 @@ namespace wfe {
 	Vector3::Vector3(float32_t x) : x(x), y(x), z(x) { }
 	Vector3::Vector3(float32_t x, float32_t y) : x(x), y(y), z(0.f) { }
 	Vector3::Vector3(float32_t x, float32_t y, float32_t z) : x(x), y(y), z(z) { }
-	Vector3::Vector3(float32_t elements[3]) : x(elements[0]), y(elements[1]), z(elements[2]) { }
+	Vector3::Vector3(const float32_t elements[3]) : x(elements[0]), y(elements[1]), z(elements[2]) { }
 
 	Vector3::Vector3(const Vector2& other) : x(other.x), y(other.y), z(0.f) { }
 	Vector3::Vector3(const Vector4& other) : x(other.x), y(other.y), z(other.z) { }

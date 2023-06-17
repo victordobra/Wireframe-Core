@@ -49,7 +49,7 @@ namespace wfe {
 		Vector4(float32_t x, float32_t y, float32_t z, float32_t w);
 		/// @brief Creates a Vector4 with the given dimensions.
 		/// @param elements An array with the Vector4's elements
-		Vector4(float32_t elements[4]);
+		Vector4(const float32_t elements[4]);
 
 		/// @brief Converts the given Vector2 into a Vector4.
 		/// @param other The Vector2 to convert.
