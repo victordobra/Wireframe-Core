@@ -111,7 +111,7 @@ namespace wfe {
 		// Calculate the elements of the resulting quaternion
 		return { sinX * cosY * cosZ - cosX * sinY * sinZ,
 		         cosX * sinY * cosZ + sinX * cosY * sinZ,
-		         cosX * cosY * sinZ - sinX * sinY * cosZ,
-		         cosX * cosY * cosZ + sinX * sinY * sinZ  };
+		         cosX * cosY * sinZ + sinX * sinY * cosZ,
+		         cosX * cosY * cosZ - sinX * sinY * sinZ  };
 	}
 }
