@@ -6,6 +6,7 @@
 #include "Event.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
+#include "Matrix4x4.hpp"
 #include "Memory.hpp"
 #include "New.hpp"
 #include "Pair.hpp"
