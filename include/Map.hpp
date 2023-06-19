@@ -2,6 +2,7 @@
 
 #include "Defines.hpp"
 #include "Debug.hpp"
+#include "Exception.hpp"
 #include "Memory.hpp"
 #include "Pair.hpp"
 #include <initializer_list>
@@ -40,7 +41,7 @@ namespace wfe {
 		map(const map& other) : mapSize(other.mapSize), mapCapacity(other.mapCapacity), mapData(malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY)) {
 			// Check if the memory was allocated correctly
 			if(!mapData)
-				WFE_LOG_FATAL("Failed to allocate map memory!");
+				throw BadAllocException("Failed to allocate map data!");
 
 			// Copy every value from the given map
 			pointer end = mapData + mapSize;
@@ -71,7 +72,7 @@ namespace wfe {
 			mapData = (pointer)malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!mapData)
-				WFE_LOG_FATAL("Failed to allocate map memory!")
+				throw BadAllocException("Failed to allocate map data!");
 			
 			// Insert every pair from the list into the map
 			pointer end = (pointer)list.end();
@@ -117,7 +118,7 @@ namespace wfe {
 			mapData = malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!mapData)
-				WFE_LOG_FATAL("Failed to allocate map memory!")
+				throw BadAllocException("Failed to allocate map data!");
 			
 			// Copy every value from the given map
 			pointer ptr = mapData;
@@ -152,7 +153,7 @@ namespace wfe {
 
 			// Check if the memory was allocated correctly
 			if(!mapData)
-				WFE_LOG_FATAL("Failed to allocate map memory!")
+				throw BadAllocException("Failed to allocate map data!");
 			
 			// Copy every value from the given map
 			pointer end = mapData + mapSize;
@@ -220,7 +221,7 @@ namespace wfe {
 			mapData = malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!mapData)
-				WFE_LOG_FATAL("Failed to allocate map memory!")
+				throw BadAllocException("Failed to allocate map data!");
 			
 			// Insert every pair from the list into the map
 			pointer end = (pointer)list.end();
@@ -307,7 +308,7 @@ namespace wfe {
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
-					WFE_LOG_FATAL("Failed to allocate map memory!");
+					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the map forward to make room for the new pair
@@ -364,7 +365,7 @@ namespace wfe {
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
-					WFE_LOG_FATAL("Failed to allocate map memory!");
+					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the map forward to make room for the new pair
@@ -464,7 +465,7 @@ namespace wfe {
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
-					WFE_LOG_FATAL("Failed to allocate map memory!");
+					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the map forward to make room for the new pair
@@ -521,7 +522,7 @@ namespace wfe {
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
-					WFE_LOG_FATAL("Failed to allocate map memory!");
+					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the map forward to make room for the new pair
@@ -573,7 +574,7 @@ namespace wfe {
 					
 					// Check if the memory was allocated correctly
 					if(!mapData)
-						WFE_LOG_FATAL("Failed to allocate map memory!");
+						throw BadAllocException("Failed to allocate map data!");
 				}
 
 				// Move part of the set forward to make room for the new value
@@ -644,7 +645,7 @@ namespace wfe {
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
-					WFE_LOG_FATAL("Failed to allocate map memory!");
+					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the set forward to make room for the new value
@@ -696,7 +697,7 @@ namespace wfe {
 					
 					// Check if the memory was allocated correctly
 					if(!mapData)
-						WFE_LOG_FATAL("Failed to allocate map memory!");
+						throw BadAllocException("Failed to allocate map data!");
 				}
 
 				// Move part of the set forward to make room for the new value
@@ -767,7 +768,7 @@ namespace wfe {
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
-					WFE_LOG_FATAL("Failed to allocate map memory!");
+					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the set forward to make room for the new value

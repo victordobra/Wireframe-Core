@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Defines.hpp"
-#include "Memory.hpp"
 #include "Debug.hpp"
+#include "Exception.hpp"
+#include "Memory.hpp"
 
 namespace wfe {
 	/// @brief Creates a new object.
@@ -18,7 +19,7 @@ namespace wfe {
 		
 		// Check if the memory was allocated correctly
 		if(!newObject)
-			WFE_LOG_FATAL("Failed to allocate object memory!");
+			throw BadAllocException("Failed to allocate object memory!");
 		
 		// Construct the object in the new memory block
 		new(newObject) T;
@@ -49,7 +50,7 @@ namespace wfe {
 
 		// Check if the memory was allocated correctly
 		if(!newArray)
-			WFE_LOG_FATAL("Failed to allocate array memory!");
+			throw BadAllocException("Failed to allocate array memory!");
 		
 		// Construct the objects in the new memory block
 		T* end = newArray + size;
@@ -77,7 +78,7 @@ namespace wfe {
 
 			// Check if the memory was reallocated correctly
 			if(!array)
-				WFE_LOG_FATAL("Failed to reallocate array memory!");
+				throw BadAllocException("Failed to reallocate array memory!");
 			
 			// Set the new memory to zero
 			memset(array + oldSize, 0, (newSize - oldSize) * sizeof(T));
@@ -97,7 +98,7 @@ namespace wfe {
 
 			// Check if the memory was reallocated correctly
 			if(!array)
-				WFE_LOG_FATAL("Failed to reallocate array memory!");
+				throw BadAllocException("Failed to reallocate array memory!");
 		}
 
 		return array;

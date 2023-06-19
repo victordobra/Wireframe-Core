@@ -2,6 +2,7 @@
 
 #include "Defines.hpp"
 #include "Debug.hpp"
+#include "Exception.hpp"
 #include "Math.hpp"
 #include "Pair.hpp"
 #include <initializer_list>
@@ -261,7 +262,7 @@ namespace wfe {
 		unordered_map(size_type n = 16) : umapBucketCount(n), umapBuckets((node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY)), umapSize(0), umapCapacity(0), umapData(nullptr) {
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered map buckets!")
+				throw BadAllocException("Failed to allocate unordered map buckets!");
 
 			// Set all the bucket pointers to nullptr
 			memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
@@ -271,11 +272,11 @@ namespace wfe {
 		unordered_map(const unordered_map& other) : umapBucketCount(other.umapBucketCount), umapBuckets((node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY)), umapSize(other.umapSize), umapCapacity(other.umapCapacity), umapData((node_type*)malloc(umapCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY)), umapMaxLoadFactor(other.umapMaxLoadFactor) {
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered map buckets!")
+				throw BadAllocException("Failed to allocate unordered map buckets!");
 			
 			// Check if the unordered map's data was allocated correctly
 			if(!umapData)
-				WFE_LOG_FATAL("Failed to allocate unordered map data!")
+				throw BadAllocException("Failed to allocate unordered map data!");
 			
 			// Copy every bucket relative to this unordered map
 			for(size_type i = 0; i != umapBucketCount; ++i) {
@@ -323,11 +324,11 @@ namespace wfe {
 		unordered_map(std::initializer_list<value_type> list, size_type n = 16) : umapBucketCount(n), umapBuckets((node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY)), umapSize(0), umapCapacity(1), umapData((node_type*)malloc(sizeof(node_type), MEMORY_USAGE_ARRAY)) {
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered map buckets!")
+				throw BadAllocException("Failed to allocate unordered map buckets!");
 			
 			// Check if the unordered map's data was allocated correctly
 			if(!umapData)
-				WFE_LOG_FATAL("Failed to allocate unordered map data!")
+				throw BadAllocException("Failed to allocate unordered map data!");
 			
 			// Set all bucket pointers to nullptr
 			memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
@@ -379,7 +380,7 @@ namespace wfe {
 		unordered_map(const std::unordered_map<key_type, mapped_type>& other) : umapBucketCount(other.bucket_count()), umapBuckets((node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY)), umapSize(other.size()), umapCapacity(1), umapData(nullptr) {
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered map buckets!")
+				throw BadAllocException("Failed to allocate unordered map buckets!");
 
 			// Set all of the unordered map's buckets to nullptr
 			memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
@@ -394,7 +395,7 @@ namespace wfe {
 			umapData = (node_type*)malloc(umapCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
 
 			if(!umapData)
-				WFE_LOG_FATAL("Failed to allocate unordered map data!")
+				throw BadAllocException("Failed to allocate unordered map data!");
 			
 			// Add every value from the other unordered map to this unordered map
 			auto otherPtr = other.begin();
@@ -443,11 +444,11 @@ namespace wfe {
 
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered map buckets!")
+				throw BadAllocException("Failed to allocate unordered map buckets!");
 			
 			// Check if the unordered map's data was allocated correctly
 			if(!umapData)
-				WFE_LOG_FATAL("Failed to allocate unordered map data!")
+				throw BadAllocException("Failed to allocate unordered map data!");
 			
 			// Copy every bucket relative to this unordered map
 			for(size_type i = 0; i != umapBucketCount; ++i) {
@@ -547,11 +548,11 @@ namespace wfe {
 
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered map buckets!")
+				throw BadAllocException("Failed to allocate unordered map buckets!");
 			
 			// Check if the unordered map's data was allocated correctly
 			if(!umapData)
-				WFE_LOG_FATAL("Failed to allocate unordered map data!")
+				throw BadAllocException("Failed to allocate unordered map data!");
 			
 			// Set all of the unordered map's buckets to nullptr
 			memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
@@ -737,9 +738,7 @@ namespace wfe {
 			}
 
 			// The value wasn't found; throw an error
-			WFE_LOG_FATAL("Failed to find the wanted key in an unordered map!")
-
-			return umapData[0].val.second;
+			throw OutOfRangeException("Failed to find the wanted key in an unordered map!");
 		}
 		/// @brief Accesses the value with the given key.
 		/// @param key The key to look for.
@@ -761,7 +760,7 @@ namespace wfe {
 			}
 
 			// The value wasn't found; throw an error
-			WFE_LOG_FATAL("Failed to find the wanted key in an unordered map!")
+			throw OutOfRangeException("Failed to find the wanted key in an unordered map!");
 		}
 
 		/// @brief Finds the value with the given key.
@@ -1251,7 +1250,7 @@ namespace wfe {
 
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered map buckets!")
+				throw BadAllocException("Failed to allocate unordered map buckets!");
 
 			// Set all bucket pointers to 0
 			memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
@@ -1312,7 +1311,7 @@ namespace wfe {
 
 			// Check if the unordered map's data was allocated correctly
 			if(!umapData)
-				WFE_LOG_FATAL("Failed to allocate unordered map data!")
+				throw BadAllocException("Failed to allocate unordered map data!");
 
 			// Set the unordered map's new capacity
 			umapCapacity = newCapacity;

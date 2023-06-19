@@ -1,12 +1,13 @@
 #include "String.hpp"
 #include "Memory.hpp"
 #include "Debug.hpp"
+#include "Exception.hpp"
 
 namespace wfe {
 	string::string(const string& other) : strSize(other.strSize), strCapacity(other.strCapacity), strData((pointer)malloc(strCapacity, MEMORY_USAGE_STRING)) {
 		// Check if the memory has been allocated successfully
 		if(!strData)
-			WFE_LOG_FATAL("Failed to allocate string memory!");
+			throw BadAllocException("Failed to allocate string data!");
 		
 		// Copy the string's contents
 		memcpy(strData, other.strData, strSize + 1);
@@ -28,7 +29,7 @@ namespace wfe {
 		// Allocate the string's data
 		strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
 		if(!strData)
-			WFE_LOG_FATAL("Failed to allocate string memory!");
+			throw BadAllocException("Failed to allocate string data!");
 
 		// Copy the string's contents
 		memcpy(strData, str, strSize + 1);
@@ -46,7 +47,7 @@ namespace wfe {
 		// Allocate the string's data
 		strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
 		if(!strData)
-			WFE_LOG_FATAL("Failed to allocate string memory!");
+			throw BadAllocException("Failed to allocate string data!");
 
 		// Copy the string's contents
 		memcpy(strData, ptr, strSize);
@@ -67,7 +68,7 @@ namespace wfe {
 		// Allocate the string's data
 		strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
 		if(!strData)
-			WFE_LOG_FATAL("Failed to allocate string memory!");
+			throw BadAllocException("Failed to allocate string data!");
 
 		// Set the string's contents
 		memset(strData, c, strSize);
@@ -78,7 +79,7 @@ namespace wfe {
 	string::string(const std::string& str) : strSize(str.size()), strCapacity(str.capacity()), strData((pointer)malloc(strCapacity, MEMORY_USAGE_STRING)) {
 		// Check if the memory has been allocated successfully
 		if(!strData)
-			WFE_LOG_FATAL("Failed to allocate string memory!");
+			throw BadAllocException("Failed to allocate string data!");
 
 		// Copy the string's contents
 		memcpy(strData, str.c_str(), strSize + 1);
@@ -101,7 +102,7 @@ namespace wfe {
 
 		// Check if the memory has been allocated successfully
 		if(!strData)
-			WFE_LOG_FATAL("Failed to allocate string memory!");
+			throw BadAllocException("Failed to allocate string data!");
 
 		// Copy the string's contents
 		memcpy(strData, other.strData, strSize + 1);
@@ -354,7 +355,7 @@ namespace wfe {
 
 		// Check if the memory has been allocated successfully
 		if(!strData)
-			WFE_LOG_FATAL("Failed to allocate string memory!");
+			throw BadAllocException("Failed to allocate string data!");
 
 		// Copy the string's contents
 		memcpy(strData, str.strData, strSize + 1);
@@ -912,7 +913,7 @@ namespace wfe {
 
 			// Check if the memory has been allocated successfully
 			if(!strData)
-				WFE_LOG_FATAL("Failed to allocate string memory!");
+				throw BadAllocException("Failed to allocate string data!");
 		}
 
 		if(strSize > oldSize) {
@@ -949,7 +950,7 @@ namespace wfe {
 
 		// Check if the memory has been allocated successfully
 		if(!strData)
-			WFE_LOG_FATAL("Failed to allocate string memory!");
+			throw BadAllocException("Failed to allocate string data!");
 
 		// Set the string's new capacity
 		strCapacity = newCapacity;

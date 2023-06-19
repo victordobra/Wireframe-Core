@@ -299,7 +299,7 @@ namespace wfe {
 				WFE_LOG_FATAL("Failed to create mutex! Reason: Insufficient memory.");
 				break;
 			default:
-				WFE_LOG_FATAL("Failed to creatre mutex! Reason: Unknown.");
+				WFE_LOG_FATAL("Failed to create mutex! Reason: Unknown.");
 			}
 		}
 	}

@@ -4,6 +4,7 @@
 #include "Debug.hpp"
 #include "Defines.hpp"
 #include "Event.hpp"
+#include "Exception.hpp"
 #include "Map.hpp"
 #include "Math.hpp"
 #include "Matrix4x4.hpp"

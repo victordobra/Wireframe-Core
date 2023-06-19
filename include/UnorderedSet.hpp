@@ -2,6 +2,7 @@
 
 #include "Defines.hpp"
 #include "Debug.hpp"
+#include "Exception.hpp"
 #include "Math.hpp"
 #include "Memory.hpp"
 #include "Pair.hpp"
@@ -259,7 +260,7 @@ namespace wfe {
 		unordered_set(size_type n = 16) : usetBucketCount(n), usetBuckets((node_type**)malloc(usetBucketCount * sizeof(node_type**), MEMORY_USAGE_ARRAY)), usetSize(0), usetCapacity(0), usetData(nullptr) {
 			// Check if the bucket list was allocated correctly
 			if(!usetBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered set buckets!")
+				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Set all the bucket pointers to 0
 			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type**));
@@ -269,11 +270,11 @@ namespace wfe {
 		unordered_set(const unordered_set& other) : usetBucketCount(other.usetBucketCount), usetBuckets((node_type**)malloc(usetBucketCount * sizeof(node_type**), MEMORY_USAGE_ARRAY)), usetSize(other.usetSize), usetCapacity(other.usetCapacity), usetData((node_type*)malloc(usetCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY)), usetMaxLoadFactor(other.usetMaxLoadFactor) {
 			// Check if the bucket list was allocated correctly
 			if(!usetBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered set buckets!")
+				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Check if the data was allocated correctly
 			if(!usetData)
-				WFE_LOG_FATAL("Failed to allocate unordered set data!")
+				throw BadAllocException("Failed to allocate unordered set data!");
 			
 			// Copy every bucket relative to this set
 			for(size_type i = 0; i != usetBucketCount; ++i) {
@@ -321,11 +322,11 @@ namespace wfe {
 		unordered_set(std::initializer_list<value_type> list, size_type n = 16) : usetBucketCount(n), usetBuckets((node_type**)malloc(usetBucketCount * sizeof(node_type**) , MEMORY_USAGE_ARRAY)), usetSize(0), usetCapacity(1), usetData((node_type*)malloc(sizeof(node_type), MEMORY_USAGE_ARRAY)), usetMaxLoadFactor(1.f) {
 			// Check if the bucket list was allocated correctly
 			if(!usetBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered set buckets!")
+				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Check if the unordered set's data was allocated correctly
 			if(!usetData)
-				WFE_LOG_FATAL("Failed to allocate unordered set data!")
+				throw BadAllocException("Failed to allocate unordered set data!");
 
 			// Set all bucket pointers to nullptr
 			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type**));
@@ -368,7 +369,7 @@ namespace wfe {
 		unordered_set(const std::unordered_set<value_type>& other) : usetBucketCount(other.bucket_count()), usetBuckets((node_type**)malloc(usetBucketCount * sizeof(node_type**), MEMORY_USAGE_ARRAY)), usetSize(other.size()), usetCapacity(1), usetData(nullptr), usetMaxLoadFactor(other.max_load_factor()) {
 			// Check if the bucket list was allocated correctly
 			if(!usetBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered set buckets!")
+				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Set all bucket pointers to nullptr
 			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type**));
@@ -382,7 +383,7 @@ namespace wfe {
 			// Allocate the unordered set's data
 			usetData = (node_type*)malloc(usetCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
 			if(!usetData)
-				WFE_LOG_FATAL("Failed to allocate unordered set data!")
+				throw BadAllocException("Failed to allocate unordered set data!");
 			
 			// Insert every value from the other set
 			auto otherIter = other.begin();
@@ -434,11 +435,11 @@ namespace wfe {
 
 			// Check if the bucket list was allocated correctly
 			if(!usetBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered set buckets!")
+				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Check if the data was allocated correctly
 			if(!usetData)
-				WFE_LOG_FATAL("Failed to allocate unordered set data!")
+				throw BadAllocException("Failed to allocate unordered set data!");
 
 			// Copy every bucket relative to this set
 			for(size_type i = 0; i != usetBucketCount; ++i) {
@@ -540,7 +541,7 @@ namespace wfe {
 			// Allocate the unordered set's buckets
 			usetBuckets = (node_type**)malloc(usetBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
 			if(!usetBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered set buckets!")
+				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Set all bucket pointers to nullptr
 			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type**));
@@ -548,7 +549,7 @@ namespace wfe {
 			// Allocate the unordered set's data
 			usetData = (node_type*)malloc(usetCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
 			if(!usetData)
-				WFE_LOG_FATAL("Failed to allocate unordered set data!")
+				throw BadAllocException("Failed to allocate unordered set data!");
 
             // Insert every value from the list
             for(size_type i = 0; i != usetSize; ++i) {
@@ -1117,7 +1118,7 @@ namespace wfe {
 
 			// Check if the bucket list was allocated correctly
 			if(!usetBuckets)
-				WFE_LOG_FATAL("Failed to allocate unordered set buckets!")
+				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Set every pointer in the bucket list to nullptr
 			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
@@ -1180,7 +1181,7 @@ namespace wfe {
 			
 			// Check if the memory was allocated correctly
 			if(!usetData)
-				WFE_LOG_FATAL("Failed to allocate unordered set memory!")
+				throw BadAllocException("Failed to allocate unordered set data!");
 			
 			// Set the unordered set's new capacity
 			usetCapacity = newCapacity;

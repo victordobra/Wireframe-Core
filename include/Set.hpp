@@ -2,6 +2,7 @@
 
 #include "Defines.hpp"
 #include "Memory.hpp"
+#include "Exception.hpp"
 #include "Debug.hpp"
 #include "Pair.hpp"
 #include <initializer_list>
@@ -37,7 +38,7 @@ namespace wfe {
 		set(const set& other) : setSize(other.setSize), setCapacity(other.setCapacity), setData((pointer)malloc(setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY)) {
 			// Check if the memory was allocated correctly
 			if(!setData)
-				WFE_LOG_FATAL("Failed to allocate set memory!");
+				throw BadAllocException("Failed to allocate set data!");
 
 			// Copy every value from the other set
 			const_pointer ptr2 = other.setData;
@@ -68,7 +69,7 @@ namespace wfe {
 			setData = (pointer)malloc(setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!setData)
-				WFE_LOG_FATAL("Failed to allocate set memory!");
+				throw BadAllocException("Failed to allocate set data!");
 
 			// Insert every value from the list
 			const_pointer end = list.end();
@@ -109,7 +110,7 @@ namespace wfe {
 			setData = (pointer)malloc(setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!setData)
-				WFE_LOG_FATAL("Failed to allocate set memory!");
+				throw BadAllocException("Failed to allocate set data!");
 			
 			// Copy every value from the given set
 			const_pointer ptr2 = other.begin();
@@ -145,7 +146,7 @@ namespace wfe {
 
 			// Check if the memory was allocated correctly
 			if(!setData)
-				WFE_LOG_FATAL("Failed to allocate set memory!");
+				throw BadAllocException("Failed to allocate set data!");
 
 			// Copy every value from the given set
 			const_pointer ptr2 = other.setData;
@@ -213,7 +214,7 @@ namespace wfe {
 			setData = (pointer)malloc(setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!setData)
-				WFE_LOG_FATAL("Failed to allocate set memory!")
+				throw BadAllocException("Failed to allocate set data!");
 
 			// Insert every value from the list
 			const_pointer end = list.end();
@@ -292,7 +293,7 @@ namespace wfe {
 				setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 				if(!setData)
-					WFE_LOG_FATAL("Failed to allocate set memory!")
+					throw BadAllocException("Failed to allocate set data!");
 			}
 
 			// Move part of the set forward to make room for the new value
@@ -345,7 +346,7 @@ namespace wfe {
 				setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 				if(!setData)
-					WFE_LOG_FATAL("Failed to allocate set memory!")
+					throw BadAllocException("Failed to allocate set data!");
 			}
 
 			// Move part of the set forward to make room for the new value
@@ -393,7 +394,7 @@ namespace wfe {
 					setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 					if(!setData)
-						WFE_LOG_FATAL("Failed to allocate set memory!")
+						throw BadAllocException("Failed to allocate set data!");
 				}
 
 				// Move part of the set forward to make room for the new value
@@ -460,7 +461,7 @@ namespace wfe {
 				setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 				if(!setData)
-					WFE_LOG_FATAL("Failed to allocate set memory!")
+					throw BadAllocException("Failed to allocate set data!");
 			}
 
 			// Move part of the set forward to make room for the new value
@@ -505,7 +506,7 @@ namespace wfe {
 					setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 					if(!setData)
-						WFE_LOG_FATAL("Failed to allocate set memory!")
+						throw BadAllocException("Failed to allocate set data!");
 				}
 
 				// Move part of the set forward to make room for the new value
@@ -572,7 +573,7 @@ namespace wfe {
 				setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 				if(!setData)
-					WFE_LOG_FATAL("Failed to allocate set memory!")
+					throw BadAllocException("Failed to allocate set data!");
 			}
 
 			// Move part of the set forward to make room for the new value

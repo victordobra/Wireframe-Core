@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Defines.hpp"
+#include "Exception.hpp"
 #include "Memory.hpp"
 #include "Debug.hpp"
 #include <initializer_list>
@@ -34,7 +35,7 @@ namespace wfe {
 		vector(const vector& other) : vecSize(other.vecSize), vecCapacity(other.vecCapacity), vecData((pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY)) {
 			// Check if the memory was allocated correctly
 			if(!vecData)
-				WFE_LOG_FATAL("Failed to allocate vector memory!");
+				throw BadAllocException("Failed to allocate vector data!");
 			
 			// Copy every value afrom the given vector
 			for(size_type i = 0; i < vecSize; ++i)
@@ -62,7 +63,7 @@ namespace wfe {
 			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!vecData)
-				WFE_LOG_FATAL("Failed to allocate vector memory!");
+				throw BadAllocException("Failed to allocate vector data!");
 
 			// Construct every value in the vector
 			pointer end = vecData + vecSize;
@@ -86,7 +87,7 @@ namespace wfe {
 			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!vecData)
-				WFE_LOG_FATAL("Failed to allocate vector memory!");
+				throw BadAllocException("Failed to allocate vector data!");
 
 			// Construct every value in the vector
 			pointer end = vecData + vecSize;
@@ -109,7 +110,7 @@ namespace wfe {
 			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!vecData)
-				WFE_LOG_FATAL("Failed to allocate vector memory!");
+				throw BadAllocException("Failed to allocate vector data!");
 
 			// Copy every value in the vector from the initializer list
 			pointer end = vecData + vecSize;
@@ -123,7 +124,7 @@ namespace wfe {
 		vector(const std::vector<T>& other) : vecSize(other.size()), vecCapacity(other.capacity()), vecData((pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY)) {
 			// Check if the memory was allocated correctly
 			if(!vecData)
-				WFE_LOG_FATAL("Failed to allocate vector memory!");
+				throw BadAllocException("Failed to allocate vector data!");
 			
 			// Copy every value from the given vector
 			for(size_type i = 0; i != vecSize; ++i)
@@ -156,7 +157,7 @@ namespace wfe {
 
 			// Check if the memory was allocated correctly
 			if(!vecData)
-				WFE_LOG_FATAL("Failed to allocate vector memory!");
+				throw BadAllocException("Failed to allocate vector data!");
 
 			// Copy every value from the given vector
 			for(size_type i = 0; i != vecSize; ++i)
@@ -221,7 +222,7 @@ namespace wfe {
 			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!vecData)
-				WFE_LOG_FATAL("Failed to allocate vector memory!");
+				throw BadAllocException("Failed to allocate vector data!");
 
 			// Copy every value in the vector from the initializer list
 			pointer end = vecData + vecSize;
@@ -335,7 +336,7 @@ namespace wfe {
 			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!vecData)
-				WFE_LOG_FATAL("Failed to allocate vector memory!");
+				throw BadAllocException("Failed to allocate vector data!");
 
 			// Set every value in the vector to the given value
 			pointer end = vecData + vecSize;
@@ -373,7 +374,7 @@ namespace wfe {
 			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 			if(!vecData)
-				WFE_LOG_FATAL("Failed to allocate vector memory!");
+				throw BadAllocException("Failed to allocate vector data!");
 
 			// Copy every value in the vector from the initializer list
 			pointer end = vecData + vecSize;
@@ -920,7 +921,7 @@ namespace wfe {
 
 			// Check if the memory was allocated correctly
 			if(!vecData)
-				WFE_LOG_FATAL("Failed to allocate vector memory!");
+				throw BadAllocException("Failed to allocate vector data!");
 			
 			// Set the vector's new capacity
 			vecCapacity = newCapacity;
