@@ -2,6 +2,7 @@
 #include "Memory.hpp"
 #include "Debug.hpp"
 #include "Exception.hpp"
+#include <stdlib.h>
 
 namespace wfe {
 	string::string(const string& other) : strSize(other.strSize), strCapacity(other.strCapacity), strData((pointer)malloc(strCapacity, MEMORY_USAGE_STRING)) {
@@ -4168,5 +4169,132 @@ namespace wfe {
 	}
 	bool8_t operator>=(const char_t* str1, const string& str2) {
 		return str2.compare(str1) <= 0;
+	}
+
+	const char_t NUMBER_CHARS[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+	string ToString(int64_t num, uint32_t base) {
+		// Return a 0 if the number is also 0
+		if(!num)
+			return "0";
+
+		// Create a buffer containing the current string
+		char_t buffer[32];
+		size_t top = 32;
+		
+		// Check if the given number is negative and flip the number if so
+		bool8_t negative = num < 0;
+		if(negative)
+			num = -num;
+
+		// Loop through every digit of the given number
+		while(num) {
+			// Divide the number by the given base and deduce the last digit without using the modulo operator
+			int64_t div = num / base;
+			int64_t digit = num - div * base;
+			num = div;
+
+			// Add the digit to the final string
+			buffer[--top] = NUMBER_CHARS[digit];
+		}
+
+		// Add a negative sign in front of the number if it is negative
+		if(negative)
+			buffer[--top] = '-';
+		
+		// Return the string formed by the characters in the buffer
+		return { buffer + top, 32 - top };
+	}
+	string ToString(uint64_t num, uint32_t base) {
+		// Return a 0 if the number is also 0
+		if(!num)
+			return "0";
+
+		// Create a buffer containing the current string
+		char_t buffer[32];
+		size_t top = 32;
+		
+		// Loop through every digit of the given number
+		while(num) {
+			// Divide the number by the given base and deduce the last digit without using the modulo operator
+			uint64_t div = num / base;
+			uint64_t digit = num - div * base;
+			num = div;
+
+			// Add the digit to the final string
+			buffer[--top] = NUMBER_CHARS[digit];
+		}
+
+		// Return the string formed by the characters in the buffer
+		return { buffer + top, 32 - top };
+	}
+	string ToString(float32_t num, uint32_t precision) {
+		// Create a large enough buffer to store the string.
+		char_t buffer[64] = "NaN";
+
+		// Use gcvt to convert the float to a string
+		gcvt(num, precision, buffer);
+
+		// Return the new string
+		return buffer;
+	}
+	string ToString(float64_t num, uint32_t precision) {
+		// Create a large enough buffer to store the string.
+		char_t buffer[64] = "NaN";
+
+		// Use gcvt to convert the float to a string
+		gcvt(num, precision, buffer);
+
+		// Return the new string
+		return buffer;
+	}
+
+	int64_t StrToInt(const string& str, size_t* outIndex, uint32_t base) {
+		// Convert the given string to a int64_t using strtoll
+		char* outPtr;
+		int64_t val = (int64_t)strtoll(str.c_str(), &outPtr, (int32_t)base);
+
+		// Write the relative index to the given pointer, if it was set
+		if(outIndex)
+			*outIndex = (size_t)(outPtr - str.c_str());
+		
+		// Return the final value
+		return val;
+	}
+	uint64_t StrToUint(const string& str, size_t* outIndex, uint32_t base) {
+		// Convert the given string to a int64_t using strtoll
+		char* outPtr;
+		uint64_t val = (uint64_t)strtoull(str.c_str(), &outPtr, (int32_t)base);
+
+		// Write the relative index to the given pointer, if it was set
+		if(outIndex)
+			*outIndex = (size_t)(outPtr - str.c_str());
+		
+		// Return the final value
+		return val;
+	}
+	float32_t StrToFloat(const string& str, size_t* outIndex) {
+		// Convert the given string to a int64_t using strtoll
+		char* outPtr;
+		float32_t val = (float32_t)strtof(str.c_str(), &outPtr);
+
+		// Write the relative index to the given pointer, if it was set
+		if(outIndex)
+			*outIndex = (size_t)(outPtr - str.c_str());
+		
+		// Return the final value
+		return val;
+	}
+	float64_t StrToDouble(const string& str, size_t* outIndex) {
+		// Convert the given string to a int64_t using strtoll
+		char* outPtr;
+		float64_t val = (float64_t)strtod(str.c_str(), &outPtr);
+
+		// Write the relative index to the given pointer, if it was set
+		if(outIndex)
+			*outIndex = (size_t)(outPtr - str.c_str());
+		
+		// Return the final value
+		return val;
 	}
 }

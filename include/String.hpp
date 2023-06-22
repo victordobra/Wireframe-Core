@@ -675,4 +675,50 @@ namespace wfe {
 	/// @param str2 The second string.
 	/// @return True if the first string is bigger than or equal to the second, otherwise false.
 	bool8_t operator>=(const char_t* str1, const string& str2);
+
+	/// @brief Converts the given number to a string.
+	/// @param num The number to convert.
+	/// @param base The base of the resulting string's number.
+	/// @return The string representation of the given number.
+	string ToString(int64_t num, uint32_t base = 10);
+	/// @brief Converts the given number to a string.
+	/// @param num The number to convert.
+	/// @param base The base of the resulting string's number.
+	/// @return The string representation of the given number.
+	string ToString(uint64_t num, uint32_t base = 10);
+	/// @brief Converts the given number to a string.
+	/// @param num The number to convert.
+	/// @param precision The maximum number of digits of the given number to be written in the resulting string.
+	/// @return The string representation of the given number.
+	string ToString(float32_t num, uint32_t precision = 10);
+	/// @brief Converts the given number to a string.
+	/// @param num The number to convert.
+	/// @param precision The maximum number of digits of the given number to be written in the resulting string.
+	/// @return The string representation of the given number.
+	string ToString(float64_t num, uint32_t precision = 10);
+
+	/// @brief Converts the first number from the given string to a signed integer.
+	/// @param str The string to convert from.
+	/// @param outIndex An optional pointer to a size_t variable which will be set to the index of the first character after the number.
+	/// @param base The base of the number to convert.
+	/// @return The resulting integer.
+	int64_t StrToInt(const string& str, size_t* outIndex = nullptr, uint32_t base = 10);
+	/// @brief Converts the first number from the given string to an unsigned integer.
+	/// @param str The string to convert from.
+	/// @param outIndex An optional pointer to a size_t variable which will be set to the index of the first character after the number.
+	/// @param base The base of the number to convert.
+	/// @return The resulting integer.
+	uint64_t StrToUint(const string& str, size_t* outIndex = nullptr, uint32_t base = 10);
+	/// @brief Converts the first number from the given string to a floating point number.
+	/// @param str The string to convert from.
+	/// @param outIndex An optional pointer to a size_t variable which will be set to the index of the first character after the number.
+	/// @param base The base of the number to convert.
+	/// @return The resulting float.
+	float32_t StrToFloat(const string& str, size_t* outIndex = nullptr);
+	/// @brief Converts the first number from the given string to a double precision floating point number.
+	/// @param str The string to convert from.
+	/// @param outIndex An optional pointer to a size_t variable which will be set to the index of the first character after the number.
+	/// @param base The base of the number to convert.
+	/// @return The resulting double.
+	float64_t StrToDouble(const string& str, size_t* outIndex = nullptr);
 }
