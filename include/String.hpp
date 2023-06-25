@@ -702,23 +702,23 @@ namespace wfe {
 	/// @param outIndex An optional pointer to a size_t variable which will be set to the index of the first character after the number, or to 0 if no conversion was performed.
 	/// @param base The base of the number to convert.
 	/// @return The resulting integer.
-	int64_t StrToInt(const string& str, size_t* outIndex = nullptr, uint32_t base = 10);
+	int64_t StrToInt(const char_t* str, size_t* outIndex = nullptr, uint32_t base = 10);
 	/// @brief Converts the first number from the given string to an unsigned integer.
 	/// @param str The string to convert from.
 	/// @param outIndex An optional pointer to a size_t variable which will be set to the index of the first character after the number, or to 0 if no conversion was performed.
 	/// @param base The base of the number to convert.
 	/// @return The resulting integer.
-	uint64_t StrToUint(const string& str, size_t* outIndex = nullptr, uint32_t base = 10);
+	uint64_t StrToUint(const char_t* str, size_t* outIndex = nullptr, uint32_t base = 10);
 	/// @brief Converts the first number from the given string to a floating point number.
 	/// @param str The string to convert from.
 	/// @param outIndex An optional pointer to a size_t variable which will be set to the index of the first character after the number, or to 0 if no conversion was performed.
 	/// @param base The base of the number to convert.
 	/// @return The resulting float.
-	float32_t StrToFloat(const string& str, size_t* outIndex = nullptr);
+	float32_t StrToFloat(const char_t* str, size_t* outIndex = nullptr);
 	/// @brief Converts the first number from the given string to a double precision floating point number.
 	/// @param str The string to convert from.
 	/// @param outIndex An optional pointer to a size_t variable which will be set to the index of the first character after the number, or to 0 if no conversion was performed.
 	/// @param base The base of the number to convert.
 	/// @return The resulting double.
-	float64_t StrToDouble(const string& str, size_t* outIndex = nullptr);
+	float64_t StrToDouble(const char_t* str, size_t* outIndex = nullptr);
 }

@@ -4249,50 +4249,50 @@ namespace wfe {
 		return buffer;
 	}
 
-	int64_t StrToInt(const string& str, size_t* outIndex, uint32_t base) {
+	int64_t StrToInt(const char_t* str, size_t* outIndex, uint32_t base) {
 		// Convert the given string to a int64_t using strtoll
 		char* outPtr;
-		int64_t val = (int64_t)strtoll(str.c_str(), &outPtr, (int32_t)base);
+		int64_t val = (int64_t)strtoll(str, &outPtr, (int32_t)base);
 
 		// Write the relative index to the given pointer, if it was set
 		if(outIndex)
-			*outIndex = (size_t)(outPtr - str.c_str());
+			*outIndex = (size_t)(outPtr - str);
 		
 		// Return the final value
 		return val;
 	}
-	uint64_t StrToUint(const string& str, size_t* outIndex, uint32_t base) {
+	uint64_t StrToUint(const char_t* str, size_t* outIndex, uint32_t base) {
 		// Convert the given string to a int64_t using strtoll
 		char* outPtr;
-		uint64_t val = (uint64_t)strtoull(str.c_str(), &outPtr, (int32_t)base);
+		uint64_t val = (uint64_t)strtoull(str, &outPtr, (int32_t)base);
 
 		// Write the relative index to the given pointer, if it was set
 		if(outIndex)
-			*outIndex = (size_t)(outPtr - str.c_str());
+			*outIndex = (size_t)(outPtr - str);
 		
 		// Return the final value
 		return val;
 	}
-	float32_t StrToFloat(const string& str, size_t* outIndex) {
+	float32_t StrToFloat(const char_t* str, size_t* outIndex) {
 		// Convert the given string to a int64_t using strtoll
 		char* outPtr;
-		float32_t val = (float32_t)strtof(str.c_str(), &outPtr);
+		float32_t val = (float32_t)strtof(str, &outPtr);
 
 		// Write the relative index to the given pointer, if it was set
 		if(outIndex)
-			*outIndex = (size_t)(outPtr - str.c_str());
+			*outIndex = (size_t)(outPtr - str);
 		
 		// Return the final value
 		return val;
 	}
-	float64_t StrToDouble(const string& str, size_t* outIndex) {
+	float64_t StrToDouble(const char_t* str, size_t* outIndex) {
 		// Convert the given string to a int64_t using strtoll
 		char* outPtr;
-		float64_t val = (float64_t)strtod(str.c_str(), &outPtr);
+		float64_t val = (float64_t)strtod(str, &outPtr);
 
 		// Write the relative index to the given pointer, if it was set
 		if(outIndex)
-			*outIndex = (size_t)(outPtr - str.c_str());
+			*outIndex = (size_t)(outPtr - str);
 		
 		// Return the final value
 		return val;
