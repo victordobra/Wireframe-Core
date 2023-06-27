@@ -852,6 +852,182 @@ namespace wfe {
 
 		return readCount;
 	}
+	size_t FileInput::Read(size_t valCount, float32_t* vals) {
+		// Keep reading buffers until all requested values have been found
+		size_t readCount = 0;
+		float32_t lastVal = 0; bool8_t lastValSet = false;
+
+		while(readCount != valCount) {
+			// Read a large buffer from the stream
+			char_t buffer[FILE_READ_BUFFER_SIZE + 1];
+			DWORD bufferSize;
+
+			bool8_t result = ReadFile((HANDLE)internalData, buffer, (DWORD)FILE_READ_BUFFER_SIZE, &bufferSize, nullptr);
+
+			// Exit the loop if the read failed
+			if(!result || !bufferSize)
+				break;
+			
+			// Set the last char of the buffer to a null termination character
+			buffer[bufferSize] = 0;
+
+			// Check if the last number got cut off to the previous buffer
+			char_t* ptr = buffer;
+			if(lastValSet)
+				while(*ptr >= '0' && *ptr <= '9') {
+					// Add the current digit to the last value
+					lastVal *= 10;
+					lastVal += *ptr - '0';
+
+					// Increment the pointer
+					++ptr;
+				}
+
+			// Check if there are no following characters. If so, move on to the next buffer
+			if(!*ptr)
+				continue;
+			
+			// Check if the last value was set
+			if(lastValSet) {
+				// Add the last value to the array and reset it
+				*vals = lastVal;
+				++readCount;
+				++vals;
+
+				lastVal = 0;
+				lastValSet = false;
+			}
+			
+			// Look for the first numerical value in the buffer
+			ptr = strpbrk(ptr, NUM_ACCEPT_STRING);
+
+			while(ptr && readCount != valCount) {
+				// Read the current value
+				size_t index;
+				float32_t val = StrToFloat(ptr, &index);
+
+				// Exit the loop if no value was found
+				if(!index)
+					break;
+
+				// Set the new pointer's value
+				ptr += index;
+
+				// Check if the current value is the last value from the buffer
+				if(!*ptr) {
+					// Don't write the value to the value array, instead write it to the lastVal variable and store it for the next buffer
+					lastVal = val;
+					lastValSet = true;
+
+					break;
+				}
+
+				// Write this value to the value array
+				*vals = val;
+				++readCount;
+				++vals;
+
+				// Look for the next numerical value in the buffer
+				ptr = strpbrk(ptr, NUM_ACCEPT_STRING);
+			}
+		}
+
+		// Write the last value to the array if it hasn't already been inserted
+		if(readCount != valCount && lastValSet) {
+			*vals = lastVal;
+			++readCount;
+		}
+
+		return readCount;
+	}
+	size_t FileInput::Read(size_t valCount, float64_t* vals) {
+		// Keep reading buffers until all requested values have been found
+		size_t readCount = 0;
+		float64_t lastVal = 0; bool8_t lastValSet = false;
+
+		while(readCount != valCount) {
+			// Read a large buffer from the stream
+			char_t buffer[FILE_READ_BUFFER_SIZE + 1];
+			DWORD bufferSize;
+
+			bool8_t result = ReadFile((HANDLE)internalData, buffer, (DWORD)FILE_READ_BUFFER_SIZE, &bufferSize, nullptr);
+
+			// Exit the loop if the read failed
+			if(!result || !bufferSize)
+				break;
+			
+			// Set the last char of the buffer to a null termination character
+			buffer[bufferSize] = 0;
+
+			// Check if the last number got cut off to the previous buffer
+			char_t* ptr = buffer;
+			if(lastValSet)
+				while(*ptr >= '0' && *ptr <= '9') {
+					// Add the current digit to the last value
+					lastVal *= 10;
+					lastVal += *ptr - '0';
+
+					// Increment the pointer
+					++ptr;
+				}
+
+			// Check if there are no following characters. If so, move on to the next buffer
+			if(!*ptr)
+				continue;
+			
+			// Check if the last value was set
+			if(lastValSet) {
+				// Add the last value to the array and reset it
+				*vals = lastVal;
+				++readCount;
+				++vals;
+
+				lastVal = 0;
+				lastValSet = false;
+			}
+			
+			// Look for the first numerical value in the buffer
+			ptr = strpbrk(ptr, NUM_ACCEPT_STRING);
+
+			while(ptr && readCount != valCount) {
+				// Read the current value
+				size_t index;
+				float64_t val = StrToDouble(ptr, &index);
+
+				// Exit the loop if no value was found
+				if(!index)
+					break;
+
+				// Set the new pointer's value
+				ptr += index;
+
+				// Check if the current value is the last value from the buffer
+				if(!*ptr) {
+					// Don't write the value to the value array, instead write it to the lastVal variable and store it for the next buffer
+					lastVal = val;
+					lastValSet = true;
+
+					break;
+				}
+
+				// Write this value to the value array
+				*vals = val;
+				++readCount;
+				++vals;
+
+				// Look for the next numerical value in the buffer
+				ptr = strpbrk(ptr, NUM_ACCEPT_STRING);
+			}
+		}
+
+		// Write the last value to the array if it hasn't already been inserted
+		if(readCount != valCount && lastValSet) {
+			*vals = lastVal;
+			++readCount;
+		}
+
+		return readCount;
+	}
 	size_t FileInput::Read(size_t strCount, string* strings, const char_t* sep) {
 		// Keep reading buffers until all requested strings have been read
 		size_t readCount = 0;
