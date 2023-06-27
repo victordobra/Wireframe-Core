@@ -1583,6 +1583,11 @@ namespace wfe {
 		return writeCount;
 	}
 
+	bool8_t FileOutput::Flush() {
+		// Flush the file's changes
+		return FlushFileBuffers((HANDLE)internalData);
+	}
+
 	uint64_t FileOutput::GetPos() const {
 		// Get the cursor's position by using SetFilePointer without modifying its position, via its return value
 		LONG highPos = 0;

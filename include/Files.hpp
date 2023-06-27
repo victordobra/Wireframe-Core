@@ -263,6 +263,10 @@ namespace wfe {
 		/// @return The number of characters successfully written to the output stream.
 		size_t Write(size_t strCount, const string* strings, const char_t* sep = " ");
 
+		/// @brief Flushes all of the file's changes to disk.
+		/// @return True if the changes were flushed successfully, otherwise false.
+		bool8_t Flush();
+
 		/// @brief Gets the file output stream's current position relative to the beginning of the file.
 		/// @return The file output stream's current position.
 		uint64_t GetPos() const;
