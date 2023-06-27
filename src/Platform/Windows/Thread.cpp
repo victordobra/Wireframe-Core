@@ -82,23 +82,26 @@ namespace wfe {
 		// Write the thread's ID to the params
 		params->threadID = threadID;
 
-		// Convert the Win32 error code to a thread error code
-		DWORD error = GetLastError();
+		// Check if the thread was created successfully
+		if(!internalData) {
+			// Convert the Win32 error code to a thread error code
+			DWORD error = GetLastError();
 
-		switch(error) {
-		case ERROR_SUCCESS:
-			break;
-		case ERROR_NOT_ENOUGH_MEMORY:
-		case ERROR_OUTOFMEMORY:
-		case ERROR_DS_THREAD_LIMIT_EXCEEDED:
-			return ERROR_INSUFFICIENT_RESOURCES;
-		case ERROR_INVALID_THREAD_ID:
-			return ERROR_INVALID_THREAD;
-		case ERROR_POSSIBLE_DEADLOCK:
-			return ERROR_DETECTED_DEADLOCK;
-		default:
-			return ERROR_UNKNOWN;
-		};
+			switch(error) {
+			case ERROR_SUCCESS:
+				break;
+			case ERROR_NOT_ENOUGH_MEMORY:
+			case ERROR_OUTOFMEMORY:
+			case ERROR_DS_THREAD_LIMIT_EXCEEDED:
+				return ERROR_INSUFFICIENT_RESOURCES;
+			case ERROR_INVALID_THREAD_ID:
+				return ERROR_INVALID_THREAD;
+			case ERROR_POSSIBLE_DEADLOCK:
+				return ERROR_DETECTED_DEADLOCK;
+			default:
+				return ERROR_UNKNOWN;
+			};
+		}
 
 		// Resume the thread from its suspended state
 		DWORD result = ResumeThread((HANDLE)internalData);
@@ -108,7 +111,7 @@ namespace wfe {
 			return SUCCESS;
 
 		// Convert the Win32 error code to a thread error code
-		error = GetLastError();
+		DWORD error = GetLastError();
 
 		switch(error) {
 		case ERROR_SUCCESS:

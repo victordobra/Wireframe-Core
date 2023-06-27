@@ -1,5 +1,8 @@
 #include "Debug.hpp"
+#include "Exception.hpp"
+#include "Files.hpp"
 #include "Memory.hpp"
+#include "Thread.hpp"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -18,10 +21,36 @@ namespace wfe {
 	};
 	const size_t LOG_LEVEL_NAME_LENGTH = 11;
 
+	FileOutput logOutput;
+	Mutex logOutputMutex;
+
 	// Internal helper functions
-	void OutputMessage(LogLevel level, const char_t* message) {
-		// Only print the message for now
-		printf("%s\n", message);
+	void* WriteToLogFileAsync(void* message) {
+		// Lock the log output mutex
+		logOutputMutex.Lock();
+
+		// Output the given message to the log file and free the message's memory
+		size_t messageLen = strlen((char_t*)message);
+
+		logOutput.WriteBuffer(messageLen, message);
+		free(message, messageLen, MEMORY_USAGE_STRING);
+
+		// Flush the message
+		logOutput.Flush();
+
+		// Unlock the log output mutex
+		logOutputMutex.Unlock();
+
+		return nullptr;
+	}
+	static void OutputMessage(LogLevel level, char_t* message) {
+		// Output the message to the console
+		printf("%s", message);
+
+		// Dispatch a thread to output the message to the log file
+		Thread logThread;
+		logThread.Begin(WriteToLogFileAsync, message);
+		logThread.Detach();
 	}
 
 	// External functions
@@ -41,11 +70,19 @@ namespace wfe {
 		vsnprintf(dest, maxSize, format, args);
 	}
 
-	void CreateLogger() {
-		// TODO: Add output log file and separate thread to output on.
+	void CreateLogger(const char_t* logFilePath) {
+		// Open the file output stream to the given path
+		logOutput.Open(logFilePath);
 	}
 	void DeleteLogger() {
-		// TODO: Remove file and file output thread once those are done.
+		// Wait for all messages to be logged to the log file
+		logOutputMutex.Lock();
+
+		// Close the file output stream
+		logOutput.Close();
+
+		// Unlock the log output mutex
+		logOutputMutex.Unlock();
 	}
 
 	void LogMessage(LogLevel level, const char_t* format, ...) {
@@ -63,11 +100,20 @@ namespace wfe {
 		// Format the message string
 		char_t formattedMessage[MAX_MESSAGE_LENGTH + 1];
 		FormatStringV(formattedMessage, MAX_MESSAGE_LENGTH, format, args);
+		size_t formattedLen = strnlen(formattedMessage, MAX_MESSAGE_LENGTH);
 
-		// Generate the full message string
-		char_t fullMessage[MAX_MESSAGE_LENGTH + LOG_LEVEL_NAME_LENGTH + 1];
-		strncpy(fullMessage, LOG_LEVEL_NAMES[level], LOG_LEVEL_NAME_LENGTH + 1);
-		strncpy(fullMessage + LOG_LEVEL_NAME_LENGTH, formattedMessage, MAX_MESSAGE_LENGTH);
+		// Allocate the full message string to the heap
+		char_t* fullMessage = (char_t*)malloc(LOG_LEVEL_NAME_LENGTH + formattedLen + 2, MEMORY_USAGE_STRING);
+
+		// Check if the memory was allocated correctly
+		if(!fullMessage)
+			throw BadAllocException("Failed to allocate string data!");
+		
+		// Copy all components into the final message
+		memcpy(fullMessage, LOG_LEVEL_NAMES[level], LOG_LEVEL_NAME_LENGTH);
+		memcpy(fullMessage + LOG_LEVEL_NAME_LENGTH, formattedMessage, formattedLen);
+		fullMessage[LOG_LEVEL_NAME_LENGTH + formattedLen] = '\n';
+		fullMessage[LOG_LEVEL_NAME_LENGTH + formattedLen + 1] = 0;
 
 		// Output the message
 		OutputMessage(level, fullMessage);

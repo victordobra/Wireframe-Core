@@ -26,7 +26,8 @@ namespace wfe {
 	} LogLevel;
 
 	/// @brief Creates the debug logger.
-	void CreateLogger();
+	/// @param logFilePath The path to the file in which all logged messages will be written
+	void CreateLogger(const char_t* logFilePath);
 	/// @brief Deletes the debug logger.
 	void DeleteLogger();
 
