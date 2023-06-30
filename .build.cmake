@@ -1,9 +1,18 @@
-# Compilers
-set(CMAKE_x86_64_C_COMPILER   "/usr/bin/i686-linux-gnu-gcc")
-set(CMAKE_x86_64_CXX_COMPILER "/usr/bin/i686-linux-gnu-g++")
+# Target platform
+set(CMAKE_TARGET_PLATFORM "Linux")
 
-set(CMAKE_x64_C_COMPILER   "gcc")
-set(CMAKE_x64_CXX_COMPILER "g++")
+# Compilers
+if(${CMAKE_TARGET_PLATFORM} STREQUAL "Windows")
+
+elseif(${CMAKE_TARGET_PLATFORM} STREQUAL "Linux")
+    set(CMAKE_x86_64_C_COMPILER   "/usr/bin/i686-linux-gnu-gcc")
+    set(CMAKE_x86_64_CXX_COMPILER "/usr/bin/i686-linux-gnu-g++")
+
+    set(CMAKE_x64_C_COMPILER   "/usr/bin/gcc")
+    set(CMAKE_x64_CXX_COMPILER "/usr/bin/g++")
+else()
+    message(FATAL_ERROR "Error: Unsupported platform!")
+endif()
 
 # Build info
 set(TARGET_ARCH "x64")
