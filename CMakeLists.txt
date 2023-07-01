@@ -34,11 +34,6 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 target_compile_options(${PROJECT_NAME} PUBLIC -fPIC)
 message(STATUS "Library created successfully.")
 
-# Check if the target platform was set correctly
-if(NOT CMAKE_TARGET_PLATFORM STREQUAL CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "ERROR: Target platform set incorrectly!")
-endif()
-
 # Add the include directories
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 message(STATUS "Include directories added.")
