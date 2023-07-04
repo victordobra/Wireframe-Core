@@ -10,7 +10,7 @@ namespace wfe {
 	};
 	size_t totalMemoryUsage[MEMORY_USAGE_COUNT];
 
-	Mutex allocMutex;
+	Mutex allocMutex{};
 
 	void* malloc(size_t size, MemoryUsage memoryUsage) {
 		// Lock the alloc mutex

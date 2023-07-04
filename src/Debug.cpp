@@ -22,7 +22,7 @@ namespace wfe {
 	const size_t LOG_LEVEL_NAME_LENGTH = 11;
 
 	FileOutput logOutput;
-	Mutex logOutputMutex;
+	Mutex logOutputMutex{};
 
 	// Internal helper functions
 	void* WriteToLogFileAsync(void* message) {
