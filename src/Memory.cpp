@@ -1,6 +1,5 @@
 #include "Memory.hpp"
 #include "Platform.hpp"
-#include "Thread.hpp"
 
 namespace wfe {
 	const char_t* MEMORY_USAGE_TYPE_NAMES[MEMORY_USAGE_COUNT] = {
@@ -93,6 +92,9 @@ namespace wfe {
 	}
 	size_t GetMemoryUsage(MemoryUsage memoryUsage) {
 		return totalMemoryUsage[memoryUsage];
+	}
+	Mutex& GetMemoryAllocationMutex() {
+		return allocMutex;
 	}
 
 	void* memcpy(void* dest, const void* src, size_t size) {

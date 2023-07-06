@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Defines.hpp"
+#include "Thread.hpp"
 
 namespace wfe {
 	/// @brief Specifies what a block of memory is used for.
@@ -62,6 +63,9 @@ namespace wfe {
 	/// @param memoryUsage The memory usage type to check for.
 	/// @return The total memory usage for the given type.
 	size_t GetMemoryUsage(MemoryUsage memoryUsage);
+	/// @brief Gets the mutex used to regulate memory allocations.
+	/// @return A reference to the mutex used to regulate memory allocations.
+	Mutex& GetMemoryAllocationMutex();
 
 	/// @brief Copies from one specified memory block to another.
 	/// @param dest The target memory block.
