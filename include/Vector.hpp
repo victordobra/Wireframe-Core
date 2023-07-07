@@ -398,9 +398,9 @@ namespace wfe {
 				size_type newCapacity = 1;
 
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-					if((vecCapacity << step) < vecSize)
-						vecCapacity <<= step;
-				vecCapacity <<= 1;
+					if((newCapacity << step) < vecSize)
+						newCapacity <<= step;
+				newCapacity <<= 1;
 				
 				// Allocate the new space in the vector
 				reserve(newCapacity);
