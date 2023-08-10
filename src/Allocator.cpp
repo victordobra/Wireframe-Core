@@ -207,6 +207,9 @@ namespace wfe {
 		if(size > MAX_LARGE_ARENA_BLOCK_SIZE) {
 			// Allocate the memory using the platform callbacks, write the allocation's size and exit the function
 			size_t* mem = (size_t*)PlatformAllocateMemory(size);
+			if(!mem)
+				return nullptr;
+
 			*mem = size;
 			return mem + 1;
 		}
