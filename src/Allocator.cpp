@@ -187,10 +187,7 @@ namespace wfe {
 		// Create the allocator if it hasn't already been created
 		if(!largeArenaCount)
 			CreateAllocator();
-		for(size_t i = 0; i != largeArenaCount; ++i)
-			if(!largeArenas[i].allocator)
-				WFE_LOG_FATAL("err! %u", (uint32_t)i)
-		
+
 		// Check if a valid size was given
 		if(!size)
 			return NULL;
