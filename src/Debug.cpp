@@ -50,6 +50,14 @@ namespace wfe {
 		// Dispatch a thread to output the message to the log file, if the file was opened
 		if(!logOutput.IsOpen())
 			return;
+		
+		// Move the message to the heap
+		size_t messageLen = strnlen(message, LOG_LEVEL_NAME_LENGTH + MAX_MESSAGE_LENGTH + 1);
+		void* messageMem = malloc(messageLen + 1, MEMORY_USAGE_STRING);
+		if(!messageMem)
+			throw BadAllocException("Failed to allocate string!");
+
+		memcpy(messageMem, message, messageLen + 1);
 
 		Thread logThread;
 		logThread.Begin(WriteToLogFileAsync, message);
