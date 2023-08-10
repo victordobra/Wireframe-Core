@@ -60,7 +60,7 @@ namespace wfe {
 		memcpy(messageMem, message, messageLen + 1);
 
 		Thread logThread;
-		logThread.Begin(WriteToLogFileAsync, message);
+		logThread.Begin(WriteToLogFileAsync, messageMem);
 		logThread.Detach();
 	}
 
