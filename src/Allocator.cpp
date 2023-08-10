@@ -449,7 +449,7 @@ namespace wfe {
 			
 			// Check if the current large arena can hold the requested memory block
 			largeArenas[largeArenaIndex].mutex.Lock();
-			WfaResult result = wfaBuddyMemoryAlloc(largeArenas[largeArenaIndex].allocator, LARGE_ARENA_BLOCK_SIZE, &allocIndex);
+			WfaResult result = wfaBuddyMemoryAlloc(largeArenas[largeArenaIndex].allocator, size, &allocIndex);
 			largeArenas[largeArenaIndex].mutex.Unlock();
 
 			if(result == WFA_SUCCESS)
