@@ -129,4 +129,7 @@ namespace wfe {
 	/// @brief Exits the current thread, calcelling all processing on it.
 	/// @param returnValue The return value to be extracted on joining the thread.
 	void ExitCurrentThread(void* returnValue);
+	/// @brief Returns the number of processors.
+	/// @return The number of processors.
+	size_t GetProcessorCount();
 }

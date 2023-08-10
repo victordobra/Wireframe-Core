@@ -147,7 +147,7 @@ namespace wfe {
 					end->~value_type();
 				
 				// Free the vector's data
-				free(vecData, vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				free(vecData, MEMORY_USAGE_ARRAY);
 			}
 
 			// Set the vector's new values
@@ -316,7 +316,7 @@ namespace wfe {
 					end->~value_type();
 				
 				// Free the vector's data
-				free(vecData, vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				free(vecData, MEMORY_USAGE_ARRAY);
 			}
 
 			// Set the vector's new values
@@ -354,7 +354,7 @@ namespace wfe {
 					end->~value_type();
 				
 				// Free the vector's data
-				free(vecData, vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				free(vecData, MEMORY_USAGE_ARRAY);
 			}
 
 			// Set the vector's new values
@@ -913,7 +913,7 @@ namespace wfe {
 
 			if(vecData) {
 				// Reallocate the vector's data
-				vecData = (pointer)realloc(vecData, vecCapacity * sizeof(value_type), newCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				vecData = (pointer)realloc(vecData, newCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 			} else {
 				// Allocate the vector's data
 				vecData = (pointer)malloc(newCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);

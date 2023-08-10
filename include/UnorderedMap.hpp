@@ -1236,15 +1236,12 @@ namespace wfe {
 		/// @brief Sets the unordered map's bucket count.
 		/// @param n The unordered map's new bucket count.
 		void rehash(size_type n) {
-			// Save the old bucket count
-			size_type oldBucketCount = umapBucketCount;
-
 			// Set the new bucket count
 			umapBucketCount = n;
 
 			// Reallocate the unordered map's buckets
 			if(umapBuckets)
-				umapBuckets = (node_type**)realloc(umapBuckets, oldBucketCount * sizeof(node_type*), umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+				umapBuckets = (node_type**)realloc(umapBuckets, umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
 			else
 				umapBuckets = (node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
 
@@ -1285,7 +1282,7 @@ namespace wfe {
 		~unordered_map() {
 			// Delete the unordered map's buckets
 			if(umapBuckets)
-				free(umapBuckets, umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+				free(umapBuckets, MEMORY_USAGE_ARRAY);
 
 			// Delete the unordered map's data
 			if(umapData) {
@@ -1295,7 +1292,7 @@ namespace wfe {
 					ptr->val.~value_type();
 				
 				// Free the unordered map's data
-				free(umapData, umapCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+				free(umapData, MEMORY_USAGE_ARRAY);
 			}
 		}
 	private:
@@ -1305,7 +1302,7 @@ namespace wfe {
 
 			// Reallocate the unordered map's data
 			if(umapData)
-				umapData = (node_type*)realloc(umapData, umapCapacity * sizeof(node_type), newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+				umapData = (node_type*)realloc(umapData, newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
 			else
 				umapData = (node_type*)malloc(newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
 

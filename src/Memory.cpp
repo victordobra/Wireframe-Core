@@ -2,101 +2,6 @@
 #include "Platform.hpp"
 
 namespace wfe {
-	const char_t* MEMORY_USAGE_TYPE_NAMES[MEMORY_USAGE_COUNT] = {
-		"Others",
-		"Arrays",
-		"Strings"
-	};
-	size_t totalMemoryUsage[MEMORY_USAGE_COUNT];
-
-	Mutex allocMutex{};
-
-	void* malloc(size_t size, MemoryUsage memoryUsage) {
-		// Lock the alloc mutex
-		allocMutex.Lock();
-
-		// Allocate the requested memory.
-		void* ptr = mallocAsync(size, memoryUsage);
-
-		// Unlock the alloc mutex
-		allocMutex.Unlock();
-
-		return ptr;
-	}
-	void* calloc(size_t nmemb, size_t size, MemoryUsage memoryUsage) {
-		// Lock the alloc mutex
-		allocMutex.Lock();
-
-		// Allocate the requested memory.
-		void* ptr = callocAsync(nmemb, size, memoryUsage);
-
-		// Unlock the alloc mutex
-		allocMutex.Unlock();
-
-		return ptr;
-	}
-	void* realloc(void* ptr, size_t oldSize, size_t newSize, MemoryUsage memoryUsage) {
-		// Lock the alloc mutex
-		allocMutex.Lock();
-
-		// Reallocate the given memory
-		void* newPtr = reallocAsync(ptr, oldSize, newSize, memoryUsage);
-
-		// Unlock the alloc mutex
-		allocMutex.Unlock();
-
-		return newPtr;
-	}
-	void free(void* ptr, size_t size, MemoryUsage memoryUsage) {
-		// Lock the alloc mutex
-		allocMutex.Lock();
-
-		// Free the given memory
-		freeAsync(ptr, size, memoryUsage);
-
-		// Unlock the alloc mutex
-		allocMutex.Unlock();
-	}
-
-	void* mallocAsync(size_t size, MemoryUsage memoryUsage) {
-		// Increase the memory usage for the specified type
-		totalMemoryUsage[memoryUsage] += size;
-
-		// Allocate the requested memory.
-		return PlatformAllocateMemory(size);
-	}
-	void* callocAsync(size_t nmemb, size_t size, MemoryUsage memoryUsage) {
-		// Increase the memory usage for the specified type
-		totalMemoryUsage[memoryUsage] += nmemb * size;
-
-		// Allocate the requested memory.
-		return PlatformAllocateZeroMemory(nmemb, size);
-	}
-	void* reallocAsync(void* ptr, size_t oldSize, size_t newSize, MemoryUsage memoryUsage) {
-		// Modify the memory usage for the specified type
-		totalMemoryUsage[memoryUsage] += newSize - oldSize;
-
-		// Reallocate the given memory
-		return PlatformReallocateMemory(ptr, oldSize, newSize);
-	}
-	void freeAsync(void* ptr, size_t size, MemoryUsage memoryUsage) {
-		// Decrease the memory usage for the specified type
-		totalMemoryUsage[memoryUsage] -= size;
-
-		// Free the given memory
-		PlatformFreeMemory(ptr, size);
-	}
-
-	size_t* GetMemoryUsage() {
-		return totalMemoryUsage;
-	}
-	size_t GetMemoryUsage(MemoryUsage memoryUsage) {
-		return totalMemoryUsage[memoryUsage];
-	}
-	Mutex& GetMemoryAllocationMutex() {
-		return allocMutex;
-	}
-
 	void* memcpy(void* dest, const void* src, size_t size) {
 		// Exit if the target and source memory block are the same; nothing needs to be copied
 		if(dest == src)
@@ -1667,7 +1572,7 @@ namespace wfe {
 			for(size_t i = 0; i != sizeof(size_t);) {
 				// Exit the function if the null termination character was found
 				if(!segmentPtr[i]) {
-					free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+					free(table, MEMORY_USAGE_ARRAY);
 					return nullptr;
 				}
 
@@ -1679,7 +1584,7 @@ namespace wfe {
 
 					// Exit the function if a match for the whole string was found
 					if(pos == wantedLength) {
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 						return str + i - wantedLength;
 					}
 				} else {
@@ -1734,7 +1639,7 @@ namespace wfe {
 			for(size_t i = 0; i != sizeof(size_t);) {
 				// Exit the function if the null termination character was found
 				if(!segmentPtr[i]) {
-					free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+					free(table, MEMORY_USAGE_ARRAY);
 					return nullptr;
 				}
 
@@ -1746,7 +1651,7 @@ namespace wfe {
 
 					// Exit the character if a match for the whole string was found
 					if(pos == wantedLength) {
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 						return str + i - wantedLength;
 					}
 				} else {

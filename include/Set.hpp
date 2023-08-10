@@ -290,7 +290,7 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
@@ -343,7 +343,7 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
@@ -391,7 +391,7 @@ namespace wfe {
 					setCapacity <<= 1;
 
 					// Reallocate the set's memory
-					setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 					if(!setData)
 						throw BadAllocException("Failed to allocate set data!");
@@ -458,7 +458,7 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
@@ -503,7 +503,7 @@ namespace wfe {
 					setCapacity <<= 1;
 
 					// Reallocate the set's memory
-					setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 					if(!setData)
 						throw BadAllocException("Failed to allocate set data!");
@@ -570,7 +570,7 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)realloc(setData, oldCapacity * sizeof(value_type), setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
@@ -989,7 +989,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the set's data
-				free(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				free(setData, MEMORY_USAGE_ARRAY);
 			}
 		}
 	private:

@@ -21,7 +21,7 @@ namespace wfe {
 	};
 	const size_t LOG_LEVEL_NAME_LENGTH = 11;
 
-	FileOutput logOutput;
+	FileOutput logOutput{};
 	Mutex logOutputMutex{};
 
 	// Internal helper functions
@@ -33,7 +33,7 @@ namespace wfe {
 		size_t messageLen = strlen((char_t*)message);
 
 		logOutput.WriteBuffer(messageLen, message);
-		free(message, messageLen, MEMORY_USAGE_STRING);
+		free(message, MEMORY_USAGE_STRING);
 
 		// Flush the message
 		logOutput.Flush();
@@ -47,7 +47,10 @@ namespace wfe {
 		// Output the message to the console
 		printf("%s", message);
 
-		// Dispatch a thread to output the message to the log file
+		// Dispatch a thread to output the message to the log file, if the file was opened
+		if(!logOutput.IsOpen())
+			return;
+
 		Thread logThread;
 		logThread.Begin(WriteToLogFileAsync, message);
 		logThread.Detach();
@@ -98,22 +101,14 @@ namespace wfe {
 	}
 	void LogMessageV(LogLevel level, const char_t* format, va_list args) {
 		// Format the message string
-		char_t formattedMessage[MAX_MESSAGE_LENGTH + 1];
-		FormatStringV(formattedMessage, MAX_MESSAGE_LENGTH, format, args);
-		size_t formattedLen = strnlen(formattedMessage, MAX_MESSAGE_LENGTH);
+		char_t fullMessage[LOG_LEVEL_NAME_LENGTH + MAX_MESSAGE_LENGTH + 2];
 
-		// Allocate the full message string to the heap
-		char_t* fullMessage = (char_t*)malloc(LOG_LEVEL_NAME_LENGTH + formattedLen + 2, MEMORY_USAGE_STRING);
-
-		// Check if the memory was allocated correctly
-		if(!fullMessage)
-			throw BadAllocException("Failed to allocate string data!");
-		
-		// Copy all components into the final message
 		memcpy(fullMessage, LOG_LEVEL_NAMES[level], LOG_LEVEL_NAME_LENGTH);
-		memcpy(fullMessage + LOG_LEVEL_NAME_LENGTH, formattedMessage, formattedLen);
-		fullMessage[LOG_LEVEL_NAME_LENGTH + formattedLen] = '\n';
-		fullMessage[LOG_LEVEL_NAME_LENGTH + formattedLen + 1] = 0;
+		FormatStringV(fullMessage, MAX_MESSAGE_LENGTH, format, args);
+
+		size_t formattedLen = strnlen(fullMessage, MAX_MESSAGE_LENGTH);
+		fullMessage[formattedLen] = '\n';
+		fullMessage[formattedLen + 1] = 0;
 
 		// Output the message
 		OutputMessage(level, fullMessage);

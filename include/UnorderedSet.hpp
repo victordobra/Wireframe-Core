@@ -1112,7 +1112,7 @@ namespace wfe {
 
 			// Reallocate the unordered set's buckets
 			if(usetBuckets)
-				usetBuckets = (node_type**)realloc(usetBuckets, oldBucketCount * sizeof(node_type*), usetBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+				usetBuckets = (node_type**)realloc(usetBuckets, usetBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
 			else
 				usetBuckets = (node_type**)malloc(usetBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
 
@@ -1161,11 +1161,11 @@ namespace wfe {
 				}
 
 				// Free the unordered set's data
-				free(usetData, usetCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+				free(usetData, MEMORY_USAGE_ARRAY);
 			}
 			if(usetBuckets) {
 				// Free the unordered set's bucket list
-				free(usetBuckets, usetBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+				free(usetBuckets, MEMORY_USAGE_ARRAY);
 			}
 		}
 	private:
@@ -1175,7 +1175,7 @@ namespace wfe {
 
 			// Reallocate the unordered set's data
 			if(usetData)
-				usetData = (node_type*)realloc(usetData, usetCapacity * sizeof(node_type), newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+				usetData = (node_type*)realloc(usetData, newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
 			else
 				usetData = (node_type*)malloc(newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
 			

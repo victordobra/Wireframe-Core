@@ -2,6 +2,9 @@
 include(./.build.cmake OPTIONAL RESULT_VARIABLE LOCAL_BUILD)
 message(STATUS "Local .build file included successfully.")
 
+# Build the allocator library
+add_subdirectory(allocator)
+
 # Set the minumum required version
 cmake_minimum_required(VERSION 3.0.0)
 message(STATUS "CMake minimum required version set to ${CMAKE_MIN_VERSION}.")
@@ -31,12 +34,17 @@ endif()
 # Create the library
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
-target_compile_options(${PROJECT_NAME} PUBLIC -fPIC)
 message(STATUS "Library created successfully.")
 
 # Add the include directories
-target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/allocator/include)
 message(STATUS "Include directories added.")
+
+# Add the link directory and target the link library
+target_link_directories(${PROJECT_NAME} PUBLIC ${PROJECT_BINARY_DIR}/allocator)
+message(STATUS "Core link directory added")
+target_link_libraries(${PROJECT_NAME} PUBLIC Wireframe-Allocator)
+message(STATUS "Core link library added")
 
 # Find the test source files
 file(GLOB_RECURSE TESTS ${PROJECT_SOURCE_DIR}/test/*.cpp)
@@ -51,18 +59,18 @@ else()
 endif()
 
 # Create the test executable
-add_executable(Test ${TESTS})
-target_compile_features(Test PUBLIC cxx_std_20)
+add_executable(Wireframe-Core-Test ${TESTS})
+target_compile_features(Wireframe-Core-Test PUBLIC cxx_std_20)
 message(STATUS "Test executable created successfully.")
 
 # Add the test include directories
-target_include_directories(Test PRIVATE ${PROJECT_SOURCE_DIR}/test PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(Wireframe-Core-Test PRIVATE ${PROJECT_SOURCE_DIR}/test PUBLIC ${PROJECT_SOURCE_DIR}/include)
 message(STATUS "Test include directories added.")
 
-# Add the link directory and link the library
-target_link_directories(Test PUBLIC ${PROJECT_SOURCE_DIR}/build)
+# Add the link directory and link the core library
+target_link_directories(Wireframe-Core-Test PUBLIC ${PROJECT_BINARY_DIR})
 message(STATUS "Test link directory added.")
-target_link_libraries(Test ${PROJECT_NAME})
+target_link_libraries(Wireframe-Core-Test ${PROJECT_NAME})
 message(STATUS "Test link library added.")
 
 # Add CMake components

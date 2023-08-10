@@ -32,7 +32,7 @@ namespace wfe {
 		threadReturnsMutex.Unlock();
 
 		// Free the given thread params
-		free(params, sizeof(ThreadParams), MEMORY_USAGE_HEAP_OBJECT);
+		free(params, MEMORY_USAGE_HEAP_OBJECT);
 
 		// Return the first bytes of the result
 		return (DWORD)((uint64_t)result & UINT32_T_MAX);
@@ -413,6 +413,14 @@ namespace wfe {
 
 		// Exit the current thread using ExitThread and return the lower half of the return value
 		ExitThread((DWORD)((uint64_t)returnValue & UINT32_T_MAX));
+	}
+	size_t GetProcessorCount() {
+		// Get the SYSTEM_INFO struct
+		SYSTEM_INFO systemInfo;
+		GetSystemInfo(&systemInfo);
+
+		// Return the processor count from the system info
+		return (size_t)systemInfo.dwNumberOfProcessors;
 	}
 }
 

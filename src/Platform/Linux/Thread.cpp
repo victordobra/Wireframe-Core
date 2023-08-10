@@ -7,6 +7,7 @@
 #include "Memory.hpp"
 #include <pthread.h>
 #include <errno.h>
+#include <sys/sysinfo.h>
 
 namespace wfe {
 	bool8_t Thread::operator==(const Thread& other) const {
@@ -114,7 +115,7 @@ namespace wfe {
 
 	Mutex::Mutex() {
 		// Allocate the required memory for the mutex
-		internalData = mallocAsync(sizeof(pthread_mutex_t), MEMORY_USAGE_HEAP_OBJECT);
+		internalData = malloc(sizeof(pthread_mutex_t), MEMORY_USAGE_HEAP_OBJECT);
 
 		// Check if the memory was allocated corectly
 		if(!internalData)
@@ -215,6 +216,10 @@ namespace wfe {
 	void ExitCurrentThread(void* returnValue) {
 		// Exit the current thread using pthread_exit
 		pthread_exit(returnValue);
+	}
+	size_t GetProcessorCount() {
+		// Get the processor count using get_nprocs
+		return (size_t)get_nprocs();
 	}
 }
 

@@ -95,7 +95,7 @@ namespace wfe {
 		strSize = other.strSize;
 
 		if(strData)
-			strData = (pointer)realloc(strData, strCapacity, other.strCapacity, MEMORY_USAGE_STRING);
+			strData = (pointer)realloc(strData, other.strCapacity, MEMORY_USAGE_STRING);
 		else
 			strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
 
@@ -113,7 +113,7 @@ namespace wfe {
 	string& string::operator=(string&& other) noexcept {
 		// Delete the string's contents (if they exist)
 		if(strData)
-			free(strData, strSize, MEMORY_USAGE_STRING);
+			free(strData, MEMORY_USAGE_STRING);
 
 		// Set the new string's values
 		strSize = other.strSize;
@@ -348,7 +348,7 @@ namespace wfe {
 		strSize = str.strSize;
 
 		if(strData)
-			strData = (pointer)realloc(strData, strCapacity, str.strCapacity, MEMORY_USAGE_STRING);
+			strData = (pointer)realloc(strData, str.strCapacity, MEMORY_USAGE_STRING);
 		else
 			strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
 
@@ -366,7 +366,7 @@ namespace wfe {
 	string& string::assign(string&& other) noexcept {
 		// Delete the string's contents (if they exist)
 		if(strData)
-			free(strData, strSize, MEMORY_USAGE_STRING);
+			free(strData, MEMORY_USAGE_STRING);
 		
 		// Set the new string's values
 		strSize = other.strSize;
@@ -906,7 +906,7 @@ namespace wfe {
 
 			if(strData) { 
 				// Reallocate the string
-				strData = (pointer)realloc(strData, oldCapacity, strCapacity, MEMORY_USAGE_STRING);
+				strData = (pointer)realloc(strData, strCapacity, MEMORY_USAGE_STRING);
 			} else {
 				// Allocate the string
 				strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
@@ -943,7 +943,7 @@ namespace wfe {
 
 		if(strData) { 
 			// Reallocate the string
-			strData = (pointer)realloc(strData, strCapacity, newCapacity, MEMORY_USAGE_STRING);
+			strData = (pointer)realloc(strData, newCapacity, MEMORY_USAGE_STRING);
 		} else {
 			// Allocate the string
 			strData = (pointer)malloc(newCapacity, MEMORY_USAGE_STRING);
@@ -1040,7 +1040,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1078,7 +1078,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1115,7 +1115,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1191,7 +1191,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1229,7 +1229,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1266,7 +1266,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1288,7 +1288,7 @@ namespace wfe {
 		}
 
 		// Free the KMP table
-		free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+		free(table, MEMORY_USAGE_ARRAY);
 
 		// Check if there is a 1 byte region left to look in
 		if(size) {
@@ -1345,7 +1345,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1383,7 +1383,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1420,7 +1420,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1442,7 +1442,7 @@ namespace wfe {
 		}
 
 		// Free the KMP table
-		free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+		free(table, MEMORY_USAGE_ARRAY);
 
 		// Check if there is a 1 byte region left to look in
 		if(size) {
@@ -1519,7 +1519,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return size + i;
 					}
@@ -1557,7 +1557,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return size + i;
 					}
@@ -1594,7 +1594,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return size + i;
 					}
@@ -1670,7 +1670,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return size + i;
 					}
@@ -1708,7 +1708,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return size + i;
 					}
@@ -1745,7 +1745,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return size + i;
 					}
@@ -1821,7 +1821,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return size + i;
 					}
@@ -1859,7 +1859,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return size + i;
 					}
@@ -1896,7 +1896,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, (wantedLength + 1) * sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+						free(table, MEMORY_USAGE_ARRAY);
 
 						return size + i;
 					}
@@ -4052,7 +4052,7 @@ namespace wfe {
 	string::~string() {
 		// Delete the string's contents (if they exist)
 		if(strData)
-			free(strData, strSize, MEMORY_USAGE_STRING);
+			free(strData, MEMORY_USAGE_STRING);
 	}
 
 	string operator+(const string&  str1, const string&  str2) {
