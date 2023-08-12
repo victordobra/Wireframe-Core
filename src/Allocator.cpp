@@ -62,10 +62,14 @@ namespace wfe {
 	};
 
 	// Internal structs
+	typedef struct SmallArena {
+		SmallArena* prev;
+		SmallArena* next;
+	} TinyArena;
 	struct LargeArena {
 		Mutex mutex;
-		void** tinyArenaHead;
-		void** smallArenaHeads[64];
+		TinyArena tinyArenaHead;
+		SmallArena smallArenaHeads[64];
 		uint64_t smallArenaHeadBitmask;
 		WfaBuddyMemoryAllocator allocator;
 	};
@@ -100,14 +104,6 @@ namespace wfe {
 	uint64_t Pow2BitIndex(uint64_t val) {
 		// Decrement the value and return its pop count
 		val -= 1;
-		uint64_t popcount = POPCOUNT_TABLE[val & 0xff];
-		popcount += POPCOUNT_TABLE[(val >> 8) & 0xff];
-		popcount += POPCOUNT_TABLE[(val >> 16) & 0xff];
-		popcount += POPCOUNT_TABLE[(val >> 24) & 0xff];
-		popcount += POPCOUNT_TABLE[(val >> 32) & 0xff];
-		popcount += POPCOUNT_TABLE[(val >> 40) & 0xff];
-		popcount += POPCOUNT_TABLE[(val >> 48) & 0xff];
-		popcount += POPCOUNT_TABLE[(val >> 56) & 0xff];
 		return POPCOUNT_TABLE[val & 0xff] + POPCOUNT_TABLE[(val >> 8) & 0xff] + POPCOUNT_TABLE[(val >> 16) & 0xff] + POPCOUNT_TABLE[(val >> 24) & 0xff] + POPCOUNT_TABLE[(val >> 32) & 0xff] + POPCOUNT_TABLE[(val >> 40) & 0xff] + POPCOUNT_TABLE[(val >> 48) & 0xff] + POPCOUNT_TABLE[(val >> 56) & 0xff];
 	}
 
@@ -138,8 +134,8 @@ namespace wfe {
 		largeArenaInfo.ppOutMemory = nullptr;
 
 		// Calculate the sizes for all arena types
-		tinyArenaRequiredSize = wfaGetMemoryPoolRequiredMemorySize(&tinyArenaInfo) + sizeof(void**);
-		smallArenaRequiredSize = wfaGetBitmaskAllocatorRequiredMemorySize(&smallArenaInfo) + sizeof(void**);
+		tinyArenaRequiredSize = wfaGetMemoryPoolRequiredMemorySize(&tinyArenaInfo) + sizeof(TinyArena);
+		smallArenaRequiredSize = wfaGetBitmaskAllocatorRequiredMemorySize(&smallArenaInfo) + sizeof(SmallArena);
 		largeArenaSize = wfaGetBuddyMemoryAllocatorRequiredMemorySize(&largeArenaInfo);
 
 		// Calculate the required block counts for both tiny and small arenas
@@ -152,12 +148,15 @@ namespace wfe {
 
 		// Create every wanted large arena
 		for(size_t i = 0; i != largeArenaCount; ++i) {
-			// Set the head of the tiny arena list to nullptr
-			largeArenas[i].tinyArenaHead = nullptr;
+			// Set the head of the tiny arena list
+			TinyArena* tinyArenaHead = &(largeArenas[i].tinyArenaHead);
+			*tinyArenaHead = { tinyArenaHead, tinyArenaHead };
 
-			// Set the head of every small arena list to nullptr
-			for(size_t j = 0; j != 64; ++j)
-				largeArenas[i].smallArenaHeads[j] = nullptr;
+			// Set the head of every small arena list
+			for(size_t j = 0; j != 64; ++j) {
+				SmallArena* smallArenaHead = largeArenas[i].smallArenaHeads + j;
+				*smallArenaHead = { smallArenaHead, smallArenaHead };
+			}
 			largeArenas[i].smallArenaHeadBitmask = 0;
 
 			// Create the large arena
@@ -168,12 +167,15 @@ namespace wfe {
 
 		// Loop through every other possible large arena, setting all default values
 		for(size_t i = largeArenaCount; i != MAX_LARGE_ARENA_COUNT; ++i) {
-			// Set the head of the tiny arena list to nullptr
-			largeArenas[i].tinyArenaHead = nullptr;
+			// Set the head of the tiny arena list
+			TinyArena* tinyArenaHead = &(largeArenas[i].tinyArenaHead);
+			*tinyArenaHead = { tinyArenaHead, tinyArenaHead };
 
-			// Set the head of every small arena list to nullptr
-			for(size_t j = 0; j != 64; ++j)
-				largeArenas[i].smallArenaHeads[j] = nullptr;
+			// Set the head of every small arena list
+			for(size_t j = 0; j != 64; ++j) {
+				SmallArena* smallArenaHead = largeArenas[i].smallArenaHeads + j;
+				*smallArenaHead = { smallArenaHead, smallArenaHead };
+			}
 			largeArenas[i].smallArenaHeadBitmask = 0;
 		}
 	}
@@ -229,13 +231,18 @@ namespace wfe {
 		// Check if the requested memory block is tiny
 		if(size <= TINY_ARENA_BLOCK_SIZE) {
 			// Try to find or allocate a tiny arena
+			TinyArena* tinyArenaHead = nullptr;
 			for(; largeArenaCount != MAX_LARGE_ARENA_COUNT; ++largeArenaCount) {
 				// Get the current large arena index
 				largeArenaIndex = (size_t)(threadIDHash % largeArenaCount);
 			
 				// Check if the current arena has a tiny arena
-				if(largeArenas[largeArenaIndex].tinyArenaHead)
+				TinyArena* currentTinyArenaHead = &(largeArenas[largeArenaIndex].tinyArenaHead);
+				if(currentTinyArenaHead->next != currentTinyArenaHead) {
+					// Save the current tiny arena head and exit the loop
+					tinyArenaHead = currentTinyArenaHead;
 					break;
+				}
 
 				// Check if the current large arena can hold a tiny arena
 				largeArenas[largeArenaIndex].mutex.Lock();
@@ -261,20 +268,17 @@ namespace wfe {
 			largeArenas[largeArenaIndex].mutex.Lock();
 
 			// Create a tiny arena if none exist
-			void** tinyArena;
-			void** tinyArenaHead = largeArenas[largeArenaIndex].tinyArenaHead;
-
+			TinyArena* tinyArena;
 			WfaMemoryPoolAllocator tinyArenaAllocator;
 			void* managedMemory;
 			if(!tinyArenaHead) {
 				// Set the tiny arena pointer
 				char_t* largeArenaIncludedMemory = (char_t*)wfaBuddyMemoryGetIncludedMemory(largeArenas[largeArenaIndex].allocator);
-				tinyArena = (void**)(largeArenaIncludedMemory + allocIndex * LARGE_ARENA_BLOCK_SIZE);
-				*tinyArena = nullptr;
+				tinyArena = (TinyArena*)(largeArenaIncludedMemory + allocIndex * LARGE_ARENA_BLOCK_SIZE);
 
 				// Set the create info
 				WfaMemoryPoolAllocatorCreateInfo createInfo;
-				managedMemory = largeArenaIncludedMemory + allocIndex * LARGE_ARENA_BLOCK_SIZE + tinyArenaRequiredSize;
+				managedMemory = (char_t*)tinyArena + tinyArenaRequiredSize;
 
 				createInfo.allocatorBlockSize = TINY_ARENA_BLOCK_SIZE;
 				createInfo.allocatorBlockCount = tinyArenaBlockCount;
@@ -289,10 +293,13 @@ namespace wfe {
 					return nullptr;
 				
 				// Add the tiny arena to the free list
-				*tinyArena = nullptr;
-				largeArenas[largeArenaIndex].tinyArenaHead = tinyArena;
+				tinyArenaHead = &(largeArenas[largeArenaIndex].tinyArenaHead);
+
+				*tinyArena = { tinyArenaHead, tinyArenaHead };
+				*tinyArenaHead = { tinyArena, tinyArena };
 			} else {
-				tinyArena = tinyArenaHead;
+				// Save the first arena in the free list
+				tinyArena = tinyArenaHead->next;
 				tinyArenaAllocator = (WfaMemoryPoolAllocator)(tinyArena + 1);
 				managedMemory = (char_t*)tinyArena + tinyArenaRequiredSize;
 			}
@@ -304,8 +311,10 @@ namespace wfe {
 			
 			// Check if the current tiny arena if full
 			if(wfaMemoryPoolIsFull(tinyArenaAllocator)) {
-				// Remove the memory pool from its free list
-				largeArenas[largeArenaIndex].tinyArenaHead = (void**)*tinyArena;
+				// Remove the tiny arena from its free list
+				TinyArena* nextTinyArena = tinyArena->next;
+				tinyArenaHead->next = nextTinyArena;
+				nextTinyArena->prev = tinyArenaHead;
 			}
 			
 			// Unlock the current large arena's mutex
@@ -366,18 +375,16 @@ namespace wfe {
 			largeArenas[largeArenaIndex].mutex.Lock();
 
 			// Create a small arena if one wasn't found
-			void** smallArena;
-
 			WfaBitmaskAllocator smallArenaAllocator;
 			void* managedMemory;
 			if(smallArenaHeadIndex == 64) {
 				// Set the small arena pointer
 				char_t* largeArenaIncludedMemory = (char_t*)wfaBuddyMemoryGetIncludedMemory(largeArenas[largeArenaIndex].allocator);
-				smallArena = (void**)(largeArenaIncludedMemory + allocIndex * LARGE_ARENA_BLOCK_SIZE);
+				SmallArena* smallArena = (SmallArena*)(largeArenaIncludedMemory + allocIndex * LARGE_ARENA_BLOCK_SIZE);
 
 				// Set the create info
 				WfaBitmaskAllocatorCreateInfo createInfo;
-				managedMemory = largeArenaIncludedMemory + allocIndex * LARGE_ARENA_BLOCK_SIZE + smallArenaRequiredSize;
+				managedMemory = (char_t*)smallArena + smallArenaRequiredSize;
 
 				createInfo.allocatorBlockSize = SMALL_ARENA_BLOCK_SIZE;
 				createInfo.allocatorBlockCount = smallArenaBlockCount;
@@ -391,11 +398,12 @@ namespace wfe {
 					return nullptr;
 				
 				// Add the small arena to its free list
-				*smallArena = nullptr;
+				smallArenaHeadIndex = smallArenaBlockCount - blockCount;
+				SmallArena* smallArenaHead = largeArenas[largeArenaIndex].smallArenaHeads + smallArenaHeadIndex;
 
-				size_t headIndex = smallArenaBlockCount - blockCount;
-				largeArenas[largeArenaIndex].smallArenaHeads[headIndex] = smallArena;
-				largeArenas[largeArenaIndex].smallArenaHeadBitmask |= (uint64_t)1 << headIndex;
+				*smallArena = { smallArenaHead, smallArenaHead };
+				*smallArenaHead = { smallArena, smallArena };
+				largeArenas[largeArenaIndex].smallArenaHeadBitmask |= (uint64_t)1 << smallArenaHeadIndex;
 
 				// Allocate a memory block in the current arena
 				result = wfaBitmaskAlloc(smallArenaAllocator, size, &allocIndex);
@@ -403,7 +411,9 @@ namespace wfe {
 					return nullptr;
 			} else {
 				// Set the working values to the values for the first small arena in the linked list
-				smallArena = (void**)largeArenas[largeArenaIndex].smallArenaHeads[smallArenaHeadIndex];
+				SmallArena* smallArenaHead = largeArenas[largeArenaIndex].smallArenaHeads + smallArenaHeadIndex;
+				SmallArena* smallArena = smallArenaHead->next;
+
 				smallArenaAllocator = (WfaBitmaskAllocator)(smallArena + 1);
 				managedMemory = (char_t*)smallArena + smallArenaRequiredSize;
 
@@ -417,14 +427,26 @@ namespace wfe {
 
 				// Check if the current allocator needs to be moved to another linked list
 				if(smallArenaHeadIndex != newHeadIndex) {
+					// Save the current large arena's small arena head bitmask
+					uint64_t smallArenaHeadBitmask = largeArenas[largeArenaIndex].smallArenaHeadBitmask;
+
 					// Remove the arena from its old linked list
-					largeArenas[largeArenaIndex].smallArenaHeads[smallArenaHeadIndex] = (void**)*smallArena;
-					largeArenas[largeArenaIndex].smallArenaHeadBitmask &= ~((uint64_t)(*smallArena == nullptr) << smallArenaHeadIndex);
+					SmallArena* nextSmallArena = smallArena->next;
+					smallArenaHead->next = nextSmallArena;
+					nextSmallArena->prev = smallArenaHead;
+					smallArenaHeadBitmask &= ~((uint64_t)(nextSmallArena == smallArenaHead) << smallArenaHeadIndex);
 					
 					// Add the arena to its new linked list
-					*smallArena = (void*)largeArenas[largeArenaIndex].smallArenaHeads[newHeadIndex];
-					largeArenas[largeArenaIndex].smallArenaHeads[newHeadIndex] = smallArena;
-					largeArenas[largeArenaIndex].smallArenaHeadBitmask |= (uint64_t)1 << newHeadIndex;
+					smallArenaHead = largeArenas[largeArenaIndex].smallArenaHeads + newHeadIndex;
+					nextSmallArena = smallArenaHead->next;
+
+					*smallArena = { smallArenaHead, nextSmallArena };
+					smallArenaHead->next = smallArena;
+					nextSmallArena->prev = smallArena;
+					smallArenaHeadBitmask |= (uint64_t)1 << newHeadIndex;
+
+					// Save the new small arena head bitmask
+					largeArenas[largeArenaIndex].smallArenaHeadBitmask = smallArenaHeadBitmask;
 				}
 			}
 
@@ -542,17 +564,17 @@ namespace wfe {
 		if(size <= TINY_ARENA_BLOCK_SIZE) {
 			// Get the block's tiny arena's index in its large arena
 			size_t offset = (size_t)((char_t*)mem - managedMemory);
-			size_t arenaIndex = offset / LARGE_ARENA_BLOCK_SIZE;
+			size_t arenaOffset = offset - offset % LARGE_ARENA_BLOCK_SIZE;
 
 			// Load the arena's data
-			void** tinyArena = (void**)(managedMemory + arenaIndex * LARGE_ARENA_BLOCK_SIZE);
+			TinyArena* tinyArena = (TinyArena*)(managedMemory + arenaOffset);
 			WfaMemoryPoolAllocator tinyArenaAllocator = (WfaMemoryPoolAllocator)(tinyArena + 1);
 
 			// Check if the arena is currently full
 			bool8_t arenaWasFull = wfaMemoryPoolIsFull(tinyArenaAllocator);
 
 			// Free the given block from its tiny arena
-			size_t blockIndex = (offset - arenaIndex * LARGE_ARENA_BLOCK_SIZE - tinyArenaRequiredSize) / TINY_ARENA_BLOCK_SIZE;
+			size_t blockIndex = (offset - arenaOffset - tinyArenaRequiredSize) / TINY_ARENA_BLOCK_SIZE;
 
 			WfaResult result = wfaMemoryPoolFree(tinyArenaAllocator, blockIndex);
 			if(result != WFA_SUCCESS) {
@@ -563,8 +585,12 @@ namespace wfe {
 			// Check if the arena was full before freeing the given block
 			if(arenaWasFull) {
 				// Add the current tiny arena to the large arena's free linked list
-				*tinyArena = (void*)largeArenas[largeArenaIndex].tinyArenaHead;
-				largeArenas[largeArenaIndex].tinyArenaHead = tinyArena;
+				TinyArena* tinyArenaHead = &(largeArenas[largeArenaIndex].tinyArenaHead);
+				TinyArena* nextTinyArena = tinyArenaHead->next;
+
+				*tinyArena = { tinyArenaHead, nextTinyArena };
+				tinyArenaHead->next = tinyArena;
+				nextTinyArena->prev = tinyArena;
 			}
 
 			// Exit the function
@@ -574,17 +600,17 @@ namespace wfe {
 		if(size <= SMALL_ARENA_BLOCK_SIZE * smallArenaBlockCount) {
 			// Get the block's small arena's index in its large arena
 			size_t offset = (size_t)((char_t*)mem - managedMemory);
-			size_t arenaIndex = offset / LARGE_ARENA_BLOCK_SIZE;
+			size_t arenaOffset = offset - offset % LARGE_ARENA_BLOCK_SIZE;
 
 			// Load the arena's data
-			void** smallArena = (void**)(managedMemory + arenaIndex * LARGE_ARENA_BLOCK_SIZE);
+			SmallArena* smallArena = (SmallArena*)(managedMemory + arenaOffset);
 			WfaBitmaskAllocator smallArenaAllocator = (WfaBitmaskAllocator)(smallArena + 1);
 
 			// Calculate the arena's current longest span length
-			size_t oldLongestSpan = wfaBitmaskMemoryGetLongestFreeSpan(smallArenaAllocator);
+			size_t oldHeadIndex = wfaBitmaskMemoryGetLongestFreeSpan(smallArenaAllocator);
 
 			// Free the given block from its small arena
-			size_t blockIndex = (offset - arenaIndex * LARGE_ARENA_BLOCK_SIZE - smallArenaRequiredSize) / SMALL_ARENA_BLOCK_SIZE;
+			size_t blockIndex = (offset - arenaOffset - smallArenaRequiredSize) / SMALL_ARENA_BLOCK_SIZE;
 
 			WfaResult result = wfaBitmaskFree(smallArenaAllocator, blockIndex, size);
 			if(result != WFA_SUCCESS) {
@@ -593,19 +619,32 @@ namespace wfe {
 			}
 
 			// Calculate the arena's current longest span length
-			size_t longestSpan = wfaBitmaskMemoryGetLongestFreeSpan(smallArenaAllocator);
+			size_t newHeadIndex = wfaBitmaskMemoryGetLongestFreeSpan(smallArenaAllocator);
 
 			// Check if the length of the longest free span has changed
-			if(oldLongestSpan != longestSpan) {
+			if(oldHeadIndex != newHeadIndex) {
+				// Save the current large arena's small arena head bitmask
+				uint64_t smallArenaHeadBitmask = largeArenas[largeArenaIndex].smallArenaHeadBitmask;
+
 				// Remove the arena from its current free list
-				void** smallArenaNext = (void**)*smallArena;
-				largeArenas[largeArenaIndex].smallArenaHeads[oldLongestSpan] = smallArenaNext;
-				largeArenas[largeArenaIndex].smallArenaHeadBitmask &= ~(((uint64_t)(smallArenaNext == nullptr)) << oldLongestSpan);
+				SmallArena* prevSmallArena = smallArena->prev;
+				SmallArena* nextSmallArena = smallArena->next;
+
+				prevSmallArena->next = nextSmallArena;
+				nextSmallArena->prev = prevSmallArena;
+				smallArenaHeadBitmask &= ~((uint64_t)(nextSmallArena == prevSmallArena) << oldHeadIndex);
 
 				// Add the arena to its new free list
-				*smallArena = (void*)largeArenas[largeArenaIndex].smallArenaHeads[longestSpan];
-				largeArenas[largeArenaIndex].smallArenaHeads[longestSpan] = smallArena;
-				largeArenas[largeArenaIndex].smallArenaHeadBitmask |= (uint64_t)1 << longestSpan;
+				SmallArena* smallArenaHead = largeArenas[largeArenaIndex].smallArenaHeads + newHeadIndex;
+				nextSmallArena = smallArenaHead->next;
+
+				*smallArena = { smallArenaHead, nextSmallArena };
+				smallArenaHead->next = smallArena;
+				nextSmallArena->prev = smallArena;
+				smallArenaHeadBitmask |= (uint64_t)1 << newHeadIndex;
+
+				// Save the new small arena head bitmask
+				largeArenas[largeArenaIndex].smallArenaHeadBitmask = smallArenaHeadBitmask;
 			}
 
 			// Exit the function
