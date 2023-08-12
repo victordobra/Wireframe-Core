@@ -259,7 +259,7 @@ namespace wfe {
 					return nullptr;
 				
 				// Create a new arena
-				result = wfaCreateBuddyMemoryAllocator(&largeArenaInfo, &SYSTEM_ALLOC_CALLBACKS, &(largeArenas[largeArenaIndex + 1].allocator));
+				result = wfaCreateBuddyMemoryAllocator(&largeArenaInfo, &SYSTEM_ALLOC_CALLBACKS, &(largeArenas[largeArenaCount + 1].allocator));
 				if(result != WFA_SUCCESS)
 					return nullptr;
 			}
@@ -366,7 +366,7 @@ namespace wfe {
 					return nullptr;
 				
 				// Create a new arena
-				result = wfaCreateBuddyMemoryAllocator(&largeArenaInfo, &SYSTEM_ALLOC_CALLBACKS, &(largeArenas[largeArenaIndex + 1].allocator));
+				result = wfaCreateBuddyMemoryAllocator(&largeArenaInfo, &SYSTEM_ALLOC_CALLBACKS, &(largeArenas[largeArenaCount + 1].allocator));
 				if(result != WFA_SUCCESS)
 					return nullptr;
 			}
@@ -484,7 +484,7 @@ namespace wfe {
 				return nullptr;
 			
 			// Create a new arena
-			result = wfaCreateBuddyMemoryAllocator(&largeArenaInfo, &SYSTEM_ALLOC_CALLBACKS, &(largeArenas[largeArenaIndex + 1].allocator));
+			result = wfaCreateBuddyMemoryAllocator(&largeArenaInfo, &SYSTEM_ALLOC_CALLBACKS, &(largeArenas[largeArenaCount + 1].allocator));
 			if(result != WFA_SUCCESS)
 				return nullptr;
 		}
