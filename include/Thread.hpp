@@ -2,6 +2,10 @@
 
 #include "Defines.hpp"
 
+#ifdef WFE_PLATFORM_LINUX
+#include <pthread.h>
+#endif
+
 namespace wfe {
 	/// @brief An implementation of a processor thread.
 	struct Thread {
@@ -120,7 +124,11 @@ namespace wfe {
 		/// @brief Deletes the mutex.
 		~Mutex();
 	private:
+#ifdef WFE_PLATFORM_LINUX
+		pthread_mutex_t internalData;
+#else
 		void* internalData;
+#endif
 	};
 
 	/// @brief Gets the current thread's ID.
