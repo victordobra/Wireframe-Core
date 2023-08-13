@@ -2,9 +2,6 @@
 include(./.build.cmake OPTIONAL RESULT_VARIABLE LOCAL_BUILD)
 message(STATUS "Local .build file included successfully.")
 
-# Build the allocator library
-add_subdirectory(allocator)
-
 # Set the minumum required version
 cmake_minimum_required(VERSION 3.0.0)
 message(STATUS "CMake minimum required version set to ${CMAKE_MIN_VERSION}.")
@@ -37,14 +34,8 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 message(STATUS "Library created successfully.")
 
 # Add the include directories
-target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/allocator/include)
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src PUBLIC ${PROJECT_SOURCE_DIR}/include)
 message(STATUS "Include directories added.")
-
-# Add the link directory and target the link library
-target_link_directories(${PROJECT_NAME} PUBLIC ${PROJECT_BINARY_DIR}/allocator)
-message(STATUS "Core link directory added")
-target_link_libraries(${PROJECT_NAME} PUBLIC Wireframe-Allocator)
-message(STATUS "Core link library added")
 
 # Find the test source files
 file(GLOB_RECURSE TESTS ${PROJECT_SOURCE_DIR}/test/*.cpp)

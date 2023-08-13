@@ -1,3 +1,0 @@
-[submodule "allocator"]
-	path = allocator
-	url = https://github.com/victordobra/Wireframe-Allocator
