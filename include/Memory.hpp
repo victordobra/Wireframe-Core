@@ -43,7 +43,7 @@ namespace wfe {
 	
 	/// @brief Gets the memory usage of the entire application.
 	/// @return A pointer to a size_t array of size MEMORY_USAGE_COUNT, specifying the memory usage for every single type.
-	size_t* GetMemoryUsage();
+	volatile atomic_size_t* GetMemoryUsage();
 	/// @brief Gets the memory usage for the given type.
 	/// @param memoryUsage The memory usage type to check for.
 	/// @return The total memory usage for the given type.

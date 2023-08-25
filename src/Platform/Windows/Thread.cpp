@@ -16,7 +16,7 @@ namespace wfe {
 		Thread::ThreadFunction func;
 		void* params;
 	};
-	unordered_map<Thread::ThreadID, void*> threadReturns;
+	//unordered_map<Thread::ThreadID, void*> threadReturns;
 	Mutex threadReturnsMutex;
 
 	DWORD WINAPI ThreadFunctionWrapper(LPVOID voidParams) {
@@ -28,7 +28,7 @@ namespace wfe {
 
 		// Write the result to the result map
 		threadReturnsMutex.Lock();
-		threadReturns[params->threadID] = result;
+		//threadReturns[params->threadID] = result;
 		threadReturnsMutex.Unlock();
 
 		// Free the given thread params
@@ -245,7 +245,7 @@ namespace wfe {
 
 		// Save the full result to the given pointer
 		threadReturnsMutex.Lock();
-		*returnPtr = threadReturns[threadID];
+		//*returnPtr = threadReturns[threadID];
 		threadReturnsMutex.Unlock();
 		
 		// Close the thread's handle
@@ -408,7 +408,7 @@ namespace wfe {
 
 		// Write the return to the return map
 		threadReturnsMutex.Lock();
-		threadReturns[threadID] = returnValue;
+		//threadReturns[threadID] = returnValue;
 		threadReturnsMutex.Unlock();
 
 		// Exit the current thread using ExitThread and return the lower half of the return value

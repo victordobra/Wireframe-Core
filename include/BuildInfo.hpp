@@ -70,7 +70,18 @@
 
 // Architecture
 #if defined(__i386__)
+// Defined when building for a 32-bit architecture
 #define WFE_ARCHITECTURE_X86_64
 #else
+// Defined when building for a 64-bit architecture
 #define WFE_ARCHITECTURE_X64
+#endif
+
+// Build mode
+#if !defined(NDEBUG)
+// Defined when building in debug mode
+#define WFE_BUILD_MODE_DEBUG
+#else
+// Defined when building in release mode
+#define WFE_BUILD_MODE_RELEASE
 #endif

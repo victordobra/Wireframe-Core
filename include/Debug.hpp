@@ -60,7 +60,7 @@ namespace wfe {
 /// @brief Defined when info messages are enabled for the logger.
 #define WFE_LOG_INFO_ENABLED
 
-#if !defined(NDEBUG)
+#if defined(WFE_BUILD_MODE_DEBUG)
 /// @brief Defined when debug messages are enabled for the logger.
 #define WFE_LOG_DEBUG_ENABLED
 /// @brief Defined when trace messages are enabled for the logger.

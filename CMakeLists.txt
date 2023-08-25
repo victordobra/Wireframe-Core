@@ -37,6 +37,10 @@ message(STATUS "Library created successfully.")
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src PUBLIC ${PROJECT_SOURCE_DIR}/include)
 message(STATUS "Include directories added.")
 
+# Add the atomic library
+target_link_libraries(${PROJECT_NAME} atomic)
+message(STATUS "Atomic library added.")
+
 # Find the test source files
 file(GLOB_RECURSE TESTS ${PROJECT_SOURCE_DIR}/test/*.cpp)
 list(LENGTH TESTS TEST_COUNT)

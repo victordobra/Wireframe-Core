@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <assert.h>
 #include <limits.h>
+#include <atomic>
 
 namespace wfe {
 	// Signed int types
@@ -64,6 +65,27 @@ namespace wfe {
 
 	WFE_STATIC_ASSERT((sizeof(bool8_t)   == 1), "Expected bool8_t to be 1 byte!"  );
 	WFE_STATIC_ASSERT((sizeof(bool32_t)  == 4), "Expected bool32_t to be 4 bytes!");
+
+	// Atomic types
+	typedef std::atomic<int8_t>  atomic_int8_t;
+	typedef std::atomic<int16_t> atomic_int16_t;
+	typedef std::atomic<int32_t> atomic_int32_t;
+	typedef std::atomic<int64_t> atomic_int64_t;
+
+	typedef std::atomic<uint8_t>  atomic_uint8_t;
+	typedef std::atomic<uint16_t> atomic_uint16_t;
+	typedef std::atomic<uint32_t> atomic_uint32_t;
+	typedef std::atomic<uint64_t> atomic_uint64_t;
+
+	typedef std::atomic<float32_t> atomic_float32_t;
+	typedef std::atomic<float64_t> atomic_float64_t;
+
+	typedef std::atomic<char_t>  atomic_char_t;
+	typedef std::atomic<charw_t> atomic_charw_t;
+
+	typedef std::atomic<size_t> atomic_size_t;
+	typedef std::atomic<ptrdiff_t> atomic_ptrdiff_t;
+	typedef std::atomic<intptr_t> atomic_intptr_t;
 
 	// Numerical limits for types
 
