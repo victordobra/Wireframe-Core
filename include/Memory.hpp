@@ -14,6 +14,8 @@ namespace wfe {
 		MEMORY_USAGE_STRING,
 		/// @brief Object allocated on the heap usage type.
 		MEMORY_USAGE_HEAP_OBJECT,
+		/// @brief Rendering API backent usage type.
+		MEMORY_USAGE_RENDERER_BACKEND,
 		/// @brief The number of possible memory usages.
 		MEMORY_USAGE_COUNT
 	} MemoryUsage;
