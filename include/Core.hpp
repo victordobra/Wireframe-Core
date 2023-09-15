@@ -3,6 +3,7 @@
 #include "BuildInfo.hpp"
 #include "Debug.hpp"
 #include "Defines.hpp"
+#include "DynamicLib.hpp"
 #include "Event.hpp"
 #include "Exception.hpp"
 #include "Files.hpp"
