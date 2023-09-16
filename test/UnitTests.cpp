@@ -43,6 +43,8 @@ namespace wfe {
 		UnitTestList unitTestList;
 		unitTestList.unitTestCount = 0;
 
+		size_t totalTestCount = 0, totalCorrectCount = 0;
+
 		// Run every unit test callback
 		for(size_t i = 0; i != unitTestCallbackCount; ++i) {
 			// Run the callback
@@ -116,8 +118,18 @@ namespace wfe {
 				printf("\n");
 			}
 
+			// Increase the total test and correct count
+			totalTestCount += unitTestList.unitTestCount;
+			totalCorrectCount += correctCount;
+
 			// Reset the unit test list
 			unitTestList.unitTestCount = 0;
 		}
+
+		// Output the total precentage
+		size_t totalPrecentage = totalCorrectCount * 100 / totalTestCount;
+
+		// Output the total stats
+		printf("\nTotal: %llu%% (%llu/%llu) correct.\n", (unsigned long long)totalPrecentage, (unsigned long long)totalCorrectCount, (unsigned long long)totalTestCount);
 	}
 }
