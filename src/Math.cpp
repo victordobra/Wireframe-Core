@@ -26,31 +26,37 @@ namespace wfe {
 		return sqrt(x);
 	}
 	float32_t InvSqrt(float32_t x) {
-		uint32_t i;
-		float32_t halfX = x * .5f, invSqrtX = x;
-
-		// Copy the float's value into an unsigned int
-		i = *(uint32_t*)&invSqrtX;
+		// Declare an integer and the given number in an union to apply bithacks
+		union {
+			uint32_t intInvSqrtX;
+			float32_t invSqrtX;
+		} sqrtUnion;
+		sqrtUnion.invSqrtX = x;
 
 		// Perform dark magic
-		i = 0x5f3759df - (i >> 1);
-
-		// Copy the unsigned int's value into a float
-		invSqrtX = *(float32_t*)&i;
+		sqrtUnion.intInvSqrtX = 0x5f3759df - (sqrtUnion.intInvSqrtX >> 1);
 
 		// Apply two Newton iterations
-		invSqrtX = invSqrtX * (1.5f - (halfX * invSqrtX * invSqrtX));
-		invSqrtX = invSqrtX * (1.5f - (halfX * invSqrtX * invSqrtX));
+		float32_t halfX = x * .5f;
+		sqrtUnion.invSqrtX = sqrtUnion.invSqrtX * (1.5f - (halfX * sqrtUnion.invSqrtX * sqrtUnion.invSqrtX));
+		sqrtUnion.invSqrtX = sqrtUnion.invSqrtX * (1.5f - (halfX * sqrtUnion.invSqrtX * sqrtUnion.invSqrtX));
 
-		return invSqrtX;
+		return sqrtUnion.invSqrtX;
 	}
 
 	float32_t Absolute(float32_t x) {
+		// Declare an integer and the given number in an union to apply bithacks
+		union {
+			uint32_t intAbsX;
+			float32_t absX;
+		} absUnion;
+		absUnion.absX = x;
+
 		// Apply an IEEE 754 bit hack to the number
-		(*(uint32_t*)&x) &= ~(1 << 31);
+		absUnion.intAbsX &= ~(1 << 31);
 
 		// Return the number
-		return x;
+		return absUnion.absX;
 	}
 
 	bool8_t IsPowerOf2(uint64_t x) {

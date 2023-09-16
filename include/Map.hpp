@@ -347,9 +347,6 @@ namespace wfe {
 
 			// Check if memory needs to be reallocated
 			if(mapSize > mapCapacity) {
-				// Save the map's old capacity
-				size_type oldCapacity = mapCapacity;
-
 				// Set the map's capacity to the lowest power of 2 higher than or equal to the set's size
 				mapCapacity = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -447,9 +444,6 @@ namespace wfe {
 
 			// Check if memory needs to be reallocated
 			if(mapSize > mapCapacity) {
-				// Save the map's old capacity
-				size_type oldCapacity = mapCapacity;
-
 				// Set the map's capacity to the lowest power of 2 higher than or equal to the set's size
 				mapCapacity = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -504,9 +498,6 @@ namespace wfe {
 
 			// Check if memory needs to be reallocated
 			if(mapSize > mapCapacity) {
-				// Save the map's old capacity
-				size_type oldCapacity = mapCapacity;
-
 				// Set the map's capacity to the lowest power of 2 higher than or equal to the set's size
 				mapCapacity = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -556,9 +547,6 @@ namespace wfe {
 
 				// Check if memory needs to be reallocated
 				if(mapSize > mapCapacity) {
-					// Save the map's old capacity
-					size_type oldCapacity = mapCapacity;
-
 					// Set the map's capacity to the lowest power of 2 higher than or equal to the set's size
 					mapCapacity = 1;
 					for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -627,9 +615,6 @@ namespace wfe {
 
 			// Check if memory needs to be reallocated
 			if(mapSize > mapCapacity) {
-				// Save the map's old capacity
-				size_type oldCapacity = mapCapacity;
-
 				// Set the map's capacity to the lowest power of 2 higher than or equal to the set's size
 				mapCapacity = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -679,9 +664,6 @@ namespace wfe {
 
 				// Check if memory needs to be reallocated
 				if(mapSize > mapCapacity) {
-					// Save the map's old capacity
-					size_type oldCapacity = mapCapacity;
-
 					// Set the map's capacity to the lowest power of 2 higher than or equal to the set's size
 					mapCapacity = 1;
 					for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -750,9 +732,6 @@ namespace wfe {
 
 			// Check if memory needs to be reallocated
 			if(mapSize > mapCapacity) {
-				// Save the map's old capacity
-				size_type oldCapacity = mapCapacity;
-
 				// Set the map's capacity to the lowest power of 2 higher than or equal to the set's size
 				mapCapacity = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)

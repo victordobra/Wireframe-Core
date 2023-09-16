@@ -68,9 +68,9 @@ namespace wfe {
 
 			UnitTest& unitTest3 = unitTestList.unitTests[unitTestList.unitTestCount++];
 
-			unitTest2.name = "assign 3";
-			unitTest2.FormatResult("%s", test3.c_str());
-			unitTest2.wantedResult = "bbbbbbbbbb";
+			unitTest3.name = "assign 3";
+			unitTest3.FormatResult("%s", test3.c_str());
+			unitTest3.wantedResult = "bbbbbbbbbb";
 		}
 		/* Test insert */ {
 			// Test 1

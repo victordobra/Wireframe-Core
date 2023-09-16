@@ -25,7 +25,7 @@ namespace wfe {
 	Mutex logOutputMutex{};
 
 	// Internal helper functions
-	void* WriteToLogFileAsync(void* message) {
+	static void* WriteToLogFileAsync(void* message) {
 		// Lock the log output mutex
 		logOutputMutex.Lock();
 
@@ -43,7 +43,7 @@ namespace wfe {
 
 		return nullptr;
 	}
-	static void OutputMessage(LogLevel level, char_t* message) {
+	static void OutputMessage(char_t* message) {
 		// Output the message to the console
 		printf("%s", message);
 
@@ -119,7 +119,7 @@ namespace wfe {
 		fullMessage[formattedLen + 1] = 0;
 
 		// Output the message
-		OutputMessage(level, fullMessage);
+		OutputMessage(fullMessage);
 
 		// Abort the program if the error was fatal
 		if(level == LOG_LEVEL_FATAL) {

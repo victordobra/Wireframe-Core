@@ -279,9 +279,6 @@ namespace wfe {
 
 			// Check if memory needs to be reallocated
 			if(setSize > setCapacity) {
-				// Save the set's old capacity
-				size_type oldCapacity = setCapacity;
-
 				// Set the capacity to the lowest power of 2 higher than the set's size
 				setCapacity = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -332,9 +329,6 @@ namespace wfe {
 
 			// Check if memory needs to be reallocated
 			if(setSize > setCapacity) {
-				// Save the set's old capacity
-				size_type oldCapacity = setCapacity;
-
 				// Set the capacity to the lowest power of 2 higher than the set's size
 				setCapacity = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -380,9 +374,6 @@ namespace wfe {
 
 				// Check if memory needs to be reallocated
 				if(setSize > setCapacity) {
-					// Save the set's old capacity
-					size_type oldCapacity = setCapacity;
-
 					// Set the capacity to the lowest power of 2 higher than the set's size
 					setCapacity = 1;
 					for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -447,9 +438,6 @@ namespace wfe {
 
 			// Check if memory needs to be reallocated
 			if(setSize > setCapacity) {
-				// Save the set's old capacity
-				size_type oldCapacity = setCapacity;
-
 				// Set the capacity to the lowest power of 2 higher than the set's size
 				setCapacity = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -492,9 +480,6 @@ namespace wfe {
 
 				// Check if memory needs to be reallocated
 				if(setSize > setCapacity) {
-					// Save the set's old capacity
-					size_type oldCapacity = setCapacity;
-
 					// Set the capacity to the lowest power of 2 higher than the set's size
 					setCapacity = 1;
 					for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -559,9 +544,6 @@ namespace wfe {
 
 			// Check if memory needs to be reallocated
 			if(setSize > setCapacity) {
-				// Save the set's old capacity
-				size_type oldCapacity = setCapacity;
-
 				// Set the capacity to the lowest power of 2 higher than the set's size
 				setCapacity = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)

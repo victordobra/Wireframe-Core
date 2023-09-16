@@ -976,7 +976,6 @@ namespace wfe {
 		
 		// Save the original pointers
 		const char_t* oldStr1 = str1;
-		const char_t* oldStr2 = str2;
 		size_t oldSize = size;
 		
 		// Compare the strings in segments of size_t
@@ -1128,7 +1127,7 @@ namespace wfe {
 		}
 
 		// Exit the function if size characters were compared
-		if(str1 - oldStr1 == oldSize)
+		if((size_t)(str1 - oldStr1) == oldSize)
 			return 0;
 
 		// Both string are equal up to the first end; check which one is longer
@@ -1544,7 +1543,8 @@ namespace wfe {
 		ptrdiff_t* table = (ptrdiff_t*)calloc(wantedLength + 1, sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 		table[0] = -1;
 
-		ptrdiff_t pos = 1, candidate = 0;
+		size_t pos = 1;
+		ptrdiff_t candidate = 0;
 		while(pos < wantedLength) {
 			if(wanted[pos] == wanted[candidate])
 				table[pos] = table[candidate];
@@ -1589,11 +1589,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					pos = table[pos];
-					if(pos < 0) {
+					ptrdiff_t position = table[pos];
+					if(position < 0) {
 						++i;
-						++pos;
-					}
+						pos = 0;
+					} else
+						pos = (size_t)position;
 				}
 			}
 
@@ -1611,7 +1612,8 @@ namespace wfe {
 		ptrdiff_t* table = (ptrdiff_t*)calloc(wantedLength + 1, sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
 		table[0] = -1;
 
-		ptrdiff_t pos = 1, candidate = 0;
+		size_t pos = 1;
+		ptrdiff_t candidate = 0;
 		while(pos < wantedLength) {
 			if(wanted[pos] == wanted[candidate])
 				table[pos] = table[candidate];
@@ -1656,11 +1658,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					pos = table[pos];
-					if(pos < 0) {
+					ptrdiff_t position = table[pos];
+					if(position < 0) {
 						++i;
-						++pos;
-					}
+						pos = 0;
+					} else
+						pos = (size_t)position;
 				}
 			}
 

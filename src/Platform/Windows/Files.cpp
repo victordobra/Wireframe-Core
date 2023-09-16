@@ -113,7 +113,7 @@ namespace wfe {
 
 			// Check if the last number got cut off to the previous buffer
 			char_t* ptr = buffer;
-			if(lastValSet)
+			if(lastValSet) {
 				if(lastVal < 0)
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
@@ -132,6 +132,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
+			}
 
 			// Check if there are no following characters. If so, move on to the next buffer
 			if(!*ptr)
@@ -215,7 +216,7 @@ namespace wfe {
 
 			// Check if the last number got cut off to the previous buffer
 			char_t* ptr = buffer;
-			if(lastValSet)
+			if(lastValSet) {
 				if(lastVal < 0)
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
@@ -234,6 +235,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
+			}
 
 			// Check if there are no following characters. If so, move on to the next buffer
 			if(!*ptr)
@@ -317,7 +319,7 @@ namespace wfe {
 
 			// Check if the last number got cut off to the previous buffer
 			char_t* ptr = buffer;
-			if(lastValSet)
+			if(lastValSet) {
 				if(lastVal < 0)
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
@@ -336,6 +338,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
+			}
 
 			// Check if there are no following characters. If so, move on to the next buffer
 			if(!*ptr)
@@ -419,7 +422,7 @@ namespace wfe {
 
 			// Check if the last number got cut off to the previous buffer
 			char_t* ptr = buffer;
-			if(lastValSet)
+			if(lastValSet) {
 				if(lastVal < 0)
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
@@ -438,6 +441,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
+			}
 
 			// Check if there are no following characters. If so, move on to the next buffer
 			if(!*ptr)
@@ -1117,6 +1121,9 @@ namespace wfe {
 		case SET_POS_RELATIVE_POS:
 			moveMethod = FILE_CURRENT;
 			break;
+		default:
+			moveMethod = FILE_BEGIN;
+			break;
 		}
 
 		// Split the given position in its low and high components
@@ -1283,6 +1290,10 @@ namespace wfe {
 
 		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
 
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
+
 		// Increase the total output count
 		writeCount += fileWriteCount;
 
@@ -1329,6 +1340,10 @@ namespace wfe {
 		DWORD fileWriteCount;
 
 		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
+
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
 
 		// Increase the total output count
 		writeCount += fileWriteCount;
@@ -1377,6 +1392,10 @@ namespace wfe {
 
 		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
 
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
+
 		// Increase the total output count
 		writeCount += fileWriteCount;
 
@@ -1423,6 +1442,10 @@ namespace wfe {
 		DWORD fileWriteCount;
 
 		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
+
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
 
 		// Increase the total output count
 		writeCount += fileWriteCount;
@@ -1471,6 +1494,10 @@ namespace wfe {
 
 		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
 
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
+
 		// Increase the total output count
 		writeCount += fileWriteCount;
 
@@ -1517,6 +1544,10 @@ namespace wfe {
 		DWORD fileWriteCount;
 
 		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
+
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
 
 		// Increase the total output count
 		writeCount += fileWriteCount;
@@ -1565,6 +1596,10 @@ namespace wfe {
 
 		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
 
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
+
 		// Increase the total output count
 		writeCount += fileWriteCount;
 
@@ -1611,6 +1646,10 @@ namespace wfe {
 		DWORD fileWriteCount;
 
 		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
+
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
 
 		// Increase the total output count
 		writeCount += fileWriteCount;
@@ -1659,6 +1698,10 @@ namespace wfe {
 
 		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
 
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
+
 		// Increase the total output count
 		writeCount += fileWriteCount;
 
@@ -1705,6 +1748,10 @@ namespace wfe {
 		DWORD fileWriteCount;
 
 		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
+
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
 
 		// Increase the total output count
 		writeCount += fileWriteCount;
@@ -1753,6 +1800,10 @@ namespace wfe {
 
 		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
 
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
+
 		// Increase the total output count
 		writeCount += fileWriteCount;
 
@@ -1787,6 +1838,9 @@ namespace wfe {
 			break;
 		case SET_POS_RELATIVE_POS:
 			moveMethod = FILE_CURRENT;
+			break;
+		default:
+			moveMethod = FILE_BEGIN;
 			break;
 		}
 

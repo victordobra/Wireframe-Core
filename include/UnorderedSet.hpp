@@ -898,7 +898,6 @@ namespace wfe {
 			
 			// Find the given value in the unordered set
 			node_type** valElem = usetBuckets + valBucket;
-			bool8_t valFound = false;
 
 			while(*valElem) {
 				// Check if the value is at the current node
@@ -1104,9 +1103,6 @@ namespace wfe {
 		/// @brief Sets the number of buckets in the unordered set.
 		/// @param n The new bucket count.
 		void rehash(size_type n) {
-			// Save the old bucket count
-			size_type oldBucketCount = usetBucketCount;
-
 			// Set the new bucket count
 			usetBucketCount = n;
 
@@ -1170,9 +1166,6 @@ namespace wfe {
 		}
 	private:
 		void reallocate(size_type newCapacity) {
-			// Store the unordered set's old data
-			node_type* oldData = usetData;
-
 			// Reallocate the unordered set's data
 			if(usetData)
 				usetData = (node_type*)realloc(usetData, newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);

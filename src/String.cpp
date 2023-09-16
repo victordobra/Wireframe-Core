@@ -893,9 +893,6 @@ namespace wfe {
 
 		// Check if memory should be allocated
 		if(strCapacity <= strSize) {
-			// Save the string's old capacity
-			size_type oldCapacity = strCapacity;
-
 			// Find the lowest power of two higher than the string's size
 			strCapacity = 1;
 
@@ -1002,10 +999,11 @@ namespace wfe {
 		size_type wantedLength = str.strSize;
 
 		// Generate the KMP table
-		ptrdiff_t* table = (ptrdiff_t*)calloc(wantedLength + 1, sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
 		table[0] = -1;
 
-		ptrdiff_t position = 1, candidate = 0;
+		size_t position = 1;
+		difference_type candidate = 0;
 		while(position < wantedLength) {
 			if(wanted[position] == wanted[candidate])
 				table[position] = table[candidate];
@@ -1046,11 +1044,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						++i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 
@@ -1084,11 +1083,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						++i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 
@@ -1121,11 +1121,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						++i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 
@@ -1153,10 +1154,11 @@ namespace wfe {
 		size_type wantedLength = strlen(str);
 
 		// Generate the KMP table
-		ptrdiff_t* table = (ptrdiff_t*)calloc(wantedLength + 1, sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
 		table[0] = -1;
 
-		ptrdiff_t position = 1, candidate = 0;
+		size_t position = 1;
+		difference_type candidate = 0;
 		while(position < wantedLength) {
 			if(wanted[position] == wanted[candidate])
 				table[position] = table[candidate];
@@ -1197,11 +1199,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						++i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 
@@ -1235,11 +1238,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						++i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 
@@ -1272,11 +1276,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						++i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 
@@ -1307,10 +1312,11 @@ namespace wfe {
 		size_type wantedLength = n;
 
 		// Generate the KMP table
-		ptrdiff_t* table = (ptrdiff_t*)calloc(wantedLength + 1, sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
 		table[0] = -1;
 
-		ptrdiff_t position = 1, candidate = 0;
+		size_type position = 1;
+		difference_type candidate = 0;
 		while(position < wantedLength) {
 			if(wanted[position] == wanted[candidate])
 				table[position] = table[candidate];
@@ -1351,11 +1357,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						++i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 
@@ -1389,11 +1396,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						++i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 
@@ -1426,11 +1434,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						++i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 
@@ -1475,10 +1484,11 @@ namespace wfe {
 		size_type wantedLength = str.strSize;
 
 		// Generate the KMP table in reverse
-		ptrdiff_t* table = (ptrdiff_t*)calloc(wantedLength + 1, sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
 		table[0] = -1;
 
-		ptrdiff_t position = 1, candidate = 0;
+		size_type position = 1;
+		difference_type candidate = 0;
 		while(position < wantedLength) {
 			if(wanted[wantedLength - position - 1] == wanted[wantedLength - candidate - 1])
 				table[position] = table[candidate];
@@ -1525,11 +1535,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						--i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 		}
@@ -1563,11 +1574,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						--i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 		}
@@ -1600,11 +1612,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						--i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 		}
@@ -1626,10 +1639,11 @@ namespace wfe {
 		size_type wantedLength = strlen(str);
 
 		// Generate the KMP table in reverse
-		ptrdiff_t* table = (ptrdiff_t*)calloc(wantedLength + 1, sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
 		table[0] = -1;
 
-		ptrdiff_t position = 1, candidate = 0;
+		size_type position = 1;
+		difference_type candidate = 0;
 		while(position < wantedLength) {
 			if(wanted[wantedLength - position - 1] == wanted[wantedLength - candidate - 1])
 				table[position] = table[candidate];
@@ -1676,11 +1690,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						--i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 		}
@@ -1714,11 +1729,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						--i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 		}
@@ -1751,11 +1767,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						--i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 		}
@@ -1777,10 +1794,11 @@ namespace wfe {
 		size_type wantedLength = n;
 
 		// Generate the KMP table in reverse
-		ptrdiff_t* table = (ptrdiff_t*)calloc(wantedLength + 1, sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
 		table[0] = -1;
 
-		ptrdiff_t position = 1, candidate = 0;
+		size_type position = 1;
+		difference_type candidate = 0;
 		while(position < wantedLength) {
 			if(wanted[wantedLength - position - 1] == wanted[wantedLength - candidate - 1])
 				table[position] = table[candidate];
@@ -1827,11 +1845,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						--i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 		}
@@ -1865,11 +1884,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						--i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 		}
@@ -1902,11 +1922,12 @@ namespace wfe {
 					}
 				} else {
 					// Start over at the highest match possible
-					position = table[position];
-					if(position < 0) {
+					difference_type signedPosition = table[position];
+					if(signedPosition < 0) {
 						--i;
-						++position;
-					}
+						position = 0;
+					} else
+						position = (size_type)signedPosition;
 				}
 			}
 		}
@@ -4028,9 +4049,6 @@ namespace wfe {
 	
 		// Set the actual length of the substring
 		len = (len > (strSize - pos)) ? (strSize - pos) : len;
-
-		// Set the smallest length of both strings
-		size_type minLength = (len + 1 < n) ? (len + 1) : n;
 
 		// Compare the two strings
 		int32_t result = memcmp(strData + pos, str, len);
