@@ -144,7 +144,7 @@ namespace wfe {
 		char_t fullMessage[LOG_LEVEL_NAME_LENGTH + MAX_MESSAGE_LENGTH + 2];
 
 		memcpy(fullMessage, LOG_LEVEL_NAMES[level], LOG_LEVEL_NAME_LENGTH);
-		FormatStringV(fullMessage, MAX_MESSAGE_LENGTH, format, args);
+		FormatStringV(fullMessage + LOG_LEVEL_NAME_LENGTH, MAX_MESSAGE_LENGTH, format, args);
 
 		size_t formattedLen = strnlen(fullMessage, MAX_MESSAGE_LENGTH);
 		fullMessage[formattedLen] = '\n';
