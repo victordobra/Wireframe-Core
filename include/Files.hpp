@@ -192,7 +192,7 @@ namespace wfe {
 		/// @param size The suze of the buffer to write.
 		/// @param buffer A pointer to the buffer to write.
 		/// @return The number of bytes successfully written to the file output stream.
-		size_t WriteBuffer(size_t size, void* buffer);
+		size_t WriteBuffer(size_t size, const void* buffer);
 
 		/// @brief Writes the given values to the output stream.
 		/// @param valCount The number of values to write.

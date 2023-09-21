@@ -6,12 +6,14 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 namespace wfe {
 	// Constants
 	const size_t MAX_MESSAGE_LENGTH = 16384;
+	const size_t MAX_MESSAGE_QUEUE_LENGTH = 1024;
 
-	const char_t* LOG_LEVEL_NAMES[] = {
+	const char_t* const LOG_LEVEL_NAMES[] = {
 		"[FATAL]:   ",
 		"[ERROR]:   ",
 		"[WARNING]: ",
@@ -21,47 +23,76 @@ namespace wfe {
 	};
 	const size_t LOG_LEVEL_NAME_LENGTH = 11;
 
+	// Variables
+	char_t* messageQueue[MAX_MESSAGE_QUEUE_LENGTH];
+	atomic_size_t queueMessageIndex = 0;
+	atomic_size_t outputMessageIndex = 0;
+
 	FileOutput logOutput{};
-	Mutex logOutputMutex{};
+	Thread outputThread{};
+	bool8_t outputThreadRunning = true;
 
 	// Internal helper functions
-	static void* WriteToLogFileAsync(void* message) {
-		// Lock the log output mutex
-		logOutputMutex.Lock();
+	static void* WriteToLogFileAsync(void* params) {
+		// Keep trying to output messages until the thread is stopped
+		while(outputThreadRunning) {
+			// Loop through all new messages
+			while(outputMessageIndex != queueMessageIndex) {
+				// Output the current message to the log file
+				char_t* message = messageQueue[outputMessageIndex];
+				size_t messageLen = strnlen(message, LOG_LEVEL_NAME_LENGTH + MAX_MESSAGE_LENGTH + 1);
 
-		// Output the given message to the log file and free the message's memory
-		size_t messageLen = strlen((char_t*)message);
+				logOutput.WriteBuffer(messageLen, message);
+				logOutput.Flush();
 
-		logOutput.WriteBuffer(messageLen, message);
-		free(message, MEMORY_USAGE_STRING);
+				// Free the message memory at the current position
+				free(message, MEMORY_USAGE_STRING);
 
-		// Flush the message
-		logOutput.Flush();
+				// Increment the message index
+				++outputMessageIndex;
+				outputMessageIndex &= MAX_MESSAGE_QUEUE_LENGTH - 1;
+			}
 
-		// Unlock the log output mutex
-		logOutputMutex.Unlock();
+			// Wait for new messages to appear
+			while(outputMessageIndex == queueMessageIndex && outputThreadRunning)
+				sleep(0);
+		}
 
 		return nullptr;
 	}
-	static void OutputMessage(char_t* message) {
+	static void OutputMessage(const char_t* message) {
 		// Output the message to the console
 		printf("%s", message);
 
-		// Dispatch a thread to output the message to the log file, if the file was opened
-		if(!logOutput.IsOpen())
-			return;
-		
-		// Move the message to the heap
+		// Copy the current message to the heap
 		size_t messageLen = strnlen(message, LOG_LEVEL_NAME_LENGTH + MAX_MESSAGE_LENGTH + 1);
-		void* messageMem = malloc(messageLen + 1, MEMORY_USAGE_STRING);
+		char_t* messageMem = (char_t*)malloc(messageLen + 1, MEMORY_USAGE_STRING);
 		if(!messageMem)
 			throw BadAllocException("Failed to allocate string!");
-
+		
 		memcpy(messageMem, message, messageLen + 1);
 
-		Thread logThread;
-		logThread.Begin(WriteToLogFileAsync, messageMem);
-		logThread.Detach();
+		// Try to write the message to the console
+		bool8_t messageWritten = false;
+		size_t oldIndex, newIndex;
+		while(!messageWritten) {
+			// Try to increment the index
+			messageWritten = true;
+			do {
+				// Load the new old index and set the new index
+				oldIndex = queueMessageIndex;
+				newIndex = (oldIndex + 1) & (MAX_MESSAGE_QUEUE_LENGTH - 1);
+
+				// Exit the loop if the new index is equal to the output index
+				if(newIndex == outputMessageIndex) {
+					messageWritten = false;
+					break;
+				}
+			} while(!queueMessageIndex.compare_exchange_weak(oldIndex, newIndex));
+		}
+
+		// Add the current message to the queue
+		messageQueue[oldIndex] = messageMem;
 	}
 
 	// External functions
@@ -84,16 +115,17 @@ namespace wfe {
 	void CreateLogger(const char_t* logFilePath) {
 		// Open the file output stream to the given path
 		logOutput.Open(logFilePath);
+
+		// Run the file output thread
+		outputThread.Begin(WriteToLogFileAsync, nullptr);
 	}
 	void DeleteLogger() {
-		// Wait for all messages to be logged to the log file
-		logOutputMutex.Lock();
+		// Wait for the file log thread to finish outputting all messages
+		outputThreadRunning = false;
+		outputThread.Join();
 
 		// Close the file output stream
 		logOutput.Close();
-
-		// Unlock the log output mutex
-		logOutputMutex.Unlock();
 	}
 
 	void LogMessage(LogLevel level, const char_t* format, ...) {

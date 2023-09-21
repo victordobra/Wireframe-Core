@@ -1178,7 +1178,7 @@ namespace wfe {
 		return result != EOF;
 	}
 
-	size_t FileOutput::WriteBuffer(size_t size, void* buffer) {
+	size_t FileOutput::WriteBuffer(size_t size, const void* buffer) {
 		// Return a 0 if the stream is not open
 		if(!internalData)
 			return 0;

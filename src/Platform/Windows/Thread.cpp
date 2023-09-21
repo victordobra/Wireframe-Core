@@ -243,10 +243,12 @@ namespace wfe {
 			}
 		}
 
-		// Save the full result to the given pointer
-		threadReturnsMutex.Lock();
-		*returnPtr = threadReturns[threadID];
-		threadReturnsMutex.Unlock();
+		if(returnPtr) {
+			// Save the full result to the given pointer
+			threadReturnsMutex.Lock();
+			*returnPtr = threadReturns[threadID];
+			threadReturnsMutex.Unlock();
+		}
 		
 		// Close the thread's handle
 		WINBOOL closeResult = CloseHandle((HANDLE)internalData);
