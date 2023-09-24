@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Compare.hpp"
 #include "Defines.hpp"
 #include "Memory.hpp"
 #include "Exception.hpp"
@@ -11,7 +12,9 @@
 namespace wfe {
 	/// @brief Holds a vector of unique elements following a specific order.
 	/// @tparam T The type of the set's values.
-	template<class T>
+	/// @tparam Lower The function struct used to check if one value should be before another.
+	/// @tparam Equal The function struct used to check if two values are equal.
+	template<class T, class Lower = LowerComp<T>, class Equal = EqualComp<T>>
 	class set {
 	public:
 		/// @brief The set's key.
@@ -78,10 +81,10 @@ namespace wfe {
 				// Find the position for the current value
 				size_type pos = setSize;
 				for(size_type step = setCapacity; step; step >>= 1)
-					if(pos >= step && !(setData[pos - step] < *ptr))
+					if(pos >= step && !Lower()(setData[pos - step], *ptr))
 						pos -= step;
 					
-				if(pos != setSize && setData[pos] == *ptr)
+				if(pos != setSize && Equal()(setData[pos], *ptr))
 					continue;
 				
 				// Move part of the set forward to make room for the new value
@@ -223,11 +226,11 @@ namespace wfe {
 				// Find the position for the current value
 				size_type pos = setSize;
 				for(size_type step = setCapacity; step; step >>= 1)
-					if(pos >= step && !(setData[pos - step] < *ptr))
+					if(pos >= step && !Lower()(setData[pos - step] < *ptr))
 						pos -= step;
 				
 				// Check if the current value is already in the set
-				if(pos != setSize && *ptr == setData[pos])
+				if(pos != setSize && Equal()(ptr, setData[pos]))
 					continue;
 				
 				// Move part of the set forward to make room for the new value
@@ -264,11 +267,11 @@ namespace wfe {
 			// Find the position for the given value
 			size_type pos = setSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(setData[pos - step] < val))
+				if(pos >= step && !Lower()(setData[pos - step], val))
 					pos -= step;
 			
 			// Check if the value is already in the set
-			if(pos != setSize && val == setData[pos])
+			if(pos != setSize && Equal()(val, setData[pos]))
 				return { setData + pos, false };
 			
 			// Increment the set's size
@@ -314,11 +317,11 @@ namespace wfe {
 			// Find the position for the given value
 			size_type pos = setSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(setData[pos - step] < val))
+				if(pos >= step && !Lower()(setData[pos - step], val))
 					pos -= step;
 			
 			// Check if the value is already in the set
-			if(pos != setSize && val == setData[pos])
+			if(pos != setSize && Equal()(val, setData[pos]))
 				return { setData + pos, false };
 			
 			// Increment the set's size
@@ -360,9 +363,9 @@ namespace wfe {
 			WFE_ASSERT(pos >= begin() && pos <= end(), "The given position hint must be in range!");
 
 			// Check if the position hint is correct
-			if(pos != end() && val == *pos)
+			if(pos != end() && Equal()(val, *pos))
 				return (pointer)pos;
-			if((pos != begin() && *(pos - 1) < val) && (pos != end() && val < *pos)) {
+			if((pos == begin() || Lower()(*(pos - 1), val)) && (pos != end() && Lower()(val, *pos))) {
 				// Increment the set's size
 				++setSize;
 
@@ -404,7 +407,7 @@ namespace wfe {
 				// Look through the whole set
 				posBegin = 0;
 				size = setSize;
-			} else if(val < *pos) {
+			} else if(Lower()(val, *pos)) {
 				// Look through the values before the position hint
 				posBegin = 0;
 				size = pos - setData - 1;
@@ -423,11 +426,11 @@ namespace wfe {
 			// Find the position for the given value
 			size_type posInd = posBegin + size;
 			for(; step; step >>= 1)
-				if(posInd >= step + posBegin && !(setData[posInd - step] < val))
+				if(posInd >= step + posBegin && !Lower()(setData[posInd - step], val))
 					posInd -= step;
 	
 			// Check if the value is already in the set
-			if(posInd != setSize && val == setData[posInd])
+			if(posInd != setSize && Equal()(val, setData[posInd]))
 				return setData + posInd;
 			
 			// Increment the set's size
@@ -469,9 +472,9 @@ namespace wfe {
 			WFE_ASSERT(pos >= begin() && pos <= end(), "The given position hint must be in range!");
 
 			// Check if the position hint is correct
-			if(pos != end() && val == *pos)
+			if(pos != end() && Equal()(val, *pos))
 				return (pointer)pos;
-			if((pos != begin() && *(pos - 1) < val) && (pos != end() && val < *pos)) {
+			if((pos == begin() || Lower()(*(pos - 1), val)) && (pos != end() && Lower()(val, *pos))) {
 				// Increment the set's size
 				++setSize;
 
@@ -510,7 +513,7 @@ namespace wfe {
 				// Look through the whole set
 				posBegin = 0;
 				size = setSize;
-			} else if(val < *pos) {
+			} else if(Lower()(val, *pos)) {
 				// Look through the values before the position hint
 				posBegin = 0;
 				size = pos - setData - 1;
@@ -529,11 +532,11 @@ namespace wfe {
 			// Find the position for the given value
 			size_type posInd = posBegin + size;
 			for(; step; step >>= 1)
-				if(posInd >= step + posBegin && !(setData[posInd - step] < val))
+				if(posInd >= step + posBegin && !Lower()(setData[posInd - step], val))
 					posInd -= step;
 	
 			// Check if the value is already in the set
-			if(posInd != setSize && val == setData[posInd])
+			if(posInd != setSize && Equal()(val, setData[posInd]))
 				return setData + posInd;
 			
 			// Increment the set's size
@@ -616,11 +619,11 @@ namespace wfe {
 			// Find the position for the given value
 			size_type pos = setSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(setData[pos - step] < val))
+				if(pos >= step && !Lower()(setData[pos - step], val))
 					pos -= step;
 
 			// Check if the value doesn't exist in the set
-			if(!(setData[pos] == val))
+			if(!Equal()(setData[pos], val))
 				return 0;
 			
 			// Decrement the set's size
@@ -774,11 +777,11 @@ namespace wfe {
 			// Look for the wanted value
 			size_type pos = setSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(setData[pos - step] < val))
+				if(pos >= step && !Lower()(setData[pos - step], val))
 					pos -= step;
 			
 			// Check if the wanted value was found
-			if(pos != setSize && setData[pos] == val)
+			if(pos != setSize && Equal()(setData[pos], val))
 				return setData + pos;
 			
 			return end();
@@ -800,11 +803,11 @@ namespace wfe {
 			// Look for the wanted value
 			size_type pos = setSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(setData[pos - step] < val))
+				if(pos >= step && !Lower()(setData[pos - step], val))
 					pos -= step;
 			
 			// Check if the wanted value was found
-			if(pos != setSize && setData[pos] == val)
+			if(pos != setSize && Equal()(setData[pos], val))
 				return setData + pos;
 			
 			return end();
@@ -826,14 +829,11 @@ namespace wfe {
 			// Look for the wanted value
 			size_type pos = setSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(setData[pos - step] < val))
+				if(pos >= step && !Lower()(setData[pos - step], val))
 					pos -= step;
 			
 			// Check if the wanted value was found
-			if(pos != setSize && setData[pos] == val)
-				return 1;
-			
-			return 0;
+			return pos != setSize && Equal()(setData[pos], val);
 		}
 		/// @brief Finds the first element that isn't lower than the given value.
 		/// @param val The value to compare with.
@@ -852,7 +852,7 @@ namespace wfe {
 			// Look for the wanted value
 			size_type pos = setSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(setData[pos - step] < val))
+				if(pos >= step && !Lower()(setData[pos - step], val))
 					pos -= step;
 			
 			// Return a pointer to the wanted value
@@ -875,7 +875,7 @@ namespace wfe {
 			// Look for the wanted value
 			size_type pos = setSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(setData[pos - step] < val))
+				if(pos >= step && !Lower()(setData[pos - step], val))
 					pos -= step;
 			
 			// Return a pointer to the wanted value
@@ -898,7 +898,7 @@ namespace wfe {
 			// Look for the wanted value
 			size_type pos = setSize;
 			for(; step; step >>= 1)
-				if(pos >= step && val < setData[pos - step])
+				if(pos >= step && Lower()(val, setData[pos - step]))
 					pos -= step;
 			
 			// Return a pointer to the wanted value
@@ -921,7 +921,7 @@ namespace wfe {
 			// Look for the wanted value
 			size_type pos = setSize;
 			for(; step; step >>= 1)
-				if(pos >= step && val < setData[pos - step])
+				if(pos >= step && Lower()(val, setData[pos - step]))
 					pos -= step;
 			
 			// Return a pointer to the wanted value

@@ -12,7 +12,9 @@ namespace wfe {
 	/// @brief Holds a map of values, each value having a key.
 	/// @tparam Key The type for the value's keys.
 	/// @tparam T The type for the map's values.
-	template<class Key, class T>
+	/// @tparam Lower The function struct used to check if one key should be before another.
+	/// @tparam Equal The function struct used to check if two keys are equal.
+	template<class Key, class T, class Lower = LowerComp<Key>, class Equal = EqualComp<Key>>
 	class map {
 	public:
 		/// @brief The map's key.
@@ -81,11 +83,11 @@ namespace wfe {
 				// Find the wanted pair
 				size_type pos = mapSize;
 				for(size_type step = mapCapacity; step; step >>= 1)
-					if(pos >= step && !(mapData[pos - step].first < ptr->first))
+					if(pos >= step && !Lower()(mapData[pos - step].first, ptr->first))
 						pos -= step;
 				
 				// Check if the current pair already exists
-				if(pos != mapSize && mapData[pos].first == ptr->first) {
+				if(pos != mapSize && Equal()(mapData[pos].first, ptr->first)) {
 					// Set the current pair's new value
 					mapData[pos].second = ptr->second;
 
@@ -230,11 +232,11 @@ namespace wfe {
 				// Find the wanted pair
 				size_type pos = mapSize;
 				for(size_type step = mapCapacity; step; step >>= 1)
-					if(pos >= step && !(mapData[pos - step].first < ptr->first))
+					if(pos >= step && !Lower()(mapData[pos - step].first, ptr->first))
 						pos -= step;
 				
 				// Check if the current pair already exists
-				if(pos != mapSize && mapData[pos].first == ptr->first) {
+				if(pos != mapSize && Equal()(mapData[pos].first, ptr->first)) {
 					// Set the current pair's new value
 					mapData[pos].second = ptr->second;
 
@@ -275,11 +277,11 @@ namespace wfe {
 			// Find the wanted value
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < key))
+				if(pos >= step && !Lower()(mapData[pos - step].first, key))
 					pos -= step;
 			
 			// Check if the wanted value exists
-			if(pos != mapSize && mapData[pos].first == key)
+			if(pos != mapSize && Equal()(mapData[pos].first, key))
 				return mapData[pos].second;
 			
 			// Increment the map's size
@@ -332,11 +334,11 @@ namespace wfe {
 			// Find the wanted value
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < key))
+				if(pos >= step && !Lower()(mapData[pos - step].first, key))
 					pos -= step;
 			
 			// Check if the wanted value exists
-			if(pos != mapSize && mapData[pos].first == key)
+			if(pos != mapSize && Equal()(mapData[pos].first, key))
 				return mapData[pos].second;
 			
 			// Increment the map's size
@@ -386,11 +388,11 @@ namespace wfe {
 			// Find the wanted value
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < key))
+				if(pos >= step && !Lower()(mapData[pos - step].first, key))
 					pos -= step;
 			
 			// Assert that the wanted value must exist in the map
-			WFE_ASSERT(pos != mapSize && mapData[pos].first == key, "The wanted value must exist in the set!")
+			WFE_ASSERT(pos != mapSize && Equal()(mapData[pos].first, key), "The wanted value must exist in the set!")
 
 			return mapData[pos].second;
 		}
@@ -407,11 +409,11 @@ namespace wfe {
 			// Find the wanted value
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < key))
+				if(pos >= step && !Lower()(mapData[pos - step].first, key))
 					pos -= step;
 			
 			// Assert that the wanted value must exist in the map
-			WFE_ASSERT(pos != mapSize && mapData[pos].first == key, "The wanted value must exist in the set!")
+			WFE_ASSERT(pos != mapSize && Equal()(mapData[pos].first, key), "The wanted value must exist in the set!")
 
 			return mapData[pos].second;
 		}
@@ -429,11 +431,11 @@ namespace wfe {
 			// Find the wanted pair
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < val.first))
+				if(pos >= step && !Lower()(mapData[pos - step].first, val.first))
 					pos -= step;
 			
 			// Check if the wanted pair exists
-			if(pos != mapSize && mapData[pos].first == val.first)
+			if(pos != mapSize && Equal()(mapData[pos].first, val.first))
 				return { mapData + pos, false };
 			
 			// Increment the map's size
@@ -483,11 +485,11 @@ namespace wfe {
 			// Find the wanted pair
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < val.first))
+				if(pos >= step && !Lower()(mapData[pos - step].first, val.first))
 					pos -= step;
 			
 			// Check if the wanted pair exists
-			if(pos != mapSize && mapData[pos].first == val.first)
+			if(pos != mapSize && Equal()(mapData[pos].first, val.first))
 				return { mapData + pos, false };
 			
 			// Increment the map's size
@@ -533,9 +535,9 @@ namespace wfe {
 			WFE_ASSERT(pos >= begin() && pos <= end(), "The given pointer must be in range!")
 
 			// Check if the position hint is correct
-			if(pos != end() && pos->first == val.first)
+			if(pos != end() && Equal()(pos->first, val.first))
 				return (pointer)pos;
-			else if((pos != begin() && (pos - 1)->first < val.first) && (pos != end() && val.first < pos->first)) {
+			else if((pos == begin() || Lower()((pos - 1)->first, val.first)) && (pos != end() && Lower()(val.first, pos->first))) {
 				// Save the position hint's index relative to the map's data
 				size_type posInd = pos - mapData;
 
@@ -581,7 +583,7 @@ namespace wfe {
 				// Look through the whole map
 				posBegin = 0;
 				size = mapSize;
-			} else if(val.first < pos->first) {
+			} else if(Lower()(val.first, pos->first)) {
 				// Look through the pairs before the position hint
 				posBegin = 0;
 				size = pos - mapData - 1;
@@ -600,11 +602,11 @@ namespace wfe {
 			// Find the wanted pair
 			size_type posInd = posBegin + size;
 			for(; step; step >>= 1)
-				if(posInd >= step + posBegin && !(mapData[posInd - step].first < val.first))
+				if(posInd >= step + posBegin && !Lower()(mapData[posInd - step].first, val.first))
 					posInd -= step;
 			
 			// Check if the wanted value exists
-			if(posInd != mapSize && mapData[posInd].first == val.first)
+			if(posInd != mapSize && Equal()(mapData[posInd].first, val.first))
 				return mapData + posInd;
 			
 			// Increment the map's size
@@ -650,9 +652,9 @@ namespace wfe {
 			WFE_ASSERT(pos >= begin() && pos <= end(), "The given pointer must be in range!")
 
 			// Check if the position hint is correct
-			if(pos != end() && pos->first == val.first)
+			if(pos != end() && Equal()(pos->first, val.first))
 				return (pointer)pos;
-			else if((pos != begin() && (pos - 1)->first < val.first) && (pos != end() && val.first < pos->first)) {
+			else if((pos == begin() || Lower()((pos - 1)->first, val.first)) && (pos != end() && Lower()(val.first, pos->first))) {
 				// Save the position hint's index relative to the map's data
 				size_type posInd = pos - mapData;
 
@@ -698,7 +700,7 @@ namespace wfe {
 				// Look through the whole map
 				posBegin = 0;
 				size = mapSize;
-			} else if(val.first < pos->first) {
+			} else if(Lower()(val.first, pos->first)) {
 				// Look through the pairs before the position hint
 				posBegin = 0;
 				size = pos - mapData - 1;
@@ -717,11 +719,11 @@ namespace wfe {
 			// Find the wanted pair
 			size_type posInd = posBegin + size;
 			for(; step; step >>= 1)
-				if(posInd >= step + posBegin && !(mapData[posInd - step].first < val.first))
+				if(posInd >= step + posBegin && !Lower()(mapData[posInd - step].first, val.first))
 					posInd -= step;
 			
 			// Check if the wanted value exists
-			if(posInd != mapSize && mapData[posInd].first == val.first)
+			if(posInd != mapSize && Equal()(mapData[posInd].first, val.first))
 				return mapData + posInd;
 			
 			// Increment the map's size
@@ -805,11 +807,11 @@ namespace wfe {
 			// Find the wanted pair
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < key))
+				if(pos >= step && !Lower()(mapData[pos - step].first, key))
 					pos -= step;
 			
 			// Check if the wanted pair doesn't exist
-			if(pos == mapSize || !(mapData[pos].first == key))
+			if(pos == mapSize || !Equal()(mapData[pos].first, key))
 				return 0;
 			
 			// Decrement the map's size
@@ -959,11 +961,11 @@ namespace wfe {
 			// Find the wanted pair
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < key))
+				if(pos >= step && !Lower()(mapData[pos - step].first, key))
 					pos -= step;
 			
 			// Check if the wanted pair exists
-			if(pos != mapSize && mapData[pos].first == key)
+			if(pos != mapSize && Equal()(mapData[pos].first, key))
 				return mapData + pos;
 			
 			return end();
@@ -981,11 +983,11 @@ namespace wfe {
 			// Find the wanted pair
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < key))
+				if(pos >= step && !Lower()(mapData[pos - step].first, key))
 					pos -= step;
 			
 			// Check if the wanted pair exists
-			if(pos != mapSize && mapData[pos].first == key)
+			if(pos != mapSize && Equal()(mapData[pos].first, key))
 				return mapData + pos;
 			
 			return end();
@@ -1003,14 +1005,11 @@ namespace wfe {
 			// Find the wanted pair
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < key))
+				if(pos >= step && !Lower()(mapData[pos - step].first < key))
 					pos -= step;
 			
 			// Check if the wanted pair exists
-			if(pos != mapSize && mapData[pos] == key)
-				return mapData + pos;
-			
-			return end();
+			return pos != mapSize && Equal()(mapData[pos], key);
 		}
 		/// @brief Finds the first pair whose key isn't lower than the given key.
 		/// @param key The key to compare with.
@@ -1025,7 +1024,7 @@ namespace wfe {
 			// Find the wanted pair
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < key))
+				if(pos >= step && !Lower()(mapData[pos - step].first, key))
 					pos -= step;
 			
 			return mapData + pos;
@@ -1043,7 +1042,7 @@ namespace wfe {
 			// Find the wanted pair
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && !(mapData[pos - step].first < key))
+				if(pos >= step && !Lower()(mapData[pos - step].first, key))
 					pos -= step;
 			
 			return mapData + pos;
@@ -1061,7 +1060,7 @@ namespace wfe {
 			// Find the wanted pair
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && key < mapData[pos - step].first)
+				if(pos >= step && Lower()(key, mapData[pos - step].first))
 					pos -= step;
 			
 			return mapData + pos;
@@ -1079,7 +1078,7 @@ namespace wfe {
 			// Find the wanted pair
 			size_type pos = mapSize;
 			for(; step; step >>= 1)
-				if(pos >= step && key < mapData[pos - step].first)
+				if(pos >= step && Lower()(key, mapData[pos - step].first))
 					pos -= step;
 			
 			return mapData + pos;

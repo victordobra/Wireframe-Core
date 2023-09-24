@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BuildInfo.hpp"
+#include "Compare.hpp"
 #include "Debug.hpp"
 #include "Defines.hpp"
 #include "DynamicLib.hpp"
