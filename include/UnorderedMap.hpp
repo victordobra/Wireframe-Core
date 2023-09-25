@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Compare.hpp"
 #include "Defines.hpp"
 #include "Debug.hpp"
 #include "Exception.hpp"
@@ -12,7 +13,9 @@ namespace wfe {
 	/// @brief Holds multiple buckets of elements with unique keys.
 	/// @tparam Key The type for the value's keys.
 	/// @tparam T The type of the unordered set's values.
-	template<class Key, class T>
+	/// @tparam KeyHash The function struct used for hashing keys.
+	/// @tparam Equal The function struct used for comparing keys.
+	template<class Key, class T, class KeyHash = Hash<Key>, class Equal = EqualComp<Key>>
 	class unordered_map {
 		/// @brief The unordered map's key.
 		typedef Key key_type;
@@ -344,7 +347,7 @@ namespace wfe {
 				// Look for the given value in the bucket
 				while(*elem) {
 					// Check if the current value is already in the unordered map
-					if((*elem)->val.first == ptr->first)
+					if(Equal()((*elem)->val.first, ptr->first))
 						continue;
 					
 					// Move on to the next value
@@ -568,7 +571,7 @@ namespace wfe {
 				// Look for the given value in the bucket
 				while(*elem) {
 					// Check if the current value is already in the unordered map
-					if((*elem)->val.first == ptr->first)
+					if(Equal()((*elem)->val.first, ptr->first))
 						break;
 					
 					// Move on to the next value
@@ -616,7 +619,7 @@ namespace wfe {
 			// Look for the given key in the bucket
 			while(*elem) {
 				// Check if the current key is already in the unordered map
-				if((*elem)->val.first == key)
+				if(Equal()((*elem)->val.first, key))
 					return (*elem)->val.second;
 				
 				// Move on to the next value
@@ -673,7 +676,7 @@ namespace wfe {
 			// Look for the given key in the bucket
 			while(*elem) {
 				// Check if the current key is already in the unordered map
-				if((*elem)->val.first == key)
+				if(Equal()((*elem)->val.first, key))
 					return (*elem)->val.second;
 				
 				// Move on to the next value
@@ -730,7 +733,7 @@ namespace wfe {
 			// Look for the given key in the bucket
 			while(*elem) {
 				// Check if the current key is already in the unordered map
-				if((*elem)->val.first == key)
+				if(Equal()((*elem)->val.first, key))
 					return (*elem)->val.second;
 				
 				// Move on to the next value
@@ -752,7 +755,7 @@ namespace wfe {
 			// Look for the given key in the bucket
 			while(*elem) {
 				// Check if the current key is already in the unordered map
-				if((*elem)->val.first == key)
+				if(Equal()((*elem)->val.first, key))
 					return (*elem)->val.second;
 				
 				// Move on to the next value
@@ -775,7 +778,7 @@ namespace wfe {
 			// Look for the given key in the bucket
 			while(*elem) {
 				// Check if the current key is already in the unordered map
-				if((*elem)->val.first == key)
+				if(Equal()((*elem)->val.first, key))
 					return *elem;
 				
 				// Move on to the next value
@@ -797,7 +800,7 @@ namespace wfe {
 			// Look for the given key in the bucket
 			while(*elem) {
 				// Check if the current key is already in the unordered map
-				if((*elem)->val.first == key)
+				if(Equal()((*elem)->val.first, key))
 					return *elem;
 				
 				// Move on to the next value
@@ -819,7 +822,7 @@ namespace wfe {
 			// Look for the given key in the bucket
 			while(*elem) {
 				// Check if the current key is already in the unordered map
-				if((*elem)->val.first == key)
+				if(Equal()((*elem)->val.first, key))
 					return 1;
 				
 				// Move on to the next value
@@ -911,7 +914,7 @@ namespace wfe {
 			// Look for the given key in the bucket
 			while(*elem) {
 				// Check if the current value is already in the unordered map
-				if((*elem)->val.first == val.first)
+				if(Equal()((*elem)->val.first, val.first))
 					return { *elem, false };
 				
 				// Move on to the next value
@@ -1028,7 +1031,7 @@ namespace wfe {
 
 			while(*elem) {
 				// Check if the given key is in the unordered map
-				if((*elem)->val.first == key)
+				if(Equal()((*elem)->val.first, key))
 					break;
 
 				// Move on to the next element
@@ -1213,7 +1216,7 @@ namespace wfe {
 		/// @return The given key's bucket index.
 		size_type bucket(const key_type& key) const {
 			// Hash the given key
-			uint64_t hash = Hash(key).val;
+			uint64_t hash = KeyHash()(key);
 
 			return hash % umapBucketCount;
 		}

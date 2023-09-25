@@ -80,52 +80,65 @@ namespace wfe {
 	}
 
 	/// @brief A large prime used for hashing strings.
-	const uint64_t LARGE_PRIME = 0x1000193;
+	const uint64_t LARGE_PRIME = 0x9ddfea08eb382d69;
+
+	// Internal integer hashing function
+	static uint64_t HashInt(uint64_t val) {
+		// Use an example hash algorithm from https://github.com/skeeto/hash-prospector/tree/master
+		val += 0x9e3779b97f4a7c15;
+		val ^= val >> 30;
+		val *= 0xbf58476d1ce4e5b9;
+		val ^= val >> 27;
+		val *= 0x94d049bb133111eb;
+		val ^= val >> 31;
+
+		return val;
+	}
 
 	template<>
-	Hash::Hash(const uint8_t& val) {
-		this->val = (uint64_t)val;
+	uint64_t Hash<uint8_t>::operator()(const uint8_t& val) const {
+		return HashInt(val);
 	}
 	template<>
-	Hash::Hash(const uint16_t& val) {
-		this->val = (uint64_t)val;
+	uint64_t Hash<uint16_t>::operator()(const uint16_t& val) const {
+		return HashInt(val);
 	}
 	template<>
-	Hash::Hash(const uint32_t& val) {
-		this->val = (uint64_t)val;
+	uint64_t Hash<uint32_t>::operator()(const uint32_t& val) const {
+		return HashInt(val);
 	}
 	template<>
-	Hash::Hash(const uint64_t& val) {
-		this->val = val;
+	uint64_t Hash<uint64_t>::operator()(const uint64_t& val) const {
+		return HashInt(val);
 	}
 	template<>
-	Hash::Hash(const int8_t& val) {
-		this->val = (uint64_t)val;
+	uint64_t Hash<int8_t>::operator()(const int8_t& val) const {
+		return HashInt((uint64_t)val);
 	}
 	template<>
-	Hash::Hash(const int16_t& val) {
-		this->val = (uint64_t)val;
+	uint64_t Hash<int16_t>::operator()(const int16_t& val) const {
+		return HashInt((uint64_t)val);
 	}
 	template<>
-	Hash::Hash(const int32_t& val) {
-		this->val = (uint64_t)val;
+	uint64_t Hash<int32_t>::operator()(const int32_t& val) const {
+		return HashInt((uint64_t)val);
 	}
 	template<>
-	Hash::Hash(const int64_t& val) {
-		this->val = (uint64_t)val;
+	uint64_t Hash<int64_t>::operator()(const int64_t& val) const {
+		return HashInt((uint64_t)val);
 	}
 	template<>
-	Hash::Hash(const float32_t& val) {
-		this->val = (uint64_t)*(uint32_t*)&val;
+	uint64_t Hash<float32_t>::operator()(const float32_t& val) const {
+		return HashInt(*(uint32_t*)&val);
 	}
 	template<>
-	Hash::Hash(const float64_t& val) {
-		this->val = *(uint64_t*)&val;
+	uint64_t Hash<float64_t>::operator()(const float64_t& val) const {
+		return HashInt(*(uint64_t*)&val);
 	}
 	template<>
-	Hash::Hash(const string& val) {
+	uint64_t Hash<string>::operator()(const string& val) const {
 		// Apply a common string hashing algorithm
-		this->val = 0x811c9dc5;
+		uint64_t hash = 0x811c9dc5;
 
 		size_t size = val.length();
 		const char_t* strPtr = val.data();
@@ -139,8 +152,8 @@ namespace wfe {
 			// Loop through every character in the segment
 			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Add the current character to the hash
-				this->val ^= *segmentPtr;
-				this->val *= LARGE_PRIME;
+				hash ^= *segmentPtr;
+				hash *= LARGE_PRIME;
 
 				// Increment the segment pointer
 				++segmentPtr;
@@ -163,8 +176,8 @@ namespace wfe {
 			// Loop through every character in the segment
 			for(size_t i = 0; i != sizeof(uint32_t); ++i) {
 				// Add the current character to the hash
-				this->val ^= *segmentPtr;
-				this->val *= LARGE_PRIME;
+				hash ^= *segmentPtr;
+				hash *= LARGE_PRIME;
 
 				// Increment the segment pointer
 				++segmentPtr;
@@ -187,8 +200,8 @@ namespace wfe {
 			// Loop through every character in the segment
 			for(size_t i = 0; i != sizeof(uint16_t); ++i) {
 				// Add the current character to the hash
-				this->val ^= *segmentPtr;
-				this->val *= LARGE_PRIME;
+				hash ^= *segmentPtr;
+				hash *= LARGE_PRIME;
 
 				// Increment the segment pointer
 				++segmentPtr;
@@ -203,17 +216,21 @@ namespace wfe {
 		// Check if there is a 1 byte region left to loop through
 		if(size) {
 			// Add the current character to the hash
-			this->val ^= *strPtr;
-			this->val *= LARGE_PRIME;
+			hash ^= *strPtr;
+			hash *= LARGE_PRIME;
 		}
+
+		return hash;
 	}
-	Hash::Hash(const char_t* val) {
+	template<>
+	uint64_t Hash<const char_t*>::operator()(const char_t* const& val) const {
 		// Apply a common string hashing algorithm
-		this->val = 0x811c9dc5;
+		const char_t* str = val;
+		uint64_t hash = 0x811c9dc5;
 
 		while(true) {
 			// Save a size_t segment
-			size_t segment = *(const size_t*)val;
+			size_t segment = *(const size_t*)str;
 
 			const char_t* segmentPtr = (const char_t*)&segment;
 
@@ -221,32 +238,29 @@ namespace wfe {
 			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Check if the string has ended.
 				if(!*segmentPtr)
-					return;
+					return hash;
 				
 				// Add the current character to the hash
-				this->val ^= *segmentPtr;
-				this->val *= LARGE_PRIME;
+				hash ^= *segmentPtr;
+				hash *= LARGE_PRIME;
 
 				// Increment the segment pointer
 				++segmentPtr;
 			}
 
 			// Increment the string pointer by the size of size_t
-			val += sizeof(size_t);
+			str += sizeof(size_t);
 		}
+
+		return hash;
 	}
 
-	Hash::operator uint64_t() const {
-		return val;
-	}
-
-	Hash& Hash::operator|=(const Hash& other) {
-		val ^= other.val + 0x9e3779b9 + (val << 6) + (val >> 2);
-
-		return *this;
-	}
-
-	Hash Hash::operator|(const Hash& other) {
-		return { val ^ (other.val + 0x9e3779b9 + (val << 6) + (val >> 2)) };
+	uint64_t HashCombine(uint64_t hash1, uint64_t hash2) {
+		// Use the hash combination algorithm from https://github.com/google/cityhash
+		uint64_t a = (hash1 ^ hash2) * LARGE_PRIME;
+		a ^= a >> 47;
+		uint64_t b = (hash1 ^ a) * LARGE_PRIME;
+		b ^= b >> 47;
+		return b * LARGE_PRIME;
 	}
 }

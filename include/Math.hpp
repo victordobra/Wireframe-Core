@@ -81,56 +81,19 @@ namespace wfe {
 	/// @return A random floating point number in the given range.
 	float32_t RandomFloatInRange(float32_t min, float32_t max);
 
-	/// @brief Holds a hash.
+	/// @brief A function struct hsed for hashing a specific type.
+	/// @tparam T The type of the values to hash.
+	template<class T>
 	struct Hash {
-		/// @brief Copies the given hash.
-		/// @param other The hash to copy.
-		Hash(const Hash& other) = default;
-		/// @brief Copies the given hash.
-		/// @param other The hash to copy.
-		Hash(Hash&& other) noexcept = default;
 		/// @brief Hashes the given value.
-		/// @tparam T The given value's type.
 		/// @param val The value to hash.
-		template<class T>
-		Hash(const T& val);
-		/// @brief Hashes the given pointer.
-		/// @tparam T The given pointer's type.
-		/// @param val The pointer to hash.
-		template<class T>
-		Hash(const T* val) {
-			val = (uint64_t*)val;
-		}
-		/// @brief Hashes the given string.
-		/// @param val The string to hash.
-		Hash(const char_t* val);
-
-		/// @brief Copies the given hash into this hash.
-		/// @param other The hash to copy.
-		/// @return A reference to this hash.
-		Hash& operator=(const Hash& other) = default;
-		/// @brief Copies the given hash into this hash.
-		/// @param other The hash to copy.
-		/// @return A reference to this hash.
-		Hash& operator=(Hash&& other) = default;
-
-		/// @brief Gets the hash's value.
-		operator uint64_t() const;
-
-		/// @brief Combines the given hash into this hash.
-		/// @param other The hash to combine.
-		/// @return A reference to this hash.
-		Hash& operator|=(const Hash& other);
-
-		/// @brief Combines the given hash with this hash.
-		/// @param other The hash to combine with.
-		/// @return The resulting hash.
-		Hash operator|(const Hash& other);
-
-		/// @brief Destruct the hash.
-		~Hash() = default;
-
-		/// @brief The hash's value.
-		uint64_t val = 0;		
+		/// @return A 64-bit hash of the given value.
+		uint64_t operator()(const T& val) const;
 	};
+
+	/// @brief Combines the two given hashes.
+	/// @param hash1 The first hash to combine.
+	/// @param hash2 The second hash to combine.
+	/// @return The resulting hash.
+	uint64_t HashCombine(uint64_t hash1, uint64_t hash2);
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Compare.hpp"
 #include "Defines.hpp"
 #include "Debug.hpp"
 #include "Exception.hpp"
@@ -12,7 +13,9 @@
 namespace wfe {
 	/// @brief Holds multiple buckets of unique elements.
 	/// @tparam T The type of the unordered set's values.
-	template<class T>
+	/// @tparam ValHash The function struct used for hashing values.
+	/// @tparam Equal The function struct used for comparing values.
+	template<class T, class ValHash = Hash<T>, class Equal = EqualComp<T>>
 	class unordered_set {    
 	public:
 		/// @brief The unordered set's key.
@@ -342,7 +345,7 @@ namespace wfe {
 				// Look for the given value in the bucket
 				while(*elem) {
 					// Check if the current value is already in the unordered map
-					if((*elem)->val == *ptr)
+					if(Equal()((*elem)->val, *ptr))
 						continue;
 					
 					// Move on to the next value
@@ -527,13 +530,13 @@ namespace wfe {
 			}
 
 			// Set the unordered set's new values
-			usetSize = list.size();
+			usetSize = 0;
 			usetCapacity = 1;
 			usetMaxLoadFactor = 1.f;
 
 			// Set the bucket count and the capacity to the lowest power of 2 higher than or equal to the size
 			for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-				if((usetCapacity << step) < usetSize)
+				if((usetCapacity << step) < list.size())
 					usetCapacity <<= step;
 			usetCapacity <<= 1;
 			usetBucketCount = usetCapacity;
@@ -552,18 +555,32 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered set data!");
 
             // Insert every value from the list
-            for(size_type i = 0; i != usetSize; ++i) {
-                // Construct the node's value
-                new(&(usetData[i].value)) value_type(list.begin()[i]);
+			const_pointer end = list.end();
+			for(const_pointer ptr = list.begin(); ptr != end; ++ptr) {
+				// Get the current value's bucket
+				size_type currentBucket = bucket(*ptr);
 
-                // Get the bucket for the value
-                size_type valBucket = bucket(usetData[i].value);
+				node_type** elem = usetBuckets + currentBucket;
 
-                // Set the node's next pointer
-                usetData[i].next = usetBuckets[valBucket];
+				// Look for the given value in the bucket
+				while(*elem) {
+					// Check if the current value is already in the unordered map
+					if(Equal()((*elem)->val, *ptr))
+						continue;
+					
+					// Move on to the next value
+					elem = &((*elem)->next);
+				}
 
-                // Set the bucket's pointer
-                usetBuckets[valBucket] = usetData + i;
+				// Increment the set's size
+				++usetSize;
+
+				// Copy the current value into the unordered set
+				new(&(usetData[usetSize - 1].val)) value_type(*ptr);
+
+				// Add the new value into the current bucket
+				usetData[usetSize - 1].next = nullptr;
+				*elem = usetData + usetSize - 1;
             }
 			
 			return *this;
@@ -596,7 +613,7 @@ namespace wfe {
 			// Look for the given value in the bucket
 			while(elem) {
 				// Compare the values
-				if(val == elem->val)
+				if(Equal()(val, elem->val))
 					return elem;
 				
 				// Move on to the next element
@@ -617,7 +634,7 @@ namespace wfe {
 			// Look for the given value in the bucket
 			while(elem) {
 				// Compare the values
-				if(val == elem->val)
+				if(Equal()(val, elem->val))
 					return elem;
 				
 				// Move on to the next element
@@ -638,7 +655,7 @@ namespace wfe {
 			// Look for the given value in the bucket
 			while(elem) {
 				// Compare the values
-				if(val == elem->val)
+				if(Equal()(val, elem->val))
 					return 1;
 				
 				// Move on to the next element
@@ -659,7 +676,7 @@ namespace wfe {
 			// Look for the given value in the bucket
 			while(elem) {
 				// Compare the values
-				if(val == elem->val)
+				if(Equal()(val, elem->val))
 					return { elem, elem + 1 };
 				
 				// Move on to the next element
@@ -680,7 +697,7 @@ namespace wfe {
 			// Look for the given value in the bucket
 			while(elem) {
 				// Compare the values
-				if(val == elem->val)
+				if(Equal()(val, elem->val))
 					return { elem, elem + 1 };
 				
 				// Move on to the next element
@@ -727,7 +744,7 @@ namespace wfe {
 			// Look for the given value in the bucket
 			while(*elem) {
 				// Compare the values
-				if(val == (*elem)->val)
+				if(Equal()(val, (*elem)->val))
 					return { *elem, false };
 				
 				// Move on to the next value
@@ -776,7 +793,7 @@ namespace wfe {
 			// Look for the given value in the bucket
 			while(*elem) {
 				// Compare the values
-				if(val == (*elem)->val)
+				if(Equal()(val, (*elem)->val))
 					return { *elem, false };
 				
 				// Move on to the next value
@@ -901,7 +918,7 @@ namespace wfe {
 
 			while(*valElem) {
 				// Check if the value is at the current node
-				if((*valElem)->val == val)
+				if(Equal()((*valElem)->val, val))
 					break;
 				
 				// Move on to the next node
@@ -1080,7 +1097,7 @@ namespace wfe {
 		/// @return The bucket's index.
 		size_type bucket(const_reference value) const {
 			// Get the given value's hash
-			uint64_t hash = Hash(value);
+			uint64_t hash = ValHash()(value);
 
 			return hash % usetBucketCount;
 		}
