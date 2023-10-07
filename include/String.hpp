@@ -516,7 +516,7 @@ namespace wfe {
 		/// @return An integer representing the relationship between this string and the given buffer: < 0 if this string is smaller than the given buffer, 0 if this string and the given buffer are equal and > 0 if this string is bigger than the given buffer.
 		int32_t compare(size_type pos, size_type len, const_pointer str, size_type n) const;
 
-		/// @brief Deletes the string.
+		/// @brief Destroys the string.
 		~string();
 	private:
 		size_type strSize = 0;

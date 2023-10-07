@@ -1118,7 +1118,7 @@ namespace wfe {
 			return range;
 		}
 
-		/// @brief Deletes the map.
+		/// @brief Destroys the map.
 		~map() {
 			if(mapData) {
 				// Destruct every value in the map

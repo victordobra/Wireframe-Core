@@ -155,7 +155,7 @@ namespace wfe {
 		/// @return The angle between the two Vector4s.
 		float32_t Angle(const Vector4& other) const;
 
-		/// @brief Deletes the Vector4.
+		/// @brief Destroys the Vector4.
 		~Vector4() = default;
 	};
 

@@ -28,8 +28,8 @@ namespace wfe {
 	/// @brief Creates the debug logger.
 	/// @param logFilePath The path to the file in which all logged messages will be written
 	void CreateLogger(const char_t* logFilePath);
-	/// @brief Deletes the debug logger.
-	void DeleteLogger();
+	/// @brief Destroys the debug logger.
+	void DestroyLogger();
 
 	/// @brief Logs a message.
 	/// @param level The message level.

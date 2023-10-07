@@ -962,7 +962,7 @@ namespace wfe {
 			return range;
 		}
 
-		/// @brief Deletes the set.
+		/// @brief Destroys the set.
 		~set() {
 			if(setData) {
 				// Destruct every value in the set

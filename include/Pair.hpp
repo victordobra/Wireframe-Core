@@ -86,7 +86,7 @@ namespace wfe {
 			memcpy(&other, memory, sizeof(pair));
 		}
 
-		/// @brief Deletes the pair.
+		/// @brief Destroys the pair.
 		~pair() = default;
 	};
 

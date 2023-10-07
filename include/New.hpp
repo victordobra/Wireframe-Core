@@ -26,12 +26,12 @@ namespace wfe {
 
 		return newObject;
 	}
-	/// @brief Deletes the given object.
-	/// @tparam T The type of object to delete.
-	/// @param object A pointer to the object to delete
+	/// @brief Destroys the given object.
+	/// @tparam T The type of object to destroy.
+	/// @param object A pointer to the object to destroy.
 	/// @param memoryUsage The memory usage type of the object's allocated memory.
 	template<class T>
-	WFE_INLINE void DeleteObject(T* object, MemoryUsage memoryUsage) {
+	WFE_INLINE void DestroyObject(T* object, MemoryUsage memoryUsage) {
 		// Destruct the object
 		object->~T();
 
@@ -103,13 +103,13 @@ namespace wfe {
 
 		return array;
 	}
-	/// @brief Deletes the given object array.
+	/// @brief Destroys the given object array.
 	/// @tparam T The array's object type.
-	/// @param array The array to delete.
+	/// @param array The array to destroy.
 	/// @param size The number of elements in the array.
 	/// @param memoryUsage The memory usage type of the array's allocated memory.
 	template<class T>
-	WFE_INLINE void DeleteArray(T* array, size_t size, MemoryUsage memoryUsage) {
+	WFE_INLINE void DestroyArray(T* array, size_t size, MemoryUsage memoryUsage) {
 		// Destruct the array's objects
 		T* end = array + size;
 		for(T* object = array; object != end; ++object)

@@ -104,7 +104,7 @@ namespace wfe {
 		/// @return The dot product of the two quaternions.
 		float32_t Dot(const Quaternion& other) const;
 
-		/// @brief Deletes this quaternion.
+		/// @brief Destroys this quaternion.
 		~Quaternion() = default;
 
 		/// @brief Generates a quaternion that represents the rotation around an axis.

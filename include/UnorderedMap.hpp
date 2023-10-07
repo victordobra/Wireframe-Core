@@ -424,7 +424,7 @@ namespace wfe {
 			if(&other == this)
 				return *this;
 			
-			// Delete the unordered map's previous data
+			// Free the unordered map's previous data
 			if(umapBuckets)
 				free(umapBuckets, umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
 			if(umapData) {
@@ -492,7 +492,7 @@ namespace wfe {
 		/// @param other The unordered map to move from.
 		/// @return A reference to this unordered map.
 		unordered_map& operator=(unordered_map&& other) {
-			// Delete the unordered map's previous data
+			// Free the unordered map's previous data
 			if(umapBuckets)
 				free(umapBuckets, umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
 			if(umapData) {
@@ -523,7 +523,7 @@ namespace wfe {
 		/// @param list The list to copy from.
 		/// @return A reference to this unordered map.
 		unordered_map& operator=(std::initializer_list<value_type> list) {
-			// Delete the unordered map's previous data
+			// Free the unordered map's previous data
 			if(umapBuckets)
 				free(umapBuckets, umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
 			if(umapData) {
@@ -1281,13 +1281,13 @@ namespace wfe {
 			rehash(newBucketCount);
 		}
 
-		/// @brief Deletes the unordered map.
+		/// @brief Destroys the unordered map.
 		~unordered_map() {
-			// Delete the unordered map's buckets
+			// Free the unordered map's buckets
 			if(umapBuckets)
 				free(umapBuckets, MEMORY_USAGE_ARRAY);
 
-			// Delete the unordered map's data
+			// Free the unordered map's data
 			if(umapData) {
 				// Destruct every value in the unordered map
 				node_type* end = umapData + umapSize;

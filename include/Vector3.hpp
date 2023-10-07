@@ -168,7 +168,7 @@ namespace wfe {
 		/// @return The cross product of the two Vector3s.
 		Vector3 Cross(const Vector3& other) const;
 
-		/// @brief Deletes the Vector3.
+		/// @brief Destroys the Vector3.
 		~Vector3() = default;
 	};
 

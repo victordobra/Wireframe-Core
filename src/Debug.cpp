@@ -119,7 +119,7 @@ namespace wfe {
 		// Run the file output thread
 		outputThread.Begin(WriteToLogFileAsync, nullptr);
 	}
-	void DeleteLogger() {
+	void DestroyLogger() {
 		// Wait for the file log thread to finish outputting all messages
 		outputThreadRunning = false;
 		outputThread.Join();
@@ -155,7 +155,7 @@ namespace wfe {
 
 		// Abort the program if the error was fatal
 		if(level == LOG_LEVEL_FATAL) {
-			DeleteLogger();
+			DestroyLogger();
 			abort();
 		}
 	}

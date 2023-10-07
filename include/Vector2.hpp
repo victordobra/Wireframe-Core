@@ -153,7 +153,7 @@ namespace wfe {
 		/// @return The angle, in radians, between the two Vector2s.
 		float32_t Angle(const Vector2& other) const;
 
-		/// @brief Deletes the Vector2.
+		/// @brief Destroys the Vector2.
 		~Vector2() = default;
 	};
 

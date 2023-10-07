@@ -59,7 +59,7 @@ namespace wfe {
 
 		// TODO: Implement async call functions
 
-		/// @brief Deletes this event.
+		/// @brief Destroys this event.
 		~Event() = default;
 	private:
 		unordered_set<EventListener> listeners{};

@@ -75,7 +75,7 @@ namespace wfe {
 		/// @return Thread::SUCCESS if the thread was joined successfully, otherwise a correcponding error code.
 		ThreadResult Join(void** returnPtr = nullptr);
 
-		/// @brief Deletes the thread.
+		/// @brief Destroys the thread.
 		~Thread();
 	private:
 		void* internalData = nullptr;
@@ -121,7 +121,7 @@ namespace wfe {
 		/// @return Mutex::SUCCESS if the mutex was unlocked successfully, otherwise a corresponding error code.
 		MutexResult Unlock();
 
-		/// @brief Deletes the mutex.
+		/// @brief Destroys the mutex.
 		~Mutex();
 	private:
 #ifdef WFE_PLATFORM_LINUX

@@ -414,7 +414,7 @@ namespace wfe {
 			if(&other == this)
 				return *this;
 			
-			// Delete this unordered set's old contents
+			// Free this unordered set's old contents
 			if(usetData) {
 				// Destruct every value
 				node_type* end = usetData + usetSize;
@@ -483,7 +483,7 @@ namespace wfe {
 		/// @param other The unordered set to move from.
 		/// @return A reference to this unordered set.
 		unordered_set& operator=(unordered_set&& other) {
-			// Delete this unordered set's old contents
+			// Free this unordered set's old contents
 			if(usetData) {
 				// Destruct every value
 				node_type* end = usetData + usetSize;
@@ -515,7 +515,7 @@ namespace wfe {
 		/// @param list The list to copy from.
 		/// @return A reference to this set.
 		unordered_set& operator=(std::initializer_list<value_type> list) {
-			// Delete this unordered set's old contents
+			// Free this unordered set's old contents
 			if(usetData) {
 				// Destruct every value
 				node_type* end = usetData + usetSize;
@@ -1163,7 +1163,7 @@ namespace wfe {
 			rehash(newBucketCount);
 		}
 
-		/// @brief Deletes the unordered set.
+		/// @brief Destroys the unordered set.
 		~unordered_set() {
 			if(usetData) {
 				// Destruct every value in the unordered set

@@ -20,11 +20,6 @@ namespace wfe {
 		MEMORY_USAGE_COUNT
 	} MemoryUsage;
 
-	/// @brief Creates the memory allocator used for heap allocations.
-	void CreateAllocator();
-	/// @brief Deletes the memory allocator used for heap allocations.
-	void DeleteAllocator();
-
 	/// @brief Allocates a memory block.
 	/// @param size The size of the memory block.
 	/// @return A pointer to the resulting memory block, or a nullptr if the block couldn't be allocated.

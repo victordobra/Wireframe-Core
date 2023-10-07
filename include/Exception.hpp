@@ -35,7 +35,7 @@ namespace wfe {
             return message;
         }
 
-        /// @brief Deletes the exception.
+        /// @brief Destroys the exception.
         virtual ~Exception() = default;
     protected:
         string message;
@@ -67,7 +67,7 @@ namespace wfe {
         /// @return A reference to this exception.
         BadAllocException& operator=(BadAllocException&& other) = default;
 
-        /// @brief Deletes the exception.
+        /// @brief Destroys the exception.
         ~BadAllocException() = default;
     };
 
@@ -97,7 +97,7 @@ namespace wfe {
         /// @return A reference to this exception.
         OutOfRangeException& operator=(OutOfRangeException&& other) = default;
 
-        /// @brief Deletes the exception.
+        /// @brief Destroys the exception.
         ~OutOfRangeException() = default;
     };
 }

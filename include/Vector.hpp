@@ -139,7 +139,7 @@ namespace wfe {
 			if(&other == this)
 				return *this;
 			
-			// Delete the vector's data (if it exists)
+			// Free the vector's data (if it exists)
 			if(vecData) {
 				// Destruct every object in the vector
 				pointer end = vecData + vecSize;
@@ -169,7 +169,7 @@ namespace wfe {
 		/// @param other The vector to move from.
 		/// @return A reference to this vector.
 		vector& operator=(vector&& other) {
-			// Delete the vector's data (if it exists)
+			// Free the vector's data (if it exists)
 			if(vecData) {
 				// Destruct every object in the vector
 				pointer end = vecData + vecSize;
@@ -194,7 +194,7 @@ namespace wfe {
 		/// @param list The initializer list to copy from.
 		/// @return A reference to this vector.
 		vector& operator=(std::initializer_list<value_type> list) {
-			// Delete the vector's data (if it exists)
+			// Free the vector's data (if it exists)
 			if(vecData) {
 				// Destruct every object in the vector
 				pointer end = vecData + vecSize;
@@ -308,7 +308,7 @@ namespace wfe {
 		/// @param n The vector's new size.
 		/// @param val The element to fill the vector with.
 		void assign(size_type n, const_reference val) {
-			// Delete the vector's data (if it exists)
+			// Free the vector's data (if it exists)
 			if(vecData) {
 				// Destruct every object in the vector
 				pointer end = vecData + vecSize;
@@ -346,7 +346,7 @@ namespace wfe {
 		/// @brief Sets the vector's contents to the contents of the given list.
 		/// @param list The initializer list to copy from.
 		void assign(std::initializer_list<value_type> list) {
-			// Delete the vector's data (if it exists)
+			// Free the vector's data (if it exists)
 			if(vecData) {
 				// Destruct every object in the vector
 				pointer end = vecData + vecSize;
@@ -932,7 +932,7 @@ namespace wfe {
 			reserve(0);
 		}
 
-		/// @brief Deletes the vector.
+		/// @brief Destroys the vector.
 		~vector() {
 			// Destruct every value in the vector (if they exist)
 			if(vecData) {

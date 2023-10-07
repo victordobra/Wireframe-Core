@@ -150,7 +150,7 @@ namespace wfe {
 		/// @return The matrix's right vector.
 		Vector3 Right() const;
 
-		/// @brief Deletes the matrix.
+		/// @brief Destroys the matrix.
 		~Matrix4x4() = default;
 
 		/// @brief Generates a perspective projection matrix.

@@ -111,7 +111,7 @@ namespace wfe {
 		return *this;
 	}
 	string& string::operator=(string&& other) noexcept {
-		// Delete the string's contents (if they exist)
+		// Free the string's contents (if they exist)
 		if(strData)
 			free(strData, MEMORY_USAGE_STRING);
 
@@ -364,7 +364,7 @@ namespace wfe {
 		return *this;
 	}
 	string& string::assign(string&& other) noexcept {
-		// Delete the string's contents (if they exist)
+		// Free the string's contents (if they exist)
 		if(strData)
 			free(strData, MEMORY_USAGE_STRING);
 		
@@ -4068,7 +4068,7 @@ namespace wfe {
 	}
 
 	string::~string() {
-		// Delete the string's contents (if they exist)
+		// Free the string's contents (if they exist)
 		if(strData)
 			free(strData, MEMORY_USAGE_STRING);
 	}
