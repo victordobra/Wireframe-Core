@@ -69,15 +69,15 @@ namespace wfe {
 
 /// @brief Logs a fatal error.
 /// @param format The message string format.
-#define WFE_LOG_FATAL(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_FATAL, format, ##__VA_ARGS__);
+#define WFE_LOG_FATAL(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_FATAL, format, ##__VA_ARGS__)
 /// @brief Logs an error.
 /// @param format The message string format.
-#define WFE_LOG_ERROR(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_ERROR, format, ##__VA_ARGS__);
+#define WFE_LOG_ERROR(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_ERROR, format, ##__VA_ARGS__)
 
 #ifdef WFE_LOG_WARNING_ENABLED
 /// @brief Logs a warning.
 /// @param format The message string format.
-#define WFE_LOG_WARNING(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_WARNING, format, ##__VA_ARGS__);
+#define WFE_LOG_WARNING(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_WARNING, format, ##__VA_ARGS__)
 #else
 /// @brief Logs a warning.
 /// @param format The message string format.
@@ -87,7 +87,7 @@ namespace wfe {
 #ifdef WFE_LOG_INFO_ENABLED
 /// @brief Logs an info message.
 /// @param format The message string format.
-#define WFE_LOG_INFO(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_INFO, format, ##__VA_ARGS__);
+#define WFE_LOG_INFO(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_INFO, format, ##__VA_ARGS__)
 #else
 /// @brief Logs an info message.
 /// @param format The message string format.
@@ -97,7 +97,7 @@ namespace wfe {
 #ifdef WFE_LOG_DEBUG_ENABLED
 /// @brief Logs a debug message.
 /// @param format The message string format.
-#define WFE_LOG_DEBUG(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_DEBUG, format, ##__VA_ARGS__);
+#define WFE_LOG_DEBUG(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_DEBUG, format, ##__VA_ARGS__)
 #else
 /// @brief Logs a debug message.
 /// @param format The message string format.
@@ -107,7 +107,7 @@ namespace wfe {
 #ifdef WFE_LOG_TRACE_ENABLED
 /// @brief Logs a trace message.
 /// @param format The message string format.
-#define WFE_LOG_TRACE(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_TRACE, format, ##__VA_ARGS__);
+#define WFE_LOG_TRACE(format, ...) wfe::LogMessage(wfe::LOG_LEVEL_TRACE, format, ##__VA_ARGS__)
 #else
 /// @brief Logs a trace message.
 /// @param format The message string format.
