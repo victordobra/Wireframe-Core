@@ -51,7 +51,7 @@ namespace wfe {
 				// Calculate the thread result index and new thread bitmask
 				threadResultIndex = Pow2BitIndex(RightmostBit(oldBitmask));
 				newBitmask = oldBitmask & ~(1 << threadResultIndex);
-			} while(threadResultBitmask.compare_exchange_weak(oldBitmask, newBitmask));
+			} while(!threadResultBitmask.compare_exchange_weak(oldBitmask, newBitmask));
 		}
 
 		// Store the thread result in the thread result array
