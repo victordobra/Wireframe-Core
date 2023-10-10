@@ -59,8 +59,40 @@ namespace wfe {
 		return absUnion.absX;
 	}
 
+	static const uint64_t mask1 = 0x5555555555555555;
+	static const uint64_t mask2 = 0x3333333333333333;
+	static const uint64_t mask4 = 0x0f0f0f0f0f0f0f0f;
+	static const uint64_t h01   = 0x0101010101010101;
+
 	bool8_t IsPowerOf2(uint64_t x) {
 		return x && !(x & (x - 1));
+	}
+	uint64_t Popcount(uint64_t x) {
+		// Use a common popcount algorithm
+		x -= (x >> 1) & mask1;
+		x = (x & mask2) + ((x >> 2) & mask2);
+		x = (x + (x >> 4)) & mask4;
+		return (x * h01) >> 56;
+	}
+	uint64_t LeftmostBit(uint64_t x) {
+		// Apply or and right shift operations to the number until all bits left of the leftmost bit are set to 1
+		x |= x >> 1;
+		x |= x >> 2;
+		x |= x >> 4;
+		x |= x >> 8;
+		x |= x >> 16;
+		x |= x >> 32;
+
+		// Right shift the number once more and increment it by 1 to get the mask
+		return (x >> 1) + (x != 0);
+	}
+	uint64_t RightmostBit(uint64_t x) {
+		// A simple bithask will return the mask
+		return x & (x - 1);
+	}
+	uint64_t Pow2BitIndex(uint64_t x) {
+		// Simply return the popcount of the decremented number
+		return Popcount(x - 1);
 	}
 
 	void RandomSeed(uint32_t seed) {

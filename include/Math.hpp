@@ -59,6 +59,22 @@ namespace wfe {
 	/// @param x The number to check.
 	/// @return True if the given number is a power of 2, otherwise false.
 	bool8_t IsPowerOf2(uint64_t x);
+	/// @brief Gets the popcount of the given number, meaning the number of bits set to 1 in the number.
+	/// @param x The number to count in.
+	/// @return The popcount of the given number.
+	uint64_t Popcount(uint64_t x);
+	/// @brief Finds the leftmost (most significant) bit of the given number.
+	/// @param x The number to find in.
+	/// @return A mask of the leftmost bit of the given number.
+	uint64_t LeftmostBit(uint64_t x);
+	/// @brief Finds the rightmost (least significant) bit of the given number.
+	/// @param x The number to find in.
+	/// @return A mask of the rightmost bit of the given number.
+	uint64_t RightmostBit(uint64_t x);
+	/// @brief Gets the index of a power of 2's bit.
+	/// @param x The number to find in.
+	/// @return The index of the bit. Undefined for non-powers of 2.
+	uint64_t Pow2BitIndex(uint64_t x);
 
 	/// @brief Sets the random number generator's seed.
 	/// @param seed The random number generator's new seed.
