@@ -57,8 +57,6 @@ namespace wfe {
 		/// @param returns An optional input vector where all return values will be stored.
 		void CallEvent(void* args, void** returns = nullptr);
 
-		// TODO: Implement async call functions
-
 		/// @brief Destroys this event.
 		~Event() = default;
 	private:

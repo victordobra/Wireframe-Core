@@ -8,10 +8,10 @@
 #include <stdio.h>
 
 namespace wfe {
-	const size_t FILE_READ_BUFFER_SIZE = 8192;
-	const char_t* NUM_ACCEPT_STRING = "0123456789";
+	static const size_t FILE_READ_BUFFER_SIZE = 8192;
+	static const char_t* NUM_ACCEPT_STRING = "0123456789";
 
-	const size_t FILE_WRITE_MAX_BUFFER_SIZE = 65536;
+	static const size_t FILE_WRITE_MAX_BUFFER_SIZE = 65536;
 
 	FileInput::FileInput(const string& filePath, StreamType streamType) {
 		// Open the file input stream using the given parameters

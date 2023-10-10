@@ -2,12 +2,12 @@
 
 namespace wfe {
 	/// @brief The maximum possible number of unit test callbacks.
-	const size_t MAX_UNIT_TEST_CALLBACK_COUNT = 256;
+	static const size_t MAX_UNIT_TEST_CALLBACK_COUNT = 256;
 
 	/// @brief The number of unit test callbacks.
-	size_t unitTestCallbackCount = 0;
+	static size_t unitTestCallbackCount = 0;
 	/// @brief An array of every unit test callback.
-	UnitTestCallback unitTestCallbacks[MAX_UNIT_TEST_CALLBACK_COUNT];
+	static UnitTestCallback unitTestCallbacks[MAX_UNIT_TEST_CALLBACK_COUNT];
 
 	void UnitTest::FormatResult(const char_t* format, ...) {
 		// Get the va list

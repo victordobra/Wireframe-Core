@@ -16,8 +16,8 @@ namespace wfe {
 		Thread::ThreadFunction func;
 		void* params;
 	};
-	unordered_map<Thread::ThreadID, void*> threadReturns;
-	Mutex threadReturnsMutex;
+	static unordered_map<Thread::ThreadID, void*> threadReturns;
+	static Mutex threadReturnsMutex;
 
 	DWORD WINAPI ThreadFunctionWrapper(LPVOID voidParams) {
 		// Convert the given params

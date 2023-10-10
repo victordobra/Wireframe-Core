@@ -80,7 +80,7 @@ namespace wfe {
 	}
 
 	/// @brief A large prime used for hashing strings.
-	const uint64_t LARGE_PRIME = 0x9ddfea08eb382d69;
+	static const uint64_t LARGE_PRIME = 0x9ddfea08eb382d69;
 
 	// Internal integer hashing function
 	static uint64_t HashInt(uint64_t val) {

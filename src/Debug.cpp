@@ -10,10 +10,10 @@
 
 namespace wfe {
 	// Constants
-	const size_t MAX_MESSAGE_LENGTH = 16384;
-	const size_t MAX_MESSAGE_QUEUE_LENGTH = 1024;
+	static const size_t MAX_MESSAGE_LENGTH = 16384;
+	static const size_t MAX_MESSAGE_QUEUE_LENGTH = 1024;
 
-	const char_t* const LOG_LEVEL_NAMES[] = {
+	static const char_t* const LOG_LEVEL_NAMES[] = {
 		"[FATAL]:   ",
 		"[ERROR]:   ",
 		"[WARNING]: ",
@@ -21,16 +21,16 @@ namespace wfe {
 		"[DEBUG]:   ",
 		"[TRACE]:   "
 	};
-	const size_t LOG_LEVEL_NAME_LENGTH = 11;
+	static const size_t LOG_LEVEL_NAME_LENGTH = 11;
 
 	// Variables
-	char_t* messageQueue[MAX_MESSAGE_QUEUE_LENGTH];
-	atomic_size_t queueMessageIndex = 0;
-	atomic_size_t outputMessageIndex = 0;
+	static char_t* messageQueue[MAX_MESSAGE_QUEUE_LENGTH];
+	static atomic_size_t queueMessageIndex = 0;
+	static atomic_size_t outputMessageIndex = 0;
 
-	FileOutput logOutput{};
-	Thread outputThread{};
-	bool8_t outputThreadRunning = true;
+	static FileOutput logOutput{};
+	static Thread outputThread{};
+	static bool8_t outputThreadRunning = true;
 
 	// Internal helper functions
 	static void* WriteToLogFileAsync(void* params) {
