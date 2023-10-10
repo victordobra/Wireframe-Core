@@ -11,13 +11,15 @@
 #include <windows.h>
 
 namespace wfe {
+	// Internal structs
 	struct ThreadParams {
-		Thread::ThreadID threadID;
 		Thread::ThreadFunction func;
 		void* params;
 	};
-	static unordered_map<Thread::ThreadID, void*> threadReturns;
-	static Mutex threadReturnsMutex;
+
+	// Internal variables
+	static atomic_uint64_t threadResultBitmask = UINT64_T_MAX;
+	static void* threadResults[64];
 
 	DWORD WINAPI ThreadFunctionWrapper(LPVOID voidParams) {
 		// Convert the given params
@@ -26,16 +28,37 @@ namespace wfe {
 		// Call the given function using the given params
 		void* result = params->func(params->params);
 
-		// Write the result to the result map
-		threadReturnsMutex.Lock();
-		threadReturns[params->threadID] = result;
-		threadReturnsMutex.Unlock();
-
 		// Free the given thread params
 		free(params, MEMORY_USAGE_HEAP_OBJECT);
 
-		// Return the first bytes of the result
-		return (DWORD)((uint64_t)result & UINT32_T_MAX);
+		// Try to find a free thread result array index
+		size_t threadResultIndex = 0;
+		bool8_t threadResultIndexFound = false;
+		while(!threadResultIndexFound) {
+			// Try to find a index for the current thread result
+			threadResultIndexFound = true;
+			uint64_t oldBitmask, newBitmask;
+			do {
+				// Load the old bitmask
+				oldBitmask = threadResultBitmask;
+
+				// Exit the loop if the old bitmask is full
+				if(!oldBitmask) {
+					threadResultIndexFound = false;
+					break;
+				}
+
+				// Calculate the thread result index and new thread bitmask
+				threadResultIndex = Pow2BitIndex(RightmostBit(oldBitmask));
+				newBitmask = oldBitmask & ~(1 << threadResultIndex);
+			} while(threadResultBitmask.compare_exchange_weak(oldBitmask, newBitmask));
+		}
+
+		// Store the thread result in the thread result array
+		threadResults[threadResultIndex] = result;
+
+		// Return the thread result index
+		return (DWORD)threadResultIndex;
 	}
 
 	bool8_t Thread::operator==(const Thread& other) const {
@@ -74,13 +97,10 @@ namespace wfe {
 		params->params = args;
 
 		// Create the thread using CreateThread
-		internalData = (void*)CreateThread(NULL, 0, ThreadFunctionWrapper, params, CREATE_SUSPENDED, &threadIDWord);
+		internalData = (void*)CreateThread(NULL, 0, ThreadFunctionWrapper, params, 0, &threadIDWord);
 
 		// Set the thread's new ID
 		threadID = (ThreadID)threadIDWord;
-
-		// Write the thread's ID to the params
-		params->threadID = threadID;
 
 		// Check if the thread was created successfully
 		if(!internalData) {
@@ -103,31 +123,7 @@ namespace wfe {
 			};
 		}
 
-		// Resume the thread from its suspended state
-		DWORD result = ResumeThread((HANDLE)internalData);
-
-		// Check if the function succeeded
-		if(result != (DWORD)-1)
-			return SUCCESS;
-
-		// Convert the Win32 error code to a thread error code
-		DWORD error = GetLastError();
-
-		switch(error) {
-		case ERROR_SUCCESS:
-			return SUCCESS;
-		case ERROR_NOT_ENOUGH_MEMORY:
-		case ERROR_OUTOFMEMORY:
-		case ERROR_DS_THREAD_LIMIT_EXCEEDED:
-			return ERROR_INSUFFICIENT_RESOURCES;
-		case ERROR_INVALID_THREAD_ID:
-			return ERROR_INVALID_THREAD;
-		case ERROR_POSSIBLE_DEADLOCK:
-			return ERROR_DETECTED_DEADLOCK;
-		default:
-			return ERROR_UNKNOWN;
-		};
-
+		return SUCCESS;
 	}
 	Thread::ThreadResult Thread::Detach() {
 		// Check if the thread was begun
@@ -245,9 +241,10 @@ namespace wfe {
 
 		if(returnPtr) {
 			// Save the full result to the given pointer
-			threadReturnsMutex.Lock();
-			*returnPtr = threadReturns[threadID];
-			threadReturnsMutex.Unlock();
+			*returnPtr = threadResults[result];
+
+			// Update the result bitmask
+			threadResultBitmask |= (uint64_t)1 << result;
 		}
 		
 		// Close the thread's handle
@@ -408,13 +405,34 @@ namespace wfe {
 		// Get the current thread's ID
 		Thread::ThreadID threadID = GetCurrentThreadID();
 
-		// Write the return to the return map
-		threadReturnsMutex.Lock();
-		threadReturns[threadID] = returnValue;
-		threadReturnsMutex.Unlock();
+		// Try to find a free thread result array index
+		size_t threadResultIndex = 0;
+		bool8_t threadResultIndexFound = false;
+		while(!threadResultIndexFound) {
+			// Try to find a index for the current thread result
+			threadResultIndexFound = true;
+			uint64_t oldBitmask, newBitmask;
+			do {
+				// Load the old bitmask
+				oldBitmask = threadResultBitmask;
 
-		// Exit the current thread using ExitThread and return the lower half of the return value
-		ExitThread((DWORD)((uint64_t)returnValue & UINT32_T_MAX));
+				// Exit the loop if the old bitmask is full
+				if(!oldBitmask) {
+					threadResultIndexFound = false;
+					break;
+				}
+
+				// Calculate the thread result index and new thread bitmask
+				threadResultIndex = Pow2BitIndex(RightmostBit(oldBitmask));
+				newBitmask = oldBitmask & ~(1 << threadResultIndex);
+			} while(threadResultBitmask.compare_exchange_weak(oldBitmask, newBitmask));
+		}
+
+		// Store the thread result in the thread result array
+		threadResults[threadResultIndex] = returnValue;
+
+		// Exit the current thread using ExitThread and return the thread result index
+		ExitThread((DWORD)threadResultIndex);
 	}
 	size_t GetProcessorCount() {
 		// Get the SYSTEM_INFO struct
