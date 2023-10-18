@@ -4,27 +4,43 @@ namespace wfe {
 	Event::Event(std::initializer_list<EventListener> list) : listeners(list) { }
 
 	size_t Event::GetListenerCount() const {
-		// Return the listener count
 		return listeners.size();
 	}
-	unordered_set<Event::EventListener> Event::GetListeners() const {
-		// Return the listener unordered set
-		return listeners;
+	Event::EventListener* Event::GetListeners() {
+		return listeners.data();
+	}
+	const Event::EventListener* Event::GetListeners() const {
+		return listeners.data();
 	}
 	bool8_t Event::AddListener(EventListener listener) {
-		// Insert the listener into the unordered set
-		auto result = listeners.insert(listener);
+		// Exit the function if the event already has the given listener
+		if(HasListener(listener))
+			return false;
+		
+		// Insert the listener into the vector
+		listeners.push_back(listener);
 
-		// Return the insert function's returned bool
-		return result.second;
+		return true;
 	}
 	bool8_t Event::RemoveListener(EventListener listener) {
-		// Return the erase function's result, since it will either return 0 and 1
-		return listeners.erase(listener);
+		// Loop through the vector, checking if the given listener is in the vector
+		for(const auto& vecListener : listeners)
+			if(vecListener == listener) {
+				// Erase the current listener and exit the function
+				listeners.erase(&vecListener);
+
+				return true;
+			}
+
+		return false;
 	}
 	bool8_t Event::HasListener(EventListener listener) {
-		// The unordered set's find function will return end() if the given walue isn't in the set; compare the return value with end()
-		return listeners.find(listener) != listeners.end();
+		// Loop through the vector, checking if the given listener is in the vector
+		for(const auto& vecListener : listeners)
+			if(vecListener == listener)
+				return true;
+
+		return false;
 	}
 
 	void Event::CallEvent(void* args, void** returns) {

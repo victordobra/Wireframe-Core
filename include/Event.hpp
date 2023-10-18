@@ -2,7 +2,7 @@
 
 #include "Defines.hpp"
 #include "Debug.hpp"
-#include "UnorderedSet.hpp"
+#include "Vector.hpp"
 #include <initializer_list>
 
 namespace wfe {
@@ -37,19 +37,22 @@ namespace wfe {
 		/// @return The number of listeners.
 		size_t GetListenerCount() const;
 		/// @brief Gets the event's listeners.
-		/// @return An unordered set of the event's listeners.
-		unordered_set<EventListener> GetListeners() const;
+		/// @return A pointer to the array of listeners.
+		EventListener* GetListeners();
+		/// @brief Gets the event's listeners.
+		/// @return A const pointer to the array of listeners.
+		const EventListener* GetListeners() const;
 		/// @brief Adds the given listener to the event.
 		/// @param listener The new listener to add to the event.
 		/// @return True if a new listener was inserted, otherwise false.
 		bool8_t AddListener(EventListener listener);
 		/// @brief Removes the given listener from the event.
 		/// @param listener The listener to be removed from the event.
-		/// @return True if the given listener was removed, otherwise false.
+		/// @return True if the given listener was found and removed, otherwise false.
 		bool8_t RemoveListener(EventListener listener);
 		/// @brief Checks if the event has the given listener.
 		/// @param listener THe listener to look for.
-		/// @return True if the event already has the given listener, otherwise false.
+		/// @return True if the event has the given listener, otherwise false.
 		bool8_t HasListener(EventListener listener);
 
 		/// @brief Calls every listener of the event.
@@ -60,6 +63,6 @@ namespace wfe {
 		/// @brief Destroys this event.
 		~Event() = default;
 	private:
-		unordered_set<EventListener> listeners{};
+		vector<EventListener> listeners{};
 	};
 }
