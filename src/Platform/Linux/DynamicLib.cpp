@@ -1,10 +1,8 @@
 #include "BuildInfo.hpp"
 
-#ifdef WFE_PLATFORM_WINDOWS
+#ifdef WFE_PLATFORM_LINUX
 #include "DynamicLib.hpp"
-
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <dlfcn.h>
 
 namespace wfe {
     bool8_t DynamicLib::LoadLib(const char_t* name) {
@@ -12,8 +10,8 @@ namespace wfe {
         if(internalData)
             return false;
         
-        // Try to load the dynamic lib using LoadLibraryA
-        internalData = (void*)LoadLibraryA(name);
+        // Try to load the library using dlopen
+        internalData = dlopen(name, RTLD_NOW);
 
         return internalData;
     }
@@ -21,17 +19,17 @@ namespace wfe {
         // Check if no dynamic lib has been loaded
         if(!internalData)
             return nullptr;
-
-        // Try to load the function using GetProcAddress
-        return (VoidFunction)GetProcAddress((HMODULE)internalData, name);
+        
+        // Try to load the function using dlsym
+        return (VoidFunction)dlsym(internalData, name);
     }
     void DynamicLib::FreeLib() {
         // Check if no dynamic lib has been loaded
         if(!internalData)
             return;
-        
-        // Free the dynamic lib using FreeLibrary
-        FreeLibrary((HMODULE)internalData);
+
+        // Free the dynamic lib using dlclose
+        dlclose(internalData);
     }
 
     DynamicLib::~DynamicLib() {
@@ -39,4 +37,5 @@ namespace wfe {
         FreeLib();
     }
 }
+
 #endif

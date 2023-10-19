@@ -2,7 +2,10 @@
 #include "Platform.hpp"
 #include "Debug.hpp"
 #include <atomic>
-#include <unistd.h>
+
+#ifdef WFE_PLATFORM_LINUX
+#include <malloc.h>
+#endif
 
 namespace wfe {
 	// Internal variables
@@ -28,7 +31,11 @@ namespace wfe {
 	}
 	void* realloc(void* ptr, size_t newSize, MemoryUsage memoryUsage) {
 		// Get the old memory's size
+#if defined(WFE_PLATFORM_WINDOWS)
 		size_t size = _msize(ptr);
+#elif defined(WFE_PLATFORM_LINUX)
+		size_t size = malloc_usable_size(ptr);
+#endif
 
 		// Modify the memory usage
 		totalMemoryUsage[memoryUsage] -= size;
@@ -39,7 +46,11 @@ namespace wfe {
 	}
 	void free(void* ptr, MemoryUsage memoryUsage) {
 		// Get the memory block's size
+#if defined(WFE_PLATFORM_WINDOWS)
 		size_t size = _msize(ptr);
+#elif defined(WFE_PLATFORM_LINUX)
+		size_t size = malloc_usable_size(ptr);
+#endif
 
 		// Decrease the current memory usage
 		totalMemoryUsage[memoryUsage] -= size;

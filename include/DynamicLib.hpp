@@ -20,7 +20,7 @@ namespace wfe {
         bool8_t LoadLib(const char_t* name);
         /// @brief Loads the function with the given name from the dynamic lib.
         /// @param name The name of the function to load.
-        /// @return A pointer to the loaded function, or a nullptr if the lad failed.
+        /// @return A pointer to the loaded function, or a nullptr if the load failed.
         VoidFunction LoadFunc(const char_t* name);
         /// @brief Frees the loaded dynamic lib.
         void FreeLib();
