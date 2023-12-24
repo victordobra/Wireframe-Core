@@ -1809,6 +1809,57 @@ namespace wfe {
 
 		return writeCount;
 	}
+	size_t FileOutput::Write(size_t strCount, const char_t** strings, const char_t* sep) {
+		// Create a string containing the total output from the current operation
+		string output = "";
+
+		// Precalculate the separation string's length to avoid extra processing
+		size_t sepLength = strlen(sep);
+
+		// Loop through the given strings
+		size_t writeCount = 0;
+		for(size_t i = 0; i != strCount; ++i) {
+			// Append the current string to the output string
+			output.append(strings[i]);
+
+			// Append the separation character to the output string
+			if(i != strCount - 1)
+				output.append(sep, sepLength);
+			
+			// Check if the string's size surpassed the max buffer output size
+			if(output.length() < FILE_WRITE_MAX_BUFFER_SIZE)
+				continue;
+			
+			// Write the output's contents to the file
+			DWORD fileWriteCount;
+
+			WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
+
+			// Increase the total output count
+			writeCount += fileWriteCount;
+
+			// Check if the write was successful
+			if(!result || fileWriteCount != output.length())
+				return writeCount;
+			
+			// Clear the output string
+			output.clear();
+		}
+
+		// Write the output's contents to the file
+		DWORD fileWriteCount;
+
+		WINBOOL result = WriteFile((HANDLE)internalData, output.data(), output.length(), &fileWriteCount, nullptr);
+
+		// Check if the write was successful
+		if(!result || fileWriteCount != output.length())
+			return writeCount;
+
+		// Increase the total output count
+		writeCount += fileWriteCount;
+
+		return writeCount;
+	}
 
 	bool8_t FileOutput::Flush() {
 		// Flush the file's changes

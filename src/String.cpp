@@ -3,6 +3,7 @@
 #include "Debug.hpp"
 #include "Exception.hpp"
 #include <stdlib.h>
+#include <stdio.h>
 
 namespace wfe {
 	string::string(const string& other) : strSize(other.strSize), strCapacity(other.strCapacity), strData((pointer)malloc(strCapacity, MEMORY_USAGE_STRING)) {
@@ -4314,5 +4315,21 @@ namespace wfe {
 		
 		// Return the final value
 		return val;
+	}
+
+	void FormatString(char_t* dest, size_t maxSize, const char_t* format, ...) {
+		// Get the va list
+		va_list args;
+		va_start(args, format);
+		
+		// Format the string using the args list
+		FormatStringArgs(dest, maxSize, format, args);
+
+		// End the va list
+		va_end(args);
+	}
+	void FormatStringArgs(char_t* dest, size_t maxSize, const char_t* format, va_list args) {
+		// Call the standard library string format function
+		vsnprintf(dest, maxSize, format, args);
 	}
 }

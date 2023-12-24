@@ -298,10 +298,10 @@ namespace wfe {
 				break;
 			case ERROR_NOT_ENOUGH_MEMORY:
 			case ERROR_OUTOFMEMORY:
-				WFE_LOG_FATAL("Failed to create mutex! Reason: Insufficient memory.");
+				throw BadAllocException("Failed to create mutex! Reason: Insufficient memory.");
 				break;
 			default:
-				WFE_LOG_FATAL("Failed to create mutex! Reason: Unknown.");
+				throw Exception("Failed to create mutex! Reason: Unknown.");
 			}
 		}
 	}

@@ -256,12 +256,18 @@ namespace wfe {
 		/// @param sep The string separating the written values.
 		/// @return The number of characters successfully written to the output stream.
 		size_t Write(size_t valCount, const float64_t* vals, size_t precision = 10, const char_t* sep = " ");
-		/// @brief Writes the given string to the output stream.
+		/// @brief Writes the given strings to the output stream.
 		/// @param strCount The number of strings to write.
 		/// @param strings The strings to write.
-		/// @param sep THe string separating the written strings.
+		/// @param sep The string separating the written strings.
 		/// @return The number of characters successfully written to the output stream.
 		size_t Write(size_t strCount, const string* strings, const char_t* sep = " ");
+		/// @brief Writes the given strings to the output stream.
+		/// @param strCount The number of strings to write.
+		/// @param strings The strings to write.
+		/// @param sep The string separating the written strings.
+		/// @return The number of characters successfully written to the output stream.
+		size_t Write(size_t strCount, const char_t** strings, const char_t* sep = " ");
 
 		/// @brief Flushes all of the file's changes to disk.
 		/// @return True if the changes were flushed successfully, otherwise false.

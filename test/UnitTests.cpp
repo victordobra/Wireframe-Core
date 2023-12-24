@@ -15,7 +15,7 @@ namespace wfe {
 		va_start(args, format);
 		
 		// Format the string using the va list
-		FormatStringV(result, MAX_UNIT_TEST_RESULT_LENGTH, format, args);
+		FormatStringArgs(result, MAX_UNIT_TEST_RESULT_LENGTH, format, args);
 
 		// End the va list
 		va_end(args);

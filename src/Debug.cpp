@@ -11,157 +11,148 @@
 namespace wfe {
 	// Constants
 	static const size_t MAX_MESSAGE_LENGTH = 16384;
-	static const size_t MAX_MESSAGE_QUEUE_LENGTH = 1024;
 
-	static const char_t* const LOG_LEVEL_NAMES[] = {
-		"[FATAL]:   ",
-		"[ERROR]:   ",
-		"[WARNING]: ",
-		"[INFO]:    ",
-		"[DEBUG]:   ",
-		"[TRACE]:   "
-	};
-	static const size_t LOG_LEVEL_NAME_LENGTH = 11;
-
-	// Variables
-	static char_t* messageQueue[MAX_MESSAGE_QUEUE_LENGTH];
-	static atomic_size_t queueMessageIndex = 0;
-	static atomic_size_t outputMessageIndex = 0;
-
-	static FileOutput logOutput{};
-	static Thread outputThread{};
-	static bool8_t outputThreadRunning = true;
-
-	// Internal helper functions
-	static void* WriteToLogFileAsync(void* params) {
-		// Keep trying to output messages until the thread is stopped
-		while(outputThreadRunning) {
-			// Loop through all new messages
-			while(outputMessageIndex != queueMessageIndex) {
-				// Output the current message to the log file
-				char_t* message = messageQueue[outputMessageIndex];
-				size_t messageLen = strnlen(message, LOG_LEVEL_NAME_LENGTH + MAX_MESSAGE_LENGTH + 1);
-
-				logOutput.WriteBuffer(messageLen, message);
-				logOutput.Flush();
-
-				// Free the message memory at the current position
-				free(message, MEMORY_USAGE_STRING);
-
-				// Increment the message index
-				++outputMessageIndex;
-				outputMessageIndex &= MAX_MESSAGE_QUEUE_LENGTH - 1;
-			}
-
-			// Wait for new messages to appear
-			while(outputMessageIndex == queueMessageIndex && outputThreadRunning)
-				sleep(0);
-		}
-
-		return nullptr;
-	}
-	static void OutputMessage(const char_t* message) {
-		// Output the message to the console
-		printf("%s", message);
-
-		// Copy the current message to the heap
-		size_t messageLen = strnlen(message, LOG_LEVEL_NAME_LENGTH + MAX_MESSAGE_LENGTH + 1);
-		char_t* messageMem = (char_t*)malloc(messageLen + 1, MEMORY_USAGE_STRING);
-		if(!messageMem)
-			throw BadAllocException("Failed to allocate string!");
-		
-		memcpy(messageMem, message, messageLen + 1);
-
-		// Try to write the message to the console
-		bool8_t messageWritten = false;
-		size_t oldIndex, newIndex;
-		while(!messageWritten) {
-			// Try to increment the index
-			messageWritten = true;
-			do {
-				// Load the new old index and set the new index
-				oldIndex = queueMessageIndex;
-				newIndex = (oldIndex + 1) & (MAX_MESSAGE_QUEUE_LENGTH - 1);
-
-				// Exit the loop if the new index is equal to the output index
-				if(newIndex == outputMessageIndex) {
-					messageWritten = false;
-					break;
-				}
-			} while(!queueMessageIndex.compare_exchange_weak(oldIndex, newIndex));
-		}
-
-		// Add the current message to the queue
-		messageQueue[oldIndex] = messageMem;
+	// Public functions
+	const char_t* Logger::GetLogLevelString(LogLevel level) {
+		switch(level) {
+		case LOG_LEVEL_DEBUG:
+			return "[LOG_DEBUG]:   ";
+		case LOG_LEVEL_INFO:
+			return "[LOG_INFO]:    ";
+		case LOG_LEVEL_WARNING:
+			return "[LOG_WARNING]: ";
+		case LOG_LEVEL_ERROR:
+			return "[LOG_ERROR]:   ";
+		case LOG_LEVEL_FATAL:
+			return "[LOG_FATAL]:   ";
+		default:
+			return "[LOG]:         ";
+		};
 	}
 
-	// External functions
-	void FormatString(char_t* dest, size_t maxSize, const char_t* format, ...) {
-		// Get the va list
+	Logger::Logger(const char_t* logFilePath, bool8_t outputConsole, LogLevelFlags logLevelFlags) : outputConsole(outputConsole), logLevelFlags(logLevelFlags), messages() {
+		// Check if a log file path is given
+		if(logFilePath) {
+			// Try to open the file
+			fileOutput.Open(logFilePath);
+		}
+	}
+
+	void Logger::LogMessage(LogLevel level, const char_t* format, ...) {
+		// Get the args list
 		va_list args;
 		va_start(args, format);
-		
-		// Format the string using the va list
-		FormatStringV(dest, maxSize, format, args);
 
-		// End the va list
+		// Output the message using the given args
+		LogMessageArgs(level, format, args);
+
+		// End the args list
 		va_end(args);
 	}
-	void FormatStringV(char_t* dest, size_t maxSize, const char_t* format, va_list args) {
-		// Call the standard library string format function
-		vsnprintf(dest, maxSize, format, args);
-	}
 
-	void CreateLogger(const char_t* logFilePath) {
-		// Open the file output stream to the given path
-		logOutput.Open(logFilePath);
+	void Logger::LogMessageArgs(LogLevel level, const char_t* format, va_list args) {
+		// Exit the function if the message level is not in the logger's mask
+		if(!(level & logLevelFlags))
+			return;
 
-		// Run the file output thread
-		outputThread.Begin(WriteToLogFileAsync, nullptr);
-	}
-	void DestroyLogger() {
-		// Wait for the file log thread to finish outputting all messages
-		outputThreadRunning = false;
-		outputThread.Join();
+		// Format the message
+		char_t message[MAX_MESSAGE_LENGTH];
+		FormatStringArgs(message, MAX_MESSAGE_LENGTH, format, args);
 
-		// Close the file output stream
-		logOutput.Close();
-	}
+		// Create the new message and add it to the message list
+		messages.emplace_back(level, message); 
+	
+		// Print the message to the file output stream, if enabled
+		if(fileOutput.IsOpen()) {
+			// Create an output string array and print the full message
+			const char_t* strings[3] { GetLogLevelString(level), message, "\n" };
+			fileOutput.Write(3, strings, "");
 
-	void LogMessage(LogLevel level, const char_t* format, ...) {
-		// Get the va list
-		va_list args;
-		va_start(args, format);
-		
-		// Output the message using the va list
-		LogMessageV(level, format, args);
+			// Flush the log file
+			fileOutput.Flush();
+		}
 
-		// End the va list
-		va_end(args);
-	}
-	void LogMessageV(LogLevel level, const char_t* format, va_list args) {
-		// Format the message string
-		char_t fullMessage[LOG_LEVEL_NAME_LENGTH + MAX_MESSAGE_LENGTH + 2];
+		// Print the message to the console, if enabled
+		if(outputConsole) {
+			// Print the log level and the message
+			fputs(GetLogLevelString(level), stdout);
+			fputs(message, stdout);
+			fputc('\n', stdout);
+		}
 
-		memcpy(fullMessage, LOG_LEVEL_NAMES[level], LOG_LEVEL_NAME_LENGTH);
-		FormatStringV(fullMessage + LOG_LEVEL_NAME_LENGTH, MAX_MESSAGE_LENGTH, format, args);
-
-		size_t formattedLen = strnlen(fullMessage, MAX_MESSAGE_LENGTH);
-		fullMessage[formattedLen] = '\n';
-		fullMessage[formattedLen + 1] = 0;
-
-		// Output the message
-		OutputMessage(fullMessage);
-
-		// Abort the program if the error was fatal
-		if(level == LOG_LEVEL_FATAL) {
-			DestroyLogger();
+		// Abort the program if the current message is a fatal error
+		if(level == LOG_LEVEL_FATAL)
 			abort();
-		}
 	}
 
-	void ReportAssertionFailure(const char_t* expression, const char_t* message, const char_t* file, size_t line) {
-		// Output a formatted message
-		LogMessage(LOG_LEVEL_FATAL, "Assertion of \"%s\" failed with message \"%s\" in file %s at line %llu!", expression, message, file, (unsigned long long)line);
+	void Logger::LogDebugMessage(const char_t* format, ...) {
+		// Get the args list
+		va_list args;
+		va_start(args, format);
+
+		// Output the message using the given args
+		LogMessageArgs(LOG_LEVEL_DEBUG, format, args);
+
+		// End the args list
+		va_end(args);
+	}
+	void Logger::LogInfoMessage(const char_t* format, ...) {
+		// Get the args list
+		va_list args;
+		va_start(args, format);
+
+		// Output the message using the given args
+		LogMessageArgs(LOG_LEVEL_INFO, format, args);
+
+		// End the args list
+		va_end(args);
+	}
+	void Logger::LogWarningMessage(const char_t* format, ...) {
+		// Get the args list
+		va_list args;
+		va_start(args, format);
+
+		// Output the message using the given args
+		LogMessageArgs(LOG_LEVEL_WARNING, format, args);
+
+		// End the args list
+		va_end(args);
+	}
+	void Logger::LogErrorMessage(const char_t* format, ...) {
+		// Get the args list
+		va_list args;
+		va_start(args, format);
+
+		// Output the message using the given args
+		LogMessageArgs(LOG_LEVEL_ERROR, format, args);
+
+		// End the args list
+		va_end(args);
+	}
+	void Logger::LogFatalMessage(const char_t* format, ...) {
+		// Get the args list
+		va_list args;
+		va_start(args, format);
+
+		// Output the message using the given args
+		LogMessageArgs(LOG_LEVEL_FATAL, format, args);
+
+		// End the args list
+		va_end(args);
+	}
+
+	size_t Logger::GetMessageCount() const {
+		return messages.size();
+	}
+	const Logger::Message* Logger::GetMessages() const {
+		return messages.data();
+	}
+	void Logger::ClearMessages() {
+		messages.clear();
+	}
+
+	Logger::~Logger() {
+		// CLose the output file stream
+		fileOutput.Close();
 	}
 }

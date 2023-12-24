@@ -721,4 +721,16 @@ namespace wfe {
 	/// @param base The base of the number to convert.
 	/// @return The resulting double.
 	float64_t StrToDouble(const char_t* str, size_t* outIndex = nullptr);
+
+	/// @brief Formats the given string.
+	/// @param dest The target string for the format.
+	/// @param maxSize The max size of the target string.
+	/// @param format The format to write to the string.
+	void FormatString(char_t* dest, size_t maxSize, const char_t* format, ...);
+	/// @brief Formats the given string, using the given args list.
+	/// @param dest The target string for the format.
+	/// @param maxSize The max size of the target string.
+	/// @param format The format to write to the string.
+	/// @param args The arguments to use for the format.
+	void FormatStringArgs(char_t* dest, size_t maxSize, const char_t* format, va_list args);
 }
