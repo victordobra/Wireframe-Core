@@ -34,17 +34,6 @@ namespace wfe {
 			// Copy the formatted message
 			message.assign(str);
 		}
-		/// @brief Creates an exception with the given formatted message.
-		/// @param args The arguments to use for the format.
-		/// @param format The format to use for the message.
-		explicit Exception(va_list args, const char_t* format) {
-			// Format the message
-			char_t str[MAX_MESSAGE_LEN];
-			FormatStringArgs(str, MAX_MESSAGE_LEN, format, args);
-
-			// Copy the formatted message
-			message.assign(str);
-		}
 
 		/// @brief Copies the given exception's contents into this exception.
 		/// @param other The exception to copy.
@@ -99,10 +88,6 @@ namespace wfe {
 			// Copy the formatted message
 			message.assign(str);
 		}
-		/// @brief Creates an exception with the given formatted message.
-		/// @param args The arguments to use for the format.
-		/// @param format The format to use for the message.
-		explicit AssertException(va_list args, const char_t* format) : Exception(args, format) { }
 
 		/// @brief Copies the given exception's contents into this exception.
 		/// @param other The exception to copy.
@@ -161,10 +146,6 @@ namespace wfe {
 			// Copy the formatted message
 			message.assign(str);
 		}
-		/// @brief Creates an exception with the given formatted message.
-		/// @param args The arguments to use for the format.
-		/// @param format The format to use for the message.
-		explicit BadAllocException(va_list args, const char_t* format) : Exception(args, format) { }
 
 		/// @brief Copies the given exception's contents into this exception.
 		/// @param other The exception to copy.
@@ -209,10 +190,6 @@ namespace wfe {
 			// Copy the formatted message
 			message.assign(str);
 		}
-		/// @brief Creates an exception with the given formatted message.
-		/// @param args The arguments to use for the format.
-		/// @param format The format to use for the message.
-		explicit OutOfRangeException(va_list args, const char_t* format) : Exception(args, format) { }
 
 		/// @brief Copies the given exception's contents into this exception.
 		/// @param other The exception to copy.
