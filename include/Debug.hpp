@@ -3,6 +3,7 @@
 #include "Defines.hpp"
 #include "Files.hpp"
 #include "Vector.hpp"
+#include "String.hpp"
 #include <stdarg.h>
 
 namespace wfe {

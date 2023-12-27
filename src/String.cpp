@@ -2,6 +2,7 @@
 #include "Memory.hpp"
 #include "Debug.hpp"
 #include "Exception.hpp"
+#include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
 

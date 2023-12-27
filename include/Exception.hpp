@@ -1,6 +1,7 @@
 #pragma once
 
 #include "String.hpp"
+#include <stdarg.h>
 
 namespace wfe {
 	/// @brief A struct that represents an exception throw by the program.
@@ -16,9 +17,34 @@ namespace wfe {
 		/// @brief Creates an exception with the given message.
 		/// @param message The exception's message.
 		explicit Exception(const string& message) : message(message) { }
-		/// @brief Creates an exception with the given message.
-		/// @param message The exception's message.
-		explicit Exception(const char_t* message) : message(message) { }
+		/// @brief Creates an exception with the given formatted message.
+		/// @param format The format to use for the message.
+		explicit Exception(const char_t* format, ...) {
+			// Get the va list
+			va_list args;
+			va_start(args, format);
+
+			// Format the message
+			char_t str[MAX_MESSAGE_LEN];
+			FormatStringArgs(str, MAX_MESSAGE_LEN, format, args);
+
+			// End the va list
+			va_end(args);
+
+			// Copy the formatted message
+			message.assign(str);
+		}
+		/// @brief Creates an exception with the given formatted message.
+		/// @param args The arguments to use for the format.
+		/// @param format The format to use for the message.
+		explicit Exception(va_list args, const char_t* format) {
+			// Format the message
+			char_t str[MAX_MESSAGE_LEN];
+			FormatStringArgs(str, MAX_MESSAGE_LEN, format, args);
+
+			// Copy the formatted message
+			message.assign(str);
+		}
 
 		/// @brief Copies the given exception's contents into this exception.
 		/// @param other The exception to copy.
@@ -31,13 +57,15 @@ namespace wfe {
 
 		/// @brief Gets the exception's message.
 		/// @return The exception's message.
-		const string& GetMessage() {
+		const string& GetMessage() const {
 			return message;
 		}
 
 		/// @brief Destroys the exception.
 		virtual ~Exception() = default;
 	protected:
+		const size_t MAX_MESSAGE_LEN = 1024;
+
 		string message;
 	};
 
@@ -54,9 +82,27 @@ namespace wfe {
 		/// @brief Creates an exception with the given message.
 		/// @param message The exception's message.
 		explicit AssertException(const string& message) : Exception(message) { }
-		/// @brief Creates an exception with the given message.
-		/// @param message The exception's message.
-		explicit AssertException(const char_t* message) : Exception(message) { }
+		/// @brief Creates an exception with the given formatted message.
+		/// @param format The format to use for the message.
+		explicit AssertException(const char_t* format, ...) : Exception("") {
+			// Get the va list
+			va_list args;
+			va_start(args, format);
+
+			// Format the message
+			char_t str[MAX_MESSAGE_LEN];
+			FormatStringArgs(str, MAX_MESSAGE_LEN, format, args);
+
+			// End the va list
+			va_end(args);
+
+			// Copy the formatted message
+			message.assign(str);
+		}
+		/// @brief Creates an exception with the given formatted message.
+		/// @param args The arguments to use for the format.
+		/// @param format The format to use for the message.
+		explicit AssertException(va_list args, const char_t* format) : Exception(args, format) { }
 
 		/// @brief Copies the given exception's contents into this exception.
 		/// @param other The exception to copy.
@@ -98,9 +144,27 @@ namespace wfe {
 		/// @brief Creates an exception with the given message.
 		/// @param message The exception's message.
 		explicit BadAllocException(const string& message) : Exception(message) { }
-		/// @brief Creates an exception with the given message.
-		/// @param message The exception's message.
-		explicit BadAllocException(const char_t* message) : Exception(message) { }
+		/// @brief Creates an exception with the given formatted message.
+		/// @param format The format to use for the message.
+		explicit BadAllocException(const char_t* format, ...) : Exception("") {
+			// Get the va list
+			va_list args;
+			va_start(args, format);
+
+			// Format the message
+			char_t str[MAX_MESSAGE_LEN];
+			FormatStringArgs(str, MAX_MESSAGE_LEN, format, args);
+
+			// End the va list
+			va_end(args);
+
+			// Copy the formatted message
+			message.assign(str);
+		}
+		/// @brief Creates an exception with the given formatted message.
+		/// @param args The arguments to use for the format.
+		/// @param format The format to use for the message.
+		explicit BadAllocException(va_list args, const char_t* format) : Exception(args, format) { }
 
 		/// @brief Copies the given exception's contents into this exception.
 		/// @param other The exception to copy.
@@ -128,9 +192,27 @@ namespace wfe {
 		/// @brief Creates an exception with the given message.
 		/// @param message The exception's message.
 		explicit OutOfRangeException(const string& message) : Exception(message) { }
-		/// @brief Creates an exception with the given message.
-		/// @param message The exception's message.
-		explicit OutOfRangeException(const char_t* message) : Exception(message) { }
+		/// @brief Creates an exception with the given formatted message.
+		/// @param format The format to use for the message.
+		explicit OutOfRangeException(const char_t* format, ...) : Exception("") {
+			// Get the va list
+			va_list args;
+			va_start(args, format);
+
+			// Format the message
+			char_t str[MAX_MESSAGE_LEN];
+			FormatStringArgs(str, MAX_MESSAGE_LEN, format, args);
+
+			// End the va list
+			va_end(args);
+
+			// Copy the formatted message
+			message.assign(str);
+		}
+		/// @brief Creates an exception with the given formatted message.
+		/// @param args The arguments to use for the format.
+		/// @param format The format to use for the message.
+		explicit OutOfRangeException(va_list args, const char_t* format) : Exception(args, format) { }
 
 		/// @brief Copies the given exception's contents into this exception.
 		/// @param other The exception to copy.
