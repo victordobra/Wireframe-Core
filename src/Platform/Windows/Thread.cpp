@@ -397,6 +397,25 @@ namespace wfe {
 		CloseHandle((HANDLE)internalData);
 	}
 
+	void AtomicMutex::Lock() {
+		// Wait until the mutex's value is set to 0
+		uint8_t target = 0;
+		while(!val.compare_exchange_weak(target, 1)) {
+			// Reset the target value
+			target = 0;
+			Sleep(0);
+		}
+	}
+	bool8_t AtomicMutex::TryLock() {
+		// Try to set the mutex's value
+		uint8_t target = 0;
+		return val.compare_exchange_weak(target, 1);
+	}
+	void AtomicMutex::Unlock() {
+		// Set the mutex's value to 0
+		val = 0;
+	}
+
 	Thread::ThreadID GetCurrentThreadID() {
 		// Get the current thread ID using GetCurrentThreadId
 		return (Thread::ThreadID)GetCurrentThreadId();

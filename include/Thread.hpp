@@ -130,6 +130,30 @@ namespace wfe {
 		void* internalData;
 #endif
 	};
+	/// @brief An implementation of a mutex that uses atomic variables for synchronization.
+	struct AtomicMutex {
+	public:
+		/// @brief Creates an atomic mutex object.
+		AtomicMutex() = default;
+		AtomicMutex(const AtomicMutex&) = delete;
+		AtomicMutex(AtomicMutex&&) noexcept = delete;
+
+		AtomicMutex& operator=(const AtomicMutex&) = delete;
+		AtomicMutex& operator=(AtomicMutex&&) noexcept = delete;
+
+		/// @brief Locks the mutex. If the mutex is already locked, the calling thread will wait for it to unlock.
+		void Lock();
+		/// @brief Locks the mutex. If the mutex is already locked, the function will return immediately.
+		/// @return True if the mutex was locked, otherwise false.
+		bool8_t TryLock();
+		/// @brief Unlocks the mutex.
+		void Unlock();
+
+		/// @brief Destroys the atomic mutex.
+		~AtomicMutex() = default;
+	private:
+		atomic_uint8_t val = 0;
+	};
 
 	/// @brief Gets the current thread's ID.
 	/// @return THe current thread's ID.
