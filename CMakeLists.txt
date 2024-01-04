@@ -3,7 +3,7 @@ include(./.build.cmake OPTIONAL RESULT_VARIABLE LOCAL_BUILD)
 message(STATUS "Local .build file included successfully.")
 
 # Set the minumum required version
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.5.0)
 message(STATUS "CMake minimum required version set to ${CMAKE_MIN_VERSION}.")
 
 # Create the project
