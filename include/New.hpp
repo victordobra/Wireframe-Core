@@ -15,7 +15,7 @@ namespace wfe {
 	template<class T, class... Args>
 	WFE_INLINE T* NewObject(MemoryUsage memoryUsage, Args&&... args) {
 		// Allocate memory for the new object
-		T* newObject = calloc(1, sizeof(T), memoryUsage);
+		T* newObject = (T*)malloc(sizeof(T), memoryUsage);
 		
 		// Check if the memory was allocated correctly
 		if(!newObject)
@@ -36,7 +36,7 @@ namespace wfe {
 		object->~T();
 
 		// Free the object's memory
-		free(object, sizeof(T), MEMORY_USAGE_OTHER);
+		free(object, MEMORY_USAGE_OTHER);
 	}
 	/// @brief Creates a new object array.
 	/// @tparam T The array's object type.
@@ -46,7 +46,7 @@ namespace wfe {
 	template<class T>
 	WFE_INLINE T* NewArray(size_t size, MemoryUsage memoryUsage) {
 		// Allocate memory for the new array
-		T* newArray = (T*)calloc(size, sizeof(T), memoryUsage);
+		T* newArray = (T*)malloc(size * sizeof(T), memoryUsage);
 
 		// Check if the memory was allocated correctly
 		if(!newArray)
@@ -74,14 +74,11 @@ namespace wfe {
 
 		if(oldSize < newSize) {
 			// Reallocate the array's memory
-			array = (T*)realloc(array, oldSize * sizeof(T), newSize * sizeof(T), memoryUsage);
+			array = (T*)realloc(array, newSize * sizeof(T), memoryUsage);
 
 			// Check if the memory was reallocated correctly
 			if(!array)
 				throw BadAllocException("Failed to reallocate array memory!");
-			
-			// Set the new memory to zero
-			memset(array + oldSize, 0, (newSize - oldSize) * sizeof(T));
 			
 			// Construct the new objects
 			T* end = array + newSize;
@@ -94,7 +91,7 @@ namespace wfe {
 				object->~T();
 			
 			// Reallocate the array's memory
-			array = (T*)realloc(array, oldSize, newSize, memoryUsage);
+			array = (T*)realloc(array, newSize * sizeof(T), memoryUsage);
 
 			// Check if the memory was reallocated correctly
 			if(!array)
@@ -116,6 +113,6 @@ namespace wfe {
 			object->~T();
 		
 		// Free the array's memory
-		free(array, size, memoryUsage);
+		free(array, memoryUsage);
 	}
 }
