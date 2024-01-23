@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Allocator.hpp"
 #include "BuildInfo.hpp"
 #include "Compare.hpp"
 #include "Debug.hpp"

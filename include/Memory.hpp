@@ -1,51 +1,8 @@
 #pragma once
 
 #include "Defines.hpp"
-#include "Thread.hpp"
 
 namespace wfe {
-	/// @brief Specifies what a block of memory is used for.
-	typedef enum {
-		/// @brief Default memory usage type for when no memory type is specified.
-		MEMORY_USAGE_OTHER,
-		/// @brief Array memory usage type.
-		MEMORY_USAGE_ARRAY,
-		/// @brief String memory usage type.
-		MEMORY_USAGE_STRING,
-		/// @brief Object allocated on the heap usage type.
-		MEMORY_USAGE_HEAP_OBJECT,
-		/// @brief Rendering API backent usage type.
-		MEMORY_USAGE_RENDERER_BACKEND,
-		/// @brief The number of possible memory usages.
-		MEMORY_USAGE_COUNT
-	} MemoryUsage;
-
-	/// @brief Allocates a memory block.
-	/// @param size The size of the memory block.
-	/// @return A pointer to the resulting memory block, or a nullptr if the block couldn't be allocated.
-	void* malloc(size_t size, MemoryUsage memoryUsage);
-	/// @brief Allocates a memory block with nmemb members of size bytes each. Same as malloc, however all bytes in the memory block are set to 0.
-	/// @param nmemb The number of members to allocate.
-	/// @param size The size of the memory block.
-	/// @return A pointer to the resulting memory block, or a nullptr if the block couldn't be allocated.
-	void* calloc(size_t nmemb, size_t size, MemoryUsage memoryUsage);
-	/// @brief Reallocates the given memory block.
-	/// @param ptr The memory block to reallocate.
-	/// @param newSize The new size of the memory block.
-	/// @return A pointer to the reallocated memory block.
-	void* realloc(void* ptr, size_t newSize, MemoryUsage memoryUsage);
-	/// @brief Frees the given memory block.
-	/// @param ptr The memory block to free.
-	void free(void* ptr, MemoryUsage memoryUsage);
-	
-	/// @brief Gets the memory usage of the entire application.
-	/// @return A pointer to a size_t array of size MEMORY_USAGE_COUNT, specifying the memory usage for every single type.
-	volatile atomic_size_t* GetMemoryUsage();
-	/// @brief Gets the memory usage for the given type.
-	/// @param memoryUsage The memory usage type to check for.
-	/// @return The total memory usage for the given type.
-	size_t GetMemoryUsage(MemoryUsage memoryUsage);
-
 	/// @brief Copies from one specified memory block to another.
 	/// @param dest The target memory block.
 	/// @param src The source memory block.

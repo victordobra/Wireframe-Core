@@ -1,4 +1,6 @@
 #include "Memory.hpp"
+#include "Allocator.hpp"
+#include "Exception.hpp"
 #include "Platform.hpp"
 
 namespace wfe {
@@ -1540,8 +1542,13 @@ namespace wfe {
 		// Generate the KMP table
 		size_t wantedLength = strlen(wanted);
 
-		ptrdiff_t* table = (ptrdiff_t*)calloc(wantedLength + 1, sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+		ptrdiff_t* table = (ptrdiff_t*)AllocMemory((wantedLength + 1) * sizeof(ptrdiff_t));
+		if(!table)
+			throw BadAllocException("Failed to allocate KMP table!");
+
 		table[0] = -1;
+		for(size_t i = 1; i != wantedLength + 1; ++i)
+			table[i] = 0;
 
 		size_t pos = 1;
 		ptrdiff_t candidate = 0;
@@ -1572,7 +1579,7 @@ namespace wfe {
 			for(size_t i = 0; i != sizeof(size_t);) {
 				// Exit the function if the null termination character was found
 				if(!segmentPtr[i]) {
-					free(table, MEMORY_USAGE_ARRAY);
+					FreeMemory(table);
 					return nullptr;
 				}
 
@@ -1584,7 +1591,7 @@ namespace wfe {
 
 					// Exit the function if a match for the whole string was found
 					if(pos == wantedLength) {
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 						return str + i - wantedLength;
 					}
 				} else {
@@ -1609,8 +1616,13 @@ namespace wfe {
 		// Generate the KMP table
 		size_t wantedLength = strlen(wanted);
 
-		ptrdiff_t* table = (ptrdiff_t*)calloc(wantedLength + 1, sizeof(ptrdiff_t), MEMORY_USAGE_ARRAY);
+		ptrdiff_t* table = (ptrdiff_t*)AllocMemory((wantedLength + 1) * sizeof(ptrdiff_t));
+		if(!table)
+			throw BadAllocException("Failed to allocate KMP table!");
+
 		table[0] = -1;
+		for(size_t i = 1; i != wantedLength + 1; ++i)
+			table[i] = 0;
 
 		size_t pos = 1;
 		ptrdiff_t candidate = 0;
@@ -1641,7 +1653,7 @@ namespace wfe {
 			for(size_t i = 0; i != sizeof(size_t);) {
 				// Exit the function if the null termination character was found
 				if(!segmentPtr[i]) {
-					free(table, MEMORY_USAGE_ARRAY);
+					FreeMemory(table);
 					return nullptr;
 				}
 
@@ -1653,7 +1665,7 @@ namespace wfe {
 
 					// Exit the character if a match for the whole string was found
 					if(pos == wantedLength) {
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 						return str + i - wantedLength;
 					}
 				} else {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Allocator.hpp"
 #include "Compare.hpp"
 #include "Defines.hpp"
 #include "Debug.hpp"
@@ -262,7 +263,7 @@ namespace wfe {
 
 		/// @brief Creates an empty unordered map.
 		/// @param n The total number of buckets.
-		unordered_map(size_type n = 16) : umapBucketCount(n), umapBuckets((node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY)), umapSize(0), umapCapacity(0), umapData(nullptr) {
+		unordered_map(size_type n = 16) : umapBucketCount(n), umapBuckets((node_type**)AllocMemory(umapBucketCount * sizeof(node_type*))), umapSize(0), umapCapacity(0), umapData(nullptr) {
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
 				throw BadAllocException("Failed to allocate unordered map buckets!");
@@ -272,7 +273,7 @@ namespace wfe {
 		}
 		/// @brief Copies the given unordered map.
 		/// @param other The unordered map to copy.
-		unordered_map(const unordered_map& other) : umapBucketCount(other.umapBucketCount), umapBuckets((node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY)), umapSize(other.umapSize), umapCapacity(other.umapCapacity), umapData((node_type*)malloc(umapCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY)), umapMaxLoadFactor(other.umapMaxLoadFactor) {
+		unordered_map(const unordered_map& other) : umapBucketCount(other.umapBucketCount), umapBuckets((node_type**)AllocMemory(umapBucketCount * sizeof(node_type*))), umapSize(other.umapSize), umapCapacity(other.umapCapacity), umapData((node_type*)AllocMemory(umapCapacity * sizeof(node_type))), umapMaxLoadFactor(other.umapMaxLoadFactor) {
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
 				throw BadAllocException("Failed to allocate unordered map buckets!");
@@ -324,7 +325,7 @@ namespace wfe {
 		/// @brief Constructs an unordered set with all the values in the list.
 		/// @param list The list to copy from.
 		/// @param n The number of buckets.
-		unordered_map(std::initializer_list<value_type> list, size_type n = 16) : umapBucketCount(n), umapBuckets((node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY)), umapSize(0), umapCapacity(1), umapData((node_type*)malloc(sizeof(node_type), MEMORY_USAGE_ARRAY)) {
+		unordered_map(std::initializer_list<value_type> list, size_type n = 16) : umapBucketCount(n), umapBuckets((node_type**)AllocMemory(umapBucketCount * sizeof(node_type*))), umapSize(0), umapCapacity(1), umapData((node_type*)AllocMemory(sizeof(node_type))) {
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
 				throw BadAllocException("Failed to allocate unordered map buckets!");
@@ -345,29 +346,40 @@ namespace wfe {
 				node_type** elem = umapBuckets + currentBucket;
 
 				// Look for the given value in the bucket
+				bool exists = false;
 				while(*elem) {
 					// Check if the current value is already in the unordered map
-					if(Equal()((*elem)->val.first, ptr->first))
+					if(Equal()((*elem)->val.first, ptr->first)) {
+						exists = true;
 						continue;
+					}
 					
 					// Move on to the next value
 					elem = &((*elem)->next);
 				}
+
+				// Skip the current value if it is already in the unordered map
+				if(exists)
+					continue;
 
 				// Increment the map's size
 				++umapSize;
 
 				// Check if memory needs to be reallocated
 				if(umapSize > umapCapacity) {
-					// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
-					size_type newCapacity = 1;
-					for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-						if((newCapacity << step) < umapSize)
-							newCapacity <<= step;
-					newCapacity <<= 1;
+					// Get the element pointer's index
+					size_t ind;
+					if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount)
+						ind = SIZE_T_MAX;
+					else
+						ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
 					
-					// Reallocate the map's data
-					reallocate(newCapacity);
+					// Reallocate the set's data
+					reallocate(umapCapacity << 1);
+
+					// Set the new element's pointer
+					if(ind != SIZE_T_MAX)
+						elem = &(umapData[ind].next);
 				}
 
 				// Copy the current value into the unordered map
@@ -380,7 +392,7 @@ namespace wfe {
 		}
 		/// @brief Copies the given std library unordered map.
 		/// @param other The std library unordered map to copy from.
-		unordered_map(const std::unordered_map<key_type, mapped_type>& other) : umapBucketCount(other.bucket_count()), umapBuckets((node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY)), umapSize(other.size()), umapCapacity(1), umapData(nullptr) {
+		unordered_map(const std::unordered_map<key_type, mapped_type>& other) : umapBucketCount(other.bucket_count()), umapBuckets((node_type**)AllocMemory(umapBucketCount * sizeof(node_type*))), umapSize(other.size()), umapCapacity(1), umapData(nullptr) {
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
 				throw BadAllocException("Failed to allocate unordered map buckets!");
@@ -395,7 +407,7 @@ namespace wfe {
 			umapCapacity <<= 1;
 
 			// Allocate the unordered map's data
-			umapData = (node_type*)malloc(umapCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+			umapData = (node_type*)AllocMemory(umapCapacity * sizeof(node_type));
 
 			if(!umapData)
 				throw BadAllocException("Failed to allocate unordered map data!");
@@ -426,7 +438,7 @@ namespace wfe {
 			
 			// Free the unordered map's previous data
 			if(umapBuckets)
-				free(umapBuckets, umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+				FreeMemory(umapBuckets, umapBucketCount * sizeof(node_type*));
 			if(umapData) {
 				// Destruct every value in the unordered map
 				node_type* end = umapData + umapSize;
@@ -434,15 +446,15 @@ namespace wfe {
 					ptr->val.~value_type();
 				
 				// Free the unordered map's data
-				free(umapData, umapCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+				FreeMemory(umapData, umapCapacity * sizeof(node_type));
 			}
 
 			// Set the unordered map's new values
 			umapBucketCount = other.umapBucketCount;
-			umapBuckets = (node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+			umapBuckets = (node_type**)AllocMemory(umapBucketCount * sizeof(node_type*));
 			umapSize = other.umapSize;
 			umapCapacity = other.umapCapacity;
-			umapData = (node_type*)malloc(umapCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+			umapData = (node_type*)AllocMemory(umapCapacity * sizeof(node_type));
 			umapMaxLoadFactor = other.umapMaxLoadFactor;
 
 			// Check if the unordered map's buckets were allocated correctly
@@ -494,7 +506,7 @@ namespace wfe {
 		unordered_map& operator=(unordered_map&& other) {
 			// Free the unordered map's previous data
 			if(umapBuckets)
-				free(umapBuckets, umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+				FreeMemory(umapBuckets, umapBucketCount * sizeof(node_type*));
 			if(umapData) {
 				// Destruct every value in the unordered map
 				node_type* end = umapData + umapSize;
@@ -502,7 +514,7 @@ namespace wfe {
 					ptr->val.~value_type();
 				
 				// Free the unordered map's data
-				free(umapData, umapCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+				FreeMemory(umapData, umapCapacity * sizeof(node_type));
 			}
 
 			// Set the unordered map's new values
@@ -525,7 +537,7 @@ namespace wfe {
 		unordered_map& operator=(std::initializer_list<value_type> list) {
 			// Free the unordered map's previous data
 			if(umapBuckets)
-				free(umapBuckets, umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+				FreeMemory(umapBuckets, umapBucketCount * sizeof(node_type*));
 			if(umapData) {
 				// Destruct every value in the unordered map
 				node_type* end = umapData + umapSize;
@@ -533,7 +545,7 @@ namespace wfe {
 					ptr->val.~value_type();
 				
 				// Free the unordered map's data
-				free(umapData, umapCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+				FreeMemory(umapData, umapCapacity * sizeof(node_type));
 			}
 
 			// Set the unordered map's bucket count to the lowest power of 2 higher than or equal to the list's size
@@ -543,10 +555,10 @@ namespace wfe {
 					umapBucketCount <<= step;
 			
 			// Set the unordered map's new values
-			umapBuckets = (node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+			umapBuckets = (node_type**)AllocMemory(umapBucketCount * sizeof(node_type*));
 			umapSize = 0;
 			umapCapacity = 1;
-			umapData = (node_type*)malloc(sizeof(node_type), MEMORY_USAGE_ARRAY);
+			umapData = (node_type*)AllocMemory(sizeof(node_type));
 			umapMaxLoadFactor = 1.f;
 
 			// Check if the unordered map's buckets were allocated correctly
@@ -569,15 +581,20 @@ namespace wfe {
 				node_type** elem = umapBucketCount + currentBucket;
 
 				// Look for the given value in the bucket
+				bool exists = false;
 				while(*elem) {
 					// Check if the current value is already in the unordered map
-					if(Equal()((*elem)->val.first, ptr->first))
+					if(Equal()((*elem)->val.first, ptr->first)) {
+						exists = true;
 						break;
+					}
 					
 					// Move on to the next value
 					elem = &((*elem)->next);
 				}
-				if(*elem)
+
+				// Skip the current value if it is already in the unordered map
+				if(exists)
 					continue;
 
 				// Increment the map's size
@@ -585,15 +602,19 @@ namespace wfe {
 
 				// Check if memory needs to be reallocated
 				if(umapSize > umapCapacity) {
-					// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
-					size_type newCapacity = 1;
-					for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-						if((newCapacity << step) < umapSize)
-							newCapacity <<= step;
-					newCapacity <<= 1;
+					// Get the element pointer's index
+					size_t ind;
+					if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount)
+						ind = SIZE_T_MAX;
+					else
+						ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
 					
-					// Reallocate the map's data
-					reallocate(newCapacity);
+					// Reallocate the set's data
+					reallocate(umapCapacity << 1);
+
+					// Set the new element's pointer
+					if(ind != SIZE_T_MAX)
+						elem = &(umapData[ind].next);
 				}
 
 				// Copy the current value into the unordered set
@@ -630,28 +651,44 @@ namespace wfe {
 			++umapSize;
 
 			// Check if a rehash is required
-			if(umapBucketCount * umapMaxLoadFactor < umapSize) {
-				// Set the unordered map's new bucket count to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+			if(umapSize > umapBucketCount * max_load_factor()) {
+				// Set the unordered set's new bucket count to the lowest power of 2 for which the unordered set's load factor is lower than or equal to the max
 				size_type newBucketCount = 1;
-				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-					if((newBucketCount << step) * umapMaxLoadFactor < umapSize)
+				for(uint32_t step = sizeof(size_type) << 2; step; step >>= 1)
+					if((newBucketCount << step) * max_load_factor() < umapSize)
 						newBucketCount <<= step;
-				
-				// Rehash the unordered map
+				newBucketCount <<= 1;
+
+				// Get the element pointer's index
+				size_t ind;
+				if(elem >= (node_type**)umapData && elem < (node_type**)(umapData + umapSize))
+					ind = SIZE_T_MAX;
+				else
+					ind = elem - umapBuckets;
+
+				// Rehash the unordered set
 				rehash(newBucketCount);
+
+				// Set the new element's pointer
+				if(ind != SIZE_T_MAX)
+					elem = &(umapData[ind].next);
 			}
 
 			// Check if memory needs to be reallocated
 			if(umapSize > umapCapacity) {
-				// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
-				size_type newCapacity = 1;
-				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-					if((newCapacity << step) < umapSize)
-						newCapacity <<= step;
-				newCapacity <<= 1;
+				// Get the element pointer's index
+				size_t ind;
+				if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount)
+					ind = SIZE_T_MAX;
+				else
+					ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
 				
-				// Reallocate the map's data
-				reallocate(newCapacity);
+				// Reallocate the set's data
+				reallocate(umapCapacity << 1);
+
+				// Set the new element's pointer
+				if(ind != SIZE_T_MAX)
+					elem = &(umapData[ind].next);
 			}
 
 			// Initialize the value
@@ -687,28 +724,44 @@ namespace wfe {
 			++umapSize;
 
 			// Check if a rehash is required
-			if(umapBucketCount * umapMaxLoadFactor < umapSize) {
-				// Set the unordered map's new bucket count to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+			if(umapSize > umapBucketCount * max_load_factor()) {
+				// Set the unordered set's new bucket count to the lowest power of 2 for which the unordered set's load factor is lower than or equal to the max
 				size_type newBucketCount = 1;
-				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-					if((newBucketCount << step) * umapMaxLoadFactor < umapSize)
+				for(uint32_t step = sizeof(size_type) << 2; step; step >>= 1)
+					if((newBucketCount << step) * max_load_factor() < umapSize)
 						newBucketCount <<= step;
-				
-				// Rehash the unordered map
+				newBucketCount <<= 1;
+
+				// Get the element pointer's index
+				size_t ind;
+				if(elem >= (node_type**)umapData && elem < (node_type**)(umapData + umapSize))
+					ind = SIZE_T_MAX;
+				else
+					ind = elem - umapBuckets;
+
+				// Rehash the unordered set
 				rehash(newBucketCount);
+
+				// Set the new element's pointer
+				if(ind != SIZE_T_MAX)
+					elem = &(umapData[ind].next);
 			}
 
 			// Check if memory needs to be reallocated
 			if(umapSize > umapCapacity) {
-				// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
-				size_type newCapacity = 1;
-				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-					if((newCapacity << step) < umapSize)
-						newCapacity <<= step;
-				newCapacity <<= 1;
+				// Get the element pointer's index
+				size_t ind;
+				if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount)
+					ind = SIZE_T_MAX;
+				else
+					ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
 				
-				// Reallocate the map's data
-				reallocate(newCapacity);
+				// Reallocate the set's data
+				reallocate(umapCapacity << 1);
+
+				// Set the new element's pointer
+				if(ind != SIZE_T_MAX)
+					elem = &(umapData[ind].next);
 			}
 
 			// Initialize the value
@@ -925,28 +978,44 @@ namespace wfe {
 			++umapSize;
 
 			// Check if a rehash is required
-			if(umapBucketCount * umapMaxLoadFactor < umapSize) {
-				// Set the unordered map's new bucket count to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
+			if(umapSize > umapBucketCount * max_load_factor()) {
+				// Set the unordered set's new bucket count to the lowest power of 2 for which the unordered set's load factor is lower than or equal to the max
 				size_type newBucketCount = 1;
-				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-					if((newBucketCount << step) * umapMaxLoadFactor < umapSize)
+				for(uint32_t step = sizeof(size_type) << 2; step; step >>= 1)
+					if((newBucketCount << step) * max_load_factor() < umapSize)
 						newBucketCount <<= step;
-				
-				// Rehash the unordered map
+				newBucketCount <<= 1;
+
+				// Get the element pointer's index
+				size_t ind;
+				if(elem >= (node_type**)umapData && elem < (node_type**)(umapData + umapSize))
+					ind = SIZE_T_MAX;
+				else
+					ind = elem - umapBuckets;
+
+				// Rehash the unordered set
 				rehash(newBucketCount);
+
+				// Set the new element's pointer
+				if(ind != SIZE_T_MAX)
+					elem = &(umapData[ind].next);
 			}
 
 			// Check if memory needs to be reallocated
 			if(umapSize > umapCapacity) {
-				// Set the unordered map's new capacity to the lowest power of 2 that, multiplied by the max load factor, is higher than or equal to the unordered set's size
-				size_type newCapacity = 1;
-				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
-					if((newCapacity << step) < umapSize)
-						newCapacity <<= step;
-				newCapacity <<= 1;
+				// Get the element pointer's index
+				size_t ind;
+				if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount)
+					ind = SIZE_T_MAX;
+				else
+					ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
 				
-				// Reallocate the map's data
-				reallocate(newCapacity);
+				// Reallocate the set's data
+				reallocate(umapCapacity << 1);
+
+				// Set the new element's pointer
+				if(ind != SIZE_T_MAX)
+					elem = &(umapData[ind].next);
 			}
 
 			// Initialize the value
@@ -1244,9 +1313,9 @@ namespace wfe {
 
 			// Reallocate the unordered map's buckets
 			if(umapBuckets)
-				umapBuckets = (node_type**)realloc(umapBuckets, umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+				umapBuckets = (node_type**)ReallocMemory(umapBuckets, umapBucketCount * sizeof(node_type*));
 			else
-				umapBuckets = (node_type**)malloc(umapBucketCount * sizeof(node_type*), MEMORY_USAGE_ARRAY);
+				umapBuckets = (node_type**)AllocMemory(umapBucketCount * sizeof(node_type*));
 
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
@@ -1285,7 +1354,7 @@ namespace wfe {
 		~unordered_map() {
 			// Free the unordered map's buckets
 			if(umapBuckets)
-				free(umapBuckets, MEMORY_USAGE_ARRAY);
+				FreeMemory(umapBuckets);
 
 			// Free the unordered map's data
 			if(umapData) {
@@ -1295,7 +1364,7 @@ namespace wfe {
 					ptr->val.~value_type();
 				
 				// Free the unordered map's data
-				free(umapData, MEMORY_USAGE_ARRAY);
+				FreeMemory(umapData);
 			}
 		}
 	private:
@@ -1305,9 +1374,9 @@ namespace wfe {
 
 			// Reallocate the unordered map's data
 			if(umapData)
-				umapData = (node_type*)realloc(umapData, newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+				umapData = (node_type*)ReallocMemory(umapData, newCapacity * sizeof(node_type));
 			else
-				umapData = (node_type*)malloc(newCapacity * sizeof(node_type), MEMORY_USAGE_ARRAY);
+				umapData = (node_type*)AllocMemory(newCapacity * sizeof(node_type));
 
 			// Check if the unordered map's data was allocated correctly
 			if(!umapData)

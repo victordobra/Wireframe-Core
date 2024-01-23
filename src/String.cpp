@@ -1,4 +1,5 @@
 #include "String.hpp"
+#include "Allocator.hpp"
 #include "Memory.hpp"
 #include "Debug.hpp"
 #include "Exception.hpp"
@@ -7,7 +8,7 @@
 #include <stdio.h>
 
 namespace wfe {
-	string::string(const string& other) : strSize(other.strSize), strCapacity(other.strCapacity), strData((pointer)malloc(strCapacity, MEMORY_USAGE_STRING)) {
+	string::string(const string& other) : strSize(other.strSize), strCapacity(other.strCapacity), strData((pointer)AllocMemory(strCapacity)) {
 		// Check if the memory has been allocated successfully
 		if(!strData)
 			throw BadAllocException("Failed to allocate string data!");
@@ -30,7 +31,7 @@ namespace wfe {
 		strCapacity <<= 1;
 		
 		// Allocate the string's data
-		strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
+		strData = (pointer)AllocMemory(strCapacity);
 		if(!strData)
 			throw BadAllocException("Failed to allocate string data!");
 
@@ -48,7 +49,7 @@ namespace wfe {
 		strCapacity <<= 1;
 		
 		// Allocate the string's data
-		strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
+		strData = (pointer)AllocMemory(strCapacity);
 		if(!strData)
 			throw BadAllocException("Failed to allocate string data!");
 
@@ -69,7 +70,7 @@ namespace wfe {
 		strCapacity <<= 1;
 		
 		// Allocate the string's data
-		strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
+		strData = (pointer)AllocMemory(strCapacity);
 		if(!strData)
 			throw BadAllocException("Failed to allocate string data!");
 
@@ -79,7 +80,7 @@ namespace wfe {
 		// Place a null termination character at the end
 		strData[strSize] = 0;
 	}
-	string::string(const std::string& str) : strSize(str.size()), strCapacity(str.capacity()), strData((pointer)malloc(strCapacity, MEMORY_USAGE_STRING)) {
+	string::string(const std::string& str) : strSize(str.size()), strCapacity(str.capacity()), strData((pointer)AllocMemory(strCapacity)) {
 		// Check if the memory has been allocated successfully
 		if(!strData)
 			throw BadAllocException("Failed to allocate string data!");
@@ -97,9 +98,9 @@ namespace wfe {
 		strSize = other.strSize;
 
 		if(strData)
-			strData = (pointer)realloc(strData, other.strCapacity, MEMORY_USAGE_STRING);
+			strData = (pointer)ReallocMemory(strData, other.strCapacity);
 		else
-			strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
+			strData = (pointer)AllocMemory(strCapacity);
 
 		strCapacity = other.strCapacity;
 
@@ -115,7 +116,7 @@ namespace wfe {
 	string& string::operator=(string&& other) noexcept {
 		// Free the string's contents (if they exist)
 		if(strData)
-			free(strData, MEMORY_USAGE_STRING);
+			FreeMemory(strData);
 
 		// Set the new string's values
 		strSize = other.strSize;
@@ -350,9 +351,9 @@ namespace wfe {
 		strSize = str.strSize;
 
 		if(strData)
-			strData = (pointer)realloc(strData, str.strCapacity, MEMORY_USAGE_STRING);
+			strData = (pointer)ReallocMemory(strData, str.strCapacity);
 		else
-			strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
+			strData = (pointer)AllocMemory(strCapacity);
 
 		strCapacity = str.strCapacity;
 
@@ -368,7 +369,7 @@ namespace wfe {
 	string& string::assign(string&& other) noexcept {
 		// Free the string's contents (if they exist)
 		if(strData)
-			free(strData, MEMORY_USAGE_STRING);
+			FreeMemory(strData);
 		
 		// Set the new string's values
 		strSize = other.strSize;
@@ -905,10 +906,10 @@ namespace wfe {
 
 			if(strData) { 
 				// Reallocate the string
-				strData = (pointer)realloc(strData, strCapacity, MEMORY_USAGE_STRING);
+				strData = (pointer)ReallocMemory(strData, strCapacity);
 			} else {
 				// Allocate the string
-				strData = (pointer)malloc(strCapacity, MEMORY_USAGE_STRING);
+				strData = (pointer)AllocMemory(strCapacity);
 			}
 
 			// Check if the memory has been allocated successfully
@@ -942,10 +943,10 @@ namespace wfe {
 
 		if(strData) { 
 			// Reallocate the string
-			strData = (pointer)realloc(strData, newCapacity, MEMORY_USAGE_STRING);
+			strData = (pointer)ReallocMemory(strData, newCapacity);
 		} else {
 			// Allocate the string
-			strData = (pointer)malloc(newCapacity, MEMORY_USAGE_STRING);
+			strData = (pointer)AllocMemory(newCapacity);
 		}
 
 		// Check if the memory has been allocated successfully
@@ -1001,8 +1002,13 @@ namespace wfe {
 		size_type wantedLength = str.strSize;
 
 		// Generate the KMP table
-		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
+		difference_type* table = (difference_type*)AllocMemory((wantedLength + 1) * sizeof(difference_type));
+		if(!table)
+			throw BadAllocException("Failed to allocate KMP table!");
+
 		table[0] = -1;
+		for(size_t i = 1; i != wantedLength + 1; ++i)
+			table[i] = 0;
 
 		size_t position = 1;
 		difference_type candidate = 0;
@@ -1040,7 +1046,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1079,7 +1085,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1117,7 +1123,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1156,8 +1162,13 @@ namespace wfe {
 		size_type wantedLength = strlen(str);
 
 		// Generate the KMP table
-		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
+		difference_type* table = (difference_type*)AllocMemory((wantedLength + 1) * sizeof(difference_type));
+		if(!table)
+			throw BadAllocException("Failed to allocate KMP table!");
+
 		table[0] = -1;
+		for(size_t i = 1; i != wantedLength + 1; ++i)
+			table[i] = 0;
 
 		size_t position = 1;
 		difference_type candidate = 0;
@@ -1195,7 +1206,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1234,7 +1245,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1272,7 +1283,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1295,7 +1306,7 @@ namespace wfe {
 		}
 
 		// Free the KMP table
-		free(table, MEMORY_USAGE_ARRAY);
+		FreeMemory(table);
 
 		// Check if there is a 1 byte region left to look in
 		if(size) {
@@ -1314,8 +1325,13 @@ namespace wfe {
 		size_type wantedLength = n;
 
 		// Generate the KMP table
-		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
+		difference_type* table = (difference_type*)AllocMemory((wantedLength + 1) * sizeof(difference_type));
+		if(!table)
+			throw BadAllocException("Failed to allocate KMP table!");
+
 		table[0] = -1;
+		for(size_t i = 1; i != wantedLength + 1; ++i)
+			table[i] = 0;
 
 		size_type position = 1;
 		difference_type candidate = 0;
@@ -1353,7 +1369,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1392,7 +1408,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1430,7 +1446,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return strSize - size + i - wantedLength;
 					}
@@ -1453,7 +1469,7 @@ namespace wfe {
 		}
 
 		// Free the KMP table
-		free(table, MEMORY_USAGE_ARRAY);
+		FreeMemory(table);
 
 		// Check if there is a 1 byte region left to look in
 		if(size) {
@@ -1485,9 +1501,14 @@ namespace wfe {
 		const_pointer wanted = str.strData;
 		size_type wantedLength = str.strSize;
 
-		// Generate the KMP table in reverse
-		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
+		// Generate the KMP table
+		difference_type* table = (difference_type*)AllocMemory((wantedLength + 1) * sizeof(difference_type));
+		if(!table)
+			throw BadAllocException("Failed to allocate KMP table!");
+
 		table[0] = -1;
+		for(size_t i = 1; i != wantedLength + 1; ++i)
+			table[i] = 0;
 
 		size_type position = 1;
 		difference_type candidate = 0;
@@ -1531,7 +1552,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return size + i;
 					}
@@ -1570,7 +1591,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return size + i;
 					}
@@ -1608,7 +1629,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return size + i;
 					}
@@ -1640,9 +1661,14 @@ namespace wfe {
 		const_pointer wanted = str;
 		size_type wantedLength = strlen(str);
 
-		// Generate the KMP table in reverse
-		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
+		// Generate the KMP table
+		difference_type* table = (difference_type*)AllocMemory((wantedLength + 1) * sizeof(difference_type));
+		if(!table)
+			throw BadAllocException("Failed to allocate KMP table!");
+
 		table[0] = -1;
+		for(size_t i = 1; i != wantedLength + 1; ++i)
+			table[i] = 0;
 
 		size_type position = 1;
 		difference_type candidate = 0;
@@ -1686,7 +1712,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return size + i;
 					}
@@ -1725,7 +1751,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return size + i;
 					}
@@ -1763,7 +1789,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return size + i;
 					}
@@ -1795,9 +1821,14 @@ namespace wfe {
 		const_pointer wanted = str;
 		size_type wantedLength = n;
 
-		// Generate the KMP table in reverse
-		difference_type* table = (difference_type*)calloc(wantedLength + 1, sizeof(difference_type), MEMORY_USAGE_ARRAY);
+		// Generate the KMP table
+		difference_type* table = (difference_type*)AllocMemory((wantedLength + 1) * sizeof(difference_type));
+		if(!table)
+			throw BadAllocException("Failed to allocate KMP table!");
+
 		table[0] = -1;
+		for(size_t i = 1; i != wantedLength + 1; ++i)
+			table[i] = 0;
 
 		size_type position = 1;
 		difference_type candidate = 0;
@@ -1841,7 +1872,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return size + i;
 					}
@@ -1880,7 +1911,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return size + i;
 					}
@@ -1918,7 +1949,7 @@ namespace wfe {
 					// Exit the function if a match for the whole string was found
 					if(position == wantedLength) {
 						// Free the KMP table
-						free(table, MEMORY_USAGE_ARRAY);
+						FreeMemory(table);
 
 						return size + i;
 					}
@@ -4072,7 +4103,7 @@ namespace wfe {
 	string::~string() {
 		// Free the string's contents (if they exist)
 		if(strData)
-			free(strData, MEMORY_USAGE_STRING);
+			FreeMemory(strData);
 	}
 
 	string operator+(const string&  str1, const string&  str2) {

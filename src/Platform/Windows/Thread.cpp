@@ -29,7 +29,7 @@ namespace wfe {
 		void* result = params->func(params->params);
 
 		// Free the given thread params
-		free(params, MEMORY_USAGE_HEAP_OBJECT);
+		FreeMemory(params);
 
 		// Try to find a free thread result array index
 		size_t threadResultIndex = 0;
@@ -87,7 +87,9 @@ namespace wfe {
 		DWORD threadIDWord;
 
 		// Allocate the current thread's params
-		ThreadParams* params = (ThreadParams*)malloc(sizeof(ThreadParams), MEMORY_USAGE_HEAP_OBJECT);
+		PushMemoryUsageType(MEMORY_USAGE_TYPE_COMMAND);
+		ThreadParams* params = (ThreadParams*)AllocMemory(sizeof(ThreadParams));
+		PopMemoryUsageType();
 
 		// Check if the thread params allocated correctly
 		if(!params)

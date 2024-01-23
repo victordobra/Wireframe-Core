@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Defines.hpp"
+#include "Allocator.hpp"
 #include "Debug.hpp"
 #include "Exception.hpp"
 #include "Memory.hpp"
@@ -13,9 +14,9 @@ namespace wfe {
 	/// @param ...args The args to create the object with.
 	/// @return A pointer to the new object.
 	template<class T, class... Args>
-	WFE_INLINE T* NewObject(MemoryUsage memoryUsage, Args&&... args) {
+	WFE_INLINE T* NewObject(Args&&... args) {
 		// Allocate memory for the new object
-		T* newObject = (T*)malloc(sizeof(T), memoryUsage);
+		T* newObject = (T*)AllocMemory(sizeof(T));
 		
 		// Check if the memory was allocated correctly
 		if(!newObject)
@@ -31,12 +32,12 @@ namespace wfe {
 	/// @param object A pointer to the object to destroy.
 	/// @param memoryUsage The memory usage type of the object's allocated memory.
 	template<class T>
-	WFE_INLINE void DestroyObject(T* object, MemoryUsage memoryUsage) {
+	WFE_INLINE void DestroyObject(T* object) {
 		// Destruct the object
 		object->~T();
 
 		// Free the object's memory
-		free(object, MEMORY_USAGE_OTHER);
+		FreeMemory(object);
 	}
 	/// @brief Creates a new object array.
 	/// @tparam T The array's object type.
@@ -44,9 +45,9 @@ namespace wfe {
 	/// @param memoryUsage The memory usage type of the array's allocated memory.
 	/// @return A pointer to the new array.
 	template<class T>
-	WFE_INLINE T* NewArray(size_t size, MemoryUsage memoryUsage) {
+	WFE_INLINE T* NewArray(size_t size) {
 		// Allocate memory for the new array
-		T* newArray = (T*)malloc(size * sizeof(T), memoryUsage);
+		T* newArray = (T*)AllocMemory(size * sizeof(T));
 
 		// Check if the memory was allocated correctly
 		if(!newArray)
@@ -67,14 +68,14 @@ namespace wfe {
 	/// @param memoryUsage The memory usage type of the array's allocated memory.
 	/// @return A pointer to the resized array.
 	template<class T>
-	WFE_INLINE T* ResizeArray(T* array, size_t oldSize, size_t newSize, MemoryUsage memoryUsage) {
+	WFE_INLINE T* ResizeArray(T* array, size_t oldSize, size_t newSize) {
 		// Exit the function if the old size is equal to the new size
 		if(oldSize == newSize)
 			return array;
 
 		if(oldSize < newSize) {
 			// Reallocate the array's memory
-			array = (T*)realloc(array, newSize * sizeof(T), memoryUsage);
+			array = (T*)ReallocMemory(array, newSize * sizeof(T));
 
 			// Check if the memory was reallocated correctly
 			if(!array)
@@ -91,7 +92,7 @@ namespace wfe {
 				object->~T();
 			
 			// Reallocate the array's memory
-			array = (T*)realloc(array, newSize * sizeof(T), memoryUsage);
+			array = (T*)ReallocMemory(array, newSize * sizeof(T));
 
 			// Check if the memory was reallocated correctly
 			if(!array)
@@ -106,13 +107,13 @@ namespace wfe {
 	/// @param size The number of elements in the array.
 	/// @param memoryUsage The memory usage type of the array's allocated memory.
 	template<class T>
-	WFE_INLINE void DestroyArray(T* array, size_t size, MemoryUsage memoryUsage) {
+	WFE_INLINE void DestroyArray(T* array, size_t size) {
 		// Destruct the array's objects
 		T* end = array + size;
 		for(T* object = array; object != end; ++object)
 			object->~T();
 		
 		// Free the array's memory
-		free(array, memoryUsage);
+		FreeMemory(array);
 	}
 }

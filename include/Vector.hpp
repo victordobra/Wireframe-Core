@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Defines.hpp"
+#include "Allocator.hpp"
 #include "Exception.hpp"
 #include "Memory.hpp"
 #include <initializer_list>
@@ -31,7 +32,7 @@ namespace wfe {
 		constexpr vector() = default;
 		/// @brief Copies the given vector.
 		/// @param other The vector to copy.
-		vector(const vector& other) : vecSize(other.vecSize), vecCapacity(other.vecCapacity), vecData((pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY)) {
+		vector(const vector& other) : vecSize(other.vecSize), vecCapacity(other.vecCapacity), vecData((pointer)AllocMemory(vecCapacity * sizeof(value_type))) {
 			// Check if the memory was allocated correctly
 			if(!vecData)
 				throw BadAllocException("Failed to allocate vector data!");
@@ -59,7 +60,7 @@ namespace wfe {
 			vecCapacity <<= 1;
 			
 			// Allocate the vector's data
-			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
 			if(!vecData)
 				throw BadAllocException("Failed to allocate vector data!");
@@ -83,7 +84,7 @@ namespace wfe {
 			vecCapacity <<= 1;
 			
 			// Allocate the vector's data
-			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
 			if(!vecData)
 				throw BadAllocException("Failed to allocate vector data!");
@@ -106,7 +107,7 @@ namespace wfe {
 			vecCapacity <<= 1;
 			
 			// Allocate the vector's data
-			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
 			if(!vecData)
 				throw BadAllocException("Failed to allocate vector data!");
@@ -120,7 +121,7 @@ namespace wfe {
 		}
 		/// @brief Copies the given std library vector.
 		/// @param other The std library vector to copy.
-		vector(const std::vector<T>& other) : vecSize(other.size()), vecCapacity(other.capacity()), vecData((pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY)) {
+		vector(const std::vector<T>& other) : vecSize(other.size()), vecCapacity(other.capacity()), vecData((pointer)AllocMemory(vecCapacity * sizeof(value_type))) {
 			// Check if the memory was allocated correctly
 			if(!vecData)
 				throw BadAllocException("Failed to allocate vector data!");
@@ -146,13 +147,13 @@ namespace wfe {
 					end->~value_type();
 				
 				// Free the vector's data
-				free(vecData, MEMORY_USAGE_ARRAY);
+				FreeMemory(vecData);
 			}
 
 			// Set the vector's new values
 			vecSize = other.vecSize;
 			vecCapacity = other.vecCapacity;
-			vecData = (pointer)malloc(vecSize * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			vecData = (pointer)AllocMemory(vecSize * sizeof(value_type));
 
 			// Check if the memory was allocated correctly
 			if(!vecData)
@@ -176,7 +177,7 @@ namespace wfe {
 					end->~value_type();
 				
 				// Free the vector's data
-				free(vecData, vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				FreeMemory(vecData, vecCapacity * sizeof(value_type));
 			}
 
 			// Set the vector's new values
@@ -201,7 +202,7 @@ namespace wfe {
 					end->~value_type();
 				
 				// Free the vector's data
-				free(vecData, vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				FreeMemory(vecData, vecCapacity * sizeof(value_type));
 			}
 
 			// Set the vector's new values
@@ -218,7 +219,7 @@ namespace wfe {
 			vecCapacity <<= 1;
 
 			// Allocate the vector's data
-			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
 			if(!vecData)
 				throw BadAllocException("Failed to allocate vector data!");
@@ -315,7 +316,7 @@ namespace wfe {
 					end->~value_type();
 				
 				// Free the vector's data
-				free(vecData, MEMORY_USAGE_ARRAY);
+				FreeMemory(vecData);
 			}
 
 			// Set the vector's new values
@@ -332,7 +333,7 @@ namespace wfe {
 			vecCapacity <<= 1;
 
 			// Allocate the vector's data
-			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
 			if(!vecData)
 				throw BadAllocException("Failed to allocate vector data!");
@@ -353,7 +354,7 @@ namespace wfe {
 					end->~value_type();
 				
 				// Free the vector's data
-				free(vecData, MEMORY_USAGE_ARRAY);
+				FreeMemory(vecData);
 			}
 
 			// Set the vector's new values
@@ -370,7 +371,7 @@ namespace wfe {
 			vecCapacity <<= 1;
 
 			// Allocate the vector's data
-			vecData = (pointer)malloc(vecCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
 			if(!vecData)
 				throw BadAllocException("Failed to allocate vector data!");
@@ -912,10 +913,10 @@ namespace wfe {
 
 			if(vecData) {
 				// Reallocate the vector's data
-				vecData = (pointer)realloc(vecData, newCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				vecData = (pointer)ReallocMemory(vecData, newCapacity * sizeof(value_type));
 			} else {
 				// Allocate the vector's data
-				vecData = (pointer)malloc(newCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				vecData = (pointer)AllocMemory(newCapacity * sizeof(value_type));
 			}
 
 			// Check if the memory was allocated correctly
@@ -938,6 +939,9 @@ namespace wfe {
 				pointer end = vecData + vecSize;
 				for(pointer ptr = vecData; ptr != end; ++ptr)
 					ptr->~value_type();
+				
+				// Free the vector's data
+				FreeMemory(vecData);
 			}
 		}
 	private:

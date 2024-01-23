@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Defines.hpp"
+#include "Allocator.hpp"
 #include "Debug.hpp"
 #include "Exception.hpp"
 #include "Memory.hpp"
@@ -40,7 +41,7 @@ namespace wfe {
 		constexpr map() = default;
 		/// @brief Copies the given map.
 		/// @param other The map to copy.
-		map(const map& other) : mapSize(other.mapSize), mapCapacity(other.mapCapacity), mapData(malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY)) {
+		map(const map& other) : mapSize(other.mapSize), mapCapacity(other.mapCapacity), mapData(AllocMemory(mapCapacity * sizeof(value_type))) {
 			// Check if the memory was allocated correctly
 			if(!mapData)
 				throw BadAllocException("Failed to allocate map data!");
@@ -71,7 +72,7 @@ namespace wfe {
 			mapCapacity <<= 1;
 
 			// Allocate the map's memory
-			mapData = (pointer)malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 
 			if(!mapData)
 				throw BadAllocException("Failed to allocate map data!");
@@ -117,7 +118,7 @@ namespace wfe {
 			mapCapacity <<= 1;
 
 			// Allocate the map's memory
-			mapData = malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			mapData = AllocMemory(mapCapacity * sizeof(value_type));
 
 			if(!mapData)
 				throw BadAllocException("Failed to allocate map data!");
@@ -145,13 +146,13 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the map's memory
-				free(mapData, mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				FreeMemory(mapData, mapCapacity * sizeof(value_type));
 			}
 
 			// Set the map's new values
 			mapSize = other.mapSize;
 			mapCapacity = other.mapCapacity;
-			mapData = (pointer)malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 
 			// Check if the memory was allocated correctly
 			if(!mapData)
@@ -178,7 +179,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the map's memory
-				free(mapData, mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				FreeMemory(mapData, mapCapacity * sizeof(value_type));
 			}
 
 			// Set the map's new values
@@ -203,7 +204,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the map's memory
-				free(mapData, mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				FreeMemory(mapData, mapCapacity * sizeof(value_type));
 			}
 
 			// Set the map's new values
@@ -220,7 +221,7 @@ namespace wfe {
 			mapCapacity <<= 1;
 
 			// Allocate the map's memory
-			mapData = malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			mapData = AllocMemory(mapCapacity * sizeof(value_type));
 
 			if(!mapData)
 				throw BadAllocException("Failed to allocate map data!");
@@ -304,9 +305,9 @@ namespace wfe {
 
 				// Reallocate the set's memory
 				if(!mapData)
-					mapData = (pointer)malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 				else
-					mapData = (pointer)realloc(mapData, oldCapacity * sizeof(value_type), mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)ReallocMemory(mapData, oldCapacity * sizeof(value_type), mapCapacity * sizeof(value_type));
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
@@ -358,9 +359,9 @@ namespace wfe {
 
 				// Reallocate the set's memory
 				if(!mapData)
-					mapData = (pointer)malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 				else
-					mapData = (pointer)realloc(mapData, mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
@@ -455,9 +456,9 @@ namespace wfe {
 
 				// Reallocate the set's memory
 				if(!mapData)
-					mapData = (pointer)malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 				else
-					mapData = (pointer)realloc(mapData, mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
@@ -509,9 +510,9 @@ namespace wfe {
 
 				// Reallocate the set's memory
 				if(!mapData)
-					mapData = (pointer)malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 				else
-					mapData = (pointer)realloc(mapData, mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
@@ -558,9 +559,9 @@ namespace wfe {
 
 					// Reallocate the set's memory
 					if(!mapData)
-						mapData = (pointer)malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+						mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 					else
-						mapData = (pointer)realloc(mapData, mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+						mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
 					
 					// Check if the memory was allocated correctly
 					if(!mapData)
@@ -626,9 +627,9 @@ namespace wfe {
 
 				// Reallocate the set's memory
 				if(!mapData)
-					mapData = (pointer)malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 				else
-					mapData = (pointer)realloc(mapData, mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
@@ -675,9 +676,9 @@ namespace wfe {
 
 					// Reallocate the set's memory
 					if(!mapData)
-						mapData = (pointer)malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+						mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 					else
-						mapData = (pointer)realloc(mapData, mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+						mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
 					
 					// Check if the memory was allocated correctly
 					if(!mapData)
@@ -743,9 +744,9 @@ namespace wfe {
 
 				// Reallocate the set's memory
 				if(!mapData)
-					mapData = (pointer)malloc(mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 				else
-					mapData = (pointer)realloc(mapData, mapCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
 				
 				// Check if the memory was allocated correctly
 				if(!mapData)
@@ -1128,7 +1129,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the map's memory
-				free(mapData, MEMORY_USAGE_ARRAY);
+				FreeMemory(mapData);
 			}
 		}
 	private:

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Allocator.hpp"
 #include "Compare.hpp"
 #include "Defines.hpp"
 #include "Memory.hpp"
@@ -38,7 +39,7 @@ namespace wfe {
 		constexpr set() = default;
 		/// @brief Copies the given set.
 		/// @param other The set to copy.
-		set(const set& other) : setSize(other.setSize), setCapacity(other.setCapacity), setData((pointer)malloc(setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY)) {
+		set(const set& other) : setSize(other.setSize), setCapacity(other.setCapacity), setData((pointer)AllocMemory(setCapacity * sizeof(value_type))) {
 			// Check if the memory was allocated correctly
 			if(!setData)
 				throw BadAllocException("Failed to allocate set data!");
@@ -69,7 +70,7 @@ namespace wfe {
 			setCapacity <<= 1;
 
 			// Allocate the set's memory
-			setData = (pointer)malloc(setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
 			if(!setData)
 				throw BadAllocException("Failed to allocate set data!");
@@ -110,7 +111,7 @@ namespace wfe {
 			setCapacity <<= 1;
 
 			// Allocate the set's memory
-			setData = (pointer)malloc(setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
 			if(!setData)
 				throw BadAllocException("Failed to allocate set data!");
@@ -139,13 +140,13 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the set's memory
-				free(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				FreeMemory(setData, setCapacity * sizeof(value_type));
 			}
 
 			// Set the set's new values
 			setSize = other.setSize;
 			setCapacity = other.setCapacity;
-			setData = (pointer)malloc(setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
 			// Check if the memory was allocated correctly
 			if(!setData)
@@ -172,7 +173,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the set's memory
-				free(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				FreeMemory(setData, setCapacity * sizeof(value_type));
 			}
 
 			// Set the set's new data
@@ -197,7 +198,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the set's memory
-				free(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				FreeMemory(setData, setCapacity * sizeof(value_type));
 			}
 
 			// Assert that the set's size must be lower than the maximum possible size
@@ -214,7 +215,7 @@ namespace wfe {
 			setCapacity <<= 1;
 
 			// Allocate the set's memory
-			setData = (pointer)malloc(setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+			setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
 			if(!setData)
 				throw BadAllocException("Failed to allocate set data!");
@@ -290,7 +291,7 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
@@ -340,7 +341,7 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
@@ -385,7 +386,7 @@ namespace wfe {
 					setCapacity <<= 1;
 
 					// Reallocate the set's memory
-					setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
 
 					if(!setData)
 						throw BadAllocException("Failed to allocate set data!");
@@ -449,7 +450,7 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
@@ -491,7 +492,7 @@ namespace wfe {
 					setCapacity <<= 1;
 
 					// Reallocate the set's memory
-					setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
 
 					if(!setData)
 						throw BadAllocException("Failed to allocate set data!");
@@ -555,7 +556,7 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)realloc(setData, setCapacity * sizeof(value_type), MEMORY_USAGE_ARRAY);
+				setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
@@ -971,7 +972,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the set's data
-				free(setData, MEMORY_USAGE_ARRAY);
+				FreeMemory(setData);
 			}
 		}
 	private:
