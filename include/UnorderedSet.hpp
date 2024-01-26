@@ -443,10 +443,10 @@ namespace wfe {
 					ptr->~node_type();
 				
 				// Free the unordered set's data
-				FreeMemory(usetData, usetCapacity * sizeof(node_type));
+				FreeMemory(usetData);
 
 				// Free the unordered set's buckets
-				FreeMemory(usetBuckets, usetBucketCount * sizeof(node_type*));
+				FreeMemory(usetBuckets);
 			}
 
 			// Set the unordered set's new values
@@ -512,10 +512,10 @@ namespace wfe {
 					ptr->~node_type();
 				
 				// Free the unordered set's data
-				FreeMemory(usetData, usetCapacity * sizeof(node_type));
+				FreeMemory(usetData);
 
 				// Free the unordered set's buckets
-				FreeMemory(usetBuckets, usetBucketCount * sizeof(node_type*));
+				FreeMemory(usetBuckets);
 			}
 
 			// Set the unordered set's new values
@@ -544,10 +544,10 @@ namespace wfe {
 					ptr->~node_type();
 				
 				// Free the unordered set's data
-				FreeMemory(usetData, usetCapacity * sizeof(node_type));
+				FreeMemory(usetData);
 
 				// Free the unordered set's buckets
-				FreeMemory(usetBuckets, usetBucketCount * sizeof(node_type*));
+				FreeMemory(usetBuckets);
 			}
 
 			// Set the unordered set's new values

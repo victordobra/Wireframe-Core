@@ -177,7 +177,7 @@ namespace wfe {
 					end->~value_type();
 				
 				// Free the vector's data
-				FreeMemory(vecData, vecCapacity * sizeof(value_type));
+				FreeMemory(vecData);
 			}
 
 			// Set the vector's new values
@@ -202,7 +202,7 @@ namespace wfe {
 					end->~value_type();
 				
 				// Free the vector's data
-				FreeMemory(vecData, vecCapacity * sizeof(value_type));
+				FreeMemory(vecData);
 			}
 
 			// Set the vector's new values

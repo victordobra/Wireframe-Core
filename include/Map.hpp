@@ -146,7 +146,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the map's memory
-				FreeMemory(mapData, mapCapacity * sizeof(value_type));
+				FreeMemory(mapData);
 			}
 
 			// Set the map's new values
@@ -179,7 +179,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the map's memory
-				FreeMemory(mapData, mapCapacity * sizeof(value_type));
+				FreeMemory(mapData);
 			}
 
 			// Set the map's new values
@@ -204,7 +204,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the map's memory
-				FreeMemory(mapData, mapCapacity * sizeof(value_type));
+				FreeMemory(mapData);
 			}
 
 			// Set the map's new values

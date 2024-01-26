@@ -140,7 +140,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the set's memory
-				FreeMemory(setData, setCapacity * sizeof(value_type));
+				FreeMemory(setData);
 			}
 
 			// Set the set's new values
@@ -173,7 +173,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the set's memory
-				FreeMemory(setData, setCapacity * sizeof(value_type));
+				FreeMemory(setData);
 			}
 
 			// Set the set's new data
@@ -198,7 +198,7 @@ namespace wfe {
 					ptr->~value_type();
 				
 				// Free the set's memory
-				FreeMemory(setData, setCapacity * sizeof(value_type));
+				FreeMemory(setData);
 			}
 
 			// Assert that the set's size must be lower than the maximum possible size

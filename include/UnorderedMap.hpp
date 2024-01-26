@@ -438,7 +438,7 @@ namespace wfe {
 			
 			// Free the unordered map's previous data
 			if(umapBuckets)
-				FreeMemory(umapBuckets, umapBucketCount * sizeof(node_type*));
+				FreeMemory(umapBuckets);
 			if(umapData) {
 				// Destruct every value in the unordered map
 				node_type* end = umapData + umapSize;
@@ -446,7 +446,7 @@ namespace wfe {
 					ptr->val.~value_type();
 				
 				// Free the unordered map's data
-				FreeMemory(umapData, umapCapacity * sizeof(node_type));
+				FreeMemory(umapData);
 			}
 
 			// Set the unordered map's new values
@@ -506,7 +506,7 @@ namespace wfe {
 		unordered_map& operator=(unordered_map&& other) {
 			// Free the unordered map's previous data
 			if(umapBuckets)
-				FreeMemory(umapBuckets, umapBucketCount * sizeof(node_type*));
+				FreeMemory(umapBuckets);
 			if(umapData) {
 				// Destruct every value in the unordered map
 				node_type* end = umapData + umapSize;
@@ -514,7 +514,7 @@ namespace wfe {
 					ptr->val.~value_type();
 				
 				// Free the unordered map's data
-				FreeMemory(umapData, umapCapacity * sizeof(node_type));
+				FreeMemory(umapData);
 			}
 
 			// Set the unordered map's new values
@@ -537,7 +537,7 @@ namespace wfe {
 		unordered_map& operator=(std::initializer_list<value_type> list) {
 			// Free the unordered map's previous data
 			if(umapBuckets)
-				FreeMemory(umapBuckets, umapBucketCount * sizeof(node_type*));
+				FreeMemory(umapBuckets);
 			if(umapData) {
 				// Destruct every value in the unordered map
 				node_type* end = umapData + umapSize;
@@ -545,7 +545,7 @@ namespace wfe {
 					ptr->val.~value_type();
 				
 				// Free the unordered map's data
-				FreeMemory(umapData, umapCapacity * sizeof(node_type));
+				FreeMemory(umapData);
 			}
 
 			// Set the unordered map's bucket count to the lowest power of 2 higher than or equal to the list's size
