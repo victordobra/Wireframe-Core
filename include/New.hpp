@@ -23,7 +23,7 @@ namespace wfe {
 			throw BadAllocException("Failed to allocate object memory!");
 		
 		// Construct the object in the new memory block
-		new(newObject) T;
+		new(newObject) T(args...);
 
 		return newObject;
 	}
