@@ -18,6 +18,10 @@ namespace wfe {
 	thread_local MemoryUsageType memoryUsageTypeStack[MEMORY_USAGE_TYPE_STACK_MAX_SIZE];
 
 	void* AllocMemory(size_t size) {
+		// Exit the function if the given size is 0
+		if(!size)
+			return nullptr;
+
 		// Retrieve the current memory usage type
 		MemoryUsageType memoryUsageType;
 		if(!memoryUsageTypeStackSize)
@@ -40,6 +44,16 @@ namespace wfe {
 		return mem;
 	}
 	void* ReallocMemory(void* mem, size_t newSize) {
+		// Alloc memory if no previous memory was given
+		if(!mem)
+			return AllocMemory(newSize);
+		
+		// Free the given memory if the new size if 0
+		if(!newSize) {
+			FreeMemory(mem);
+			return nullptr;
+		}
+
 		// Get the memory's old size
 		size_t oldSize = PlatformGetMemorySize(mem) - sizeof(MemoryUsageType);
 
@@ -62,6 +76,10 @@ namespace wfe {
 		return newMem;
 	}
 	void FreeMemory(void* mem) {
+		// Exit the function if no memory block was given
+		if(!mem)
+			return;
+		
 		// Get the memory's size
 		size_t size = PlatformGetMemorySize(mem) - sizeof(MemoryUsageType);
 
