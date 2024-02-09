@@ -374,8 +374,15 @@ namespace wfe {
 					else
 						ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
 					
-					// Reallocate the set's data
-					reallocate(umapCapacity << 1);
+					// Set the map's capacity to the lowest power of 2 higher than or equal to the map's size
+					size_type newCapacity = 1;
+					for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+						if((newCapacity << step) < umapSize)
+							newCapacity <<= step;
+					newCapacity <<= 1;
+					
+					// Reallocate the map's data
+					reallocate(newCapacity);
 
 					// Set the new element's pointer
 					if(ind != SIZE_T_MAX)
@@ -609,8 +616,15 @@ namespace wfe {
 					else
 						ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
 					
-					// Reallocate the set's data
-					reallocate(umapCapacity << 1);
+					// Set the map's capacity to the lowest power of 2 higher than or equal to the map's size
+					size_type newCapacity = 1;
+					for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+						if((newCapacity << step) < umapSize)
+							newCapacity <<= step;
+					newCapacity <<= 1;
+					
+					// Reallocate the map's data
+					reallocate(newCapacity);
 
 					// Set the new element's pointer
 					if(ind != SIZE_T_MAX)
@@ -683,8 +697,15 @@ namespace wfe {
 				else
 					ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
 				
-				// Reallocate the set's data
-				reallocate(umapCapacity << 1);
+				// Set the map's capacity to the lowest power of 2 higher than or equal to the map's size
+				size_type newCapacity = 1;
+				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+					if((newCapacity << step) < umapSize)
+						newCapacity <<= step;
+				newCapacity <<= 1;
+				
+				// Reallocate the map's data
+				reallocate(newCapacity);
 
 				// Set the new element's pointer
 				if(ind != SIZE_T_MAX)
@@ -756,8 +777,15 @@ namespace wfe {
 				else
 					ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
 				
-				// Reallocate the set's data
-				reallocate(umapCapacity << 1);
+				// Set the map's capacity to the lowest power of 2 higher than or equal to the map's size
+				size_type newCapacity = 1;
+				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+					if((newCapacity << step) < umapSize)
+						newCapacity <<= step;
+				newCapacity <<= 1;
+				
+				// Reallocate the map's data
+				reallocate(newCapacity);
 
 				// Set the new element's pointer
 				if(ind != SIZE_T_MAX)
@@ -1010,8 +1038,15 @@ namespace wfe {
 				else
 					ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
 				
-				// Reallocate the set's data
-				reallocate(umapCapacity << 1);
+				// Set the map's capacity to the lowest power of 2 higher than or equal to the map's size
+				size_type newCapacity = 1;
+				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
+					if((newCapacity << step) < umapSize)
+						newCapacity <<= step;
+				newCapacity <<= 1;
+				
+				// Reallocate the map's data
+				reallocate(newCapacity);
 
 				// Set the new element's pointer
 				if(ind != SIZE_T_MAX)

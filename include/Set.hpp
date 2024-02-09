@@ -291,7 +291,10 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+				if(setData)
+					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+				else
+					setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
@@ -341,7 +344,10 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+				if(setData)
+					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+				else
+					setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
@@ -386,7 +392,10 @@ namespace wfe {
 					setCapacity <<= 1;
 
 					// Reallocate the set's memory
-					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+					if(setData)
+						setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+					else
+						setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
 					if(!setData)
 						throw BadAllocException("Failed to allocate set data!");
@@ -450,7 +459,10 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+				if(setData)
+					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+				else
+					setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
@@ -492,7 +504,10 @@ namespace wfe {
 					setCapacity <<= 1;
 
 					// Reallocate the set's memory
-					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+					if(setData)
+						setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+					else
+						setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
 					if(!setData)
 						throw BadAllocException("Failed to allocate set data!");
@@ -556,7 +571,10 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+				if(setData)
+					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
+				else
+					setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
 				if(!setData)
 					throw BadAllocException("Failed to allocate set data!");
