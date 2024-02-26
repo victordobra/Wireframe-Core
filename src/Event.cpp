@@ -1,18 +1,18 @@
 #include "Event.hpp"
 
 namespace wfe {
-	Event::Event(std::initializer_list<EventListener> list) : listeners(list) { }
+	Event::Event(std::initializer_list<Listener> list) : listeners(list) { }
 
 	size_t Event::GetListenerCount() const {
 		return listeners.size();
 	}
-	Event::EventListener* Event::GetListeners() {
+	Event::Listener* Event::GetListeners() {
 		return listeners.data();
 	}
-	const Event::EventListener* Event::GetListeners() const {
+	const Event::Listener* Event::GetListeners() const {
 		return listeners.data();
 	}
-	bool8_t Event::AddListener(EventListener listener) {
+	bool8_t Event::AddListener(Listener listener) {
 		// Exit the function if the event already has the given listener
 		if(HasListener(listener))
 			return false;
@@ -22,10 +22,10 @@ namespace wfe {
 
 		return true;
 	}
-	bool8_t Event::RemoveListener(EventListener listener) {
+	bool8_t Event::RemoveListener(Listener listener) {
 		// Loop through the vector, checking if the given listener is in the vector
 		for(const auto& vecListener : listeners)
-			if(vecListener == listener) {
+			if(vecListener.callback == listener.callback && vecListener.userData == listener.userData) {
 				// Erase the current listener and exit the function
 				listeners.erase(&vecListener);
 
@@ -34,10 +34,10 @@ namespace wfe {
 
 		return false;
 	}
-	bool8_t Event::HasListener(EventListener listener) {
+	bool8_t Event::HasListener(Listener listener) {
 		// Loop through the vector, checking if the given listener is in the vector
 		for(const auto& vecListener : listeners)
-			if(vecListener == listener)
+			if(vecListener.callback == listener.callback && vecListener.userData == listener.userData)
 				return true;
 
 		return false;
@@ -50,7 +50,7 @@ namespace wfe {
 		// Loop through every listener
 		for(auto& listener : listeners) {
 			// Call the current listener
-			void* result = listener(args);
+			void* result = listener.callback(args, listener.userData);
 
 			// Add the current return to the return vector, if it exists (the index doesn't need to be incremented otherwise)
 			if(returns)
