@@ -17,6 +17,7 @@
 #include "Pair.hpp"
 #include "Platform.hpp"
 #include "Quaternion.hpp"
+#include "Runner.hpp"
 #include "Set.hpp"
 #include "String.hpp"
 #include "Thread.hpp"
