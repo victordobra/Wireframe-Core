@@ -89,9 +89,6 @@ namespace wfe {
 		~AssertException() = default;
 	};
 
-/// @brief Gets the string version of the macro's value. Used for a string conversion workaround.
-/// @brief The macro whose string value to return.
-#define WFE_MACRO_STRING(macro) #macro
 /// @brief Asserts an expresion and throws an exception if that assertion is not true.
 /// @param cond The condition to check.
 /// @param message The message used if the assertion fails.

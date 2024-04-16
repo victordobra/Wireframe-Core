@@ -177,4 +177,12 @@ namespace wfe {
 /// @brief Declares the specified function as not inline.
 #define WFE_NOINLINE
 #endif
+
+/// @brief Gets the string version of the macro's value. Used for a string conversion workaround.
+/// @param macro The macro whose string value to return.
+#define WFE_MACRO_STRING(macro) #macro
+/// @brief Concatenates the two given macros. Used for a macro value conversion workaround.
+/// @param macro1 The first macro to concatenate.
+/// @param macro2 The second macro to concatenate.
+#define WFE_MACRO_CONCAT(macro1, macro2) macro1 ## macro2
 }
