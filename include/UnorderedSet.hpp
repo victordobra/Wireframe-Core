@@ -1302,15 +1302,18 @@ namespace wfe {
 		}
 	private:
 		void reallocate(size_type newCapacity) {
+			// Save the unordered set's old data
+			node_type* oldData = usetData;
+
 			// Reallocate the unordered set's data
-			node_type* newData;
-			if(usetData)
-				newData = (node_type*)ReallocMemory(usetData, newCapacity * sizeof(node_type));
-			else
-				newData = (node_type*)AllocMemory(newCapacity * sizeof(node_type));
+			if(usetData) {
+				usetData = (node_type*)ReallocMemory(usetData, newCapacity * sizeof(node_type));
+			} else {
+				usetData = (node_type*)AllocMemory(newCapacity * sizeof(node_type));
+			}
 			
 			// Check if the memory was allocated correctly
-			if(!newData)
+			if(!usetData)
 				throw BadAllocException("Failed to allocate unordered set data!");
 			
 			// Set the unordered set's new capacity
@@ -1323,10 +1326,10 @@ namespace wfe {
 					continue;
 
 				// Get the bucket's index
-				size_type index = usetBuckets[i] - usetData;
+				size_type index = usetBuckets[i] - oldData;
 
 				// Set the bucket based on the index
-				usetBuckets[i] = newData + index;
+				usetBuckets[i] = usetData + index;
 			}
 
 			// Copy every node relative to the new data
@@ -1336,14 +1339,11 @@ namespace wfe {
 					continue;
 
 				// Get the next pointer's index
-				size_type index = newData[i].next - usetData;
+				size_type index = usetData[i].next - oldData;
 
 				// Set the next pointer based on the index
-				newData[i].next = newData + index;
+				usetData[i].next = usetData + index;
 			}
-
-			// Set the unordered set's new data
-			usetData = newData;
 		}
 
 		size_type usetBucketCount;

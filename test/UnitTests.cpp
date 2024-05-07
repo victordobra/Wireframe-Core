@@ -102,8 +102,6 @@ namespace wfe {
 			printf(" %llu%% (%llu/%llu) correct.\n", (unsigned long long)precentage, (unsigned long long)correctCount, (unsigned long long)unitTestList.unitTestCount);
 
 			if(correctCount != unitTestList.unitTestCount) {
-				// TODO: Output incorrect tests to a log file
-
 				// Output all the incorect unit tests
 				printf("\nIncorrect unit tests:\n");
 

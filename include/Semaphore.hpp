@@ -57,8 +57,9 @@ namespace wfe {
 		/// @return Semaphore::SUCCESS if the semaphore's counter was decremented successfully, otherwise a corresponding error code.
 		SemaphoreResult TryWait();
 		/// @brief Signals the semaphore.
+		/// @param signalCount The value to increase the counter with.
 		/// @return Semaphore::SUCCESS if the semaphore was signaled successfully, otherwise a corresponding error code.
-		SemaphoreResult Signal();
+		SemaphoreResult Signal(uint32_t signalCount = 1);
 
 		/// @brief Destroys the semaphore.
 		~Semaphore();

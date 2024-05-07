@@ -91,9 +91,9 @@ namespace wfe {
 		return ERROR_UNKNOWN;
 
 	}
-	Semaphore::SemaphoreResult Semaphore::Signal() {
+	Semaphore::SemaphoreResult Semaphore::Signal(uint32_t signalCount) {
 		// Signal the semaphore using ReleaseSemaphore
-		BOOL result = ReleaseSemaphore((HANDLE)internalData, 1, nullptr);
+		BOOL result = ReleaseSemaphore((HANDLE)internalData, (LONG)signalCount, nullptr);
 
 		// Check if the semaphore signal failed
 		if(!result) {

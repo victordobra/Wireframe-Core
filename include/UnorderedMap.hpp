@@ -1408,10 +1408,11 @@ namespace wfe {
 			node_type* oldData = umapData;
 
 			// Reallocate the unordered map's data
-			if(umapData)
+			if(umapData) {
 				umapData = (node_type*)ReallocMemory(umapData, newCapacity * sizeof(node_type));
-			else
+			} else {
 				umapData = (node_type*)AllocMemory(newCapacity * sizeof(node_type));
+			}
 
 			// Check if the unordered map's data was allocated correctly
 			if(!umapData)
