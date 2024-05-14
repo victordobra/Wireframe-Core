@@ -2,6 +2,7 @@
 
 #include "Defines.hpp"
 #include "String.hpp"
+#include "Vector.hpp"
 
 namespace wfe {
 	/// @brief Represents a file input stream.
@@ -297,4 +298,17 @@ namespace wfe {
 	private:
 		void* internalData = nullptr;
 	};
+
+	/// @brief Gets the directory's children files.
+	/// @param dirPath The path to the directory to scan.
+	/// @return A vector containing the paths of the children files.
+	vector<string> GetDirectoryChildrenFiles(const string& dirPath);
+	/// @brief Gets the directory's children directories.
+	/// @param dirPath The path to the directory to scan.
+	/// @return A vector containing the paths of the children directories.
+	vector<string> GetDirectoryChildrenDirectories(const string& dirPath);
+	/// @brief Reccursively scans the directory and finds all files descending from the directory.
+	/// @param dirPath The path to the directory to scan.
+	/// @return A vector containing the paths of all found files.
+	vector<string> GetDirectoryFiles(const string& dirPath);
 }

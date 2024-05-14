@@ -8,6 +8,67 @@
 #include <windows.h>
 
 namespace wfe {
+	// Internal helper functions
+	static void FormatDirPath(string& dirPath, string& formattedPath) {
+		// Add a slash at the end of the directory's path, if not already there
+		if(dirPath.back() != '/')
+			dirPath.push_back('/');
+
+		// Replace every forward slash in the given path with backslashes
+		formattedPath = dirPath;
+		for(size_t charPos = formattedPath.find('/', 0); charPos != SIZE_T_MAX && charPos != formattedPath.size() - 1; charPos = formattedPath.find('/', charPos + 1))
+			formattedPath[charPos] = '\\';
+	}
+	static void ScanDirChildren(const string& dirPath, const string& formattedPath, vector<string>* files, vector<string>* dirs) {
+		// Open the directory to scan all of its files
+		WIN32_FIND_DATAA fileInfo;
+		HANDLE fileScan = FindFirstFileExA(formattedPath.c_str(), FindExInfoBasic, &fileInfo, FindExSearchNameMatch, nullptr, 0);
+
+		if(fileScan == INVALID_HANDLE_VALUE)
+			throw Exception("Failed to scan directory for files!");
+
+		// Loop through all available files and store them in each corresponding vector
+		do {
+			// Skip the current file if it represents the current or previous directory
+			if(!strncmp(fileInfo.cFileName, ".", MAX_PATH) || !strncmp(fileInfo.cFileName, "..", MAX_PATH))
+				continue;
+
+			// Check if the current file is a directory
+			bool isDir = fileInfo.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
+			if(isDir && dirs) {
+				dirs->push_back(dirPath + fileInfo.cFileName + '/');
+			} else if(!isDir && files) {
+				files->push_back(dirPath + fileInfo.cFileName);
+			}
+		} while(FindNextFileA(fileScan, &fileInfo));
+
+		// Check for any unexpected errors
+		if(GetLastError() != ERROR_NO_MORE_FILES)
+			throw Exception("Failed to scan directory for files!");
+		
+		// Close the directory scan
+		FindClose(fileScan);
+	}
+	static void ScanDirReccursive(const string& dirPath, const string& formattedPath, vector<string>& files) {
+		// Get the current directory's children files and directories
+		vector<string> dirs;
+		ScanDirChildren(dirPath, formattedPath, &files, &dirs);
+
+		// Loop through the children directories
+		for(const string& nextDirPath : dirs) {
+			// Only add the new part to the old formatted path and replace the only slash
+			string nextFormattedPath = formattedPath;
+
+			nextFormattedPath.pop_back();
+			nextFormattedPath.append(nextDirPath.c_str() + dirPath.size());
+			nextFormattedPath.back() = '\\';
+			nextFormattedPath.push_back('*');
+
+			// Scan the child directory for files
+			ScanDirReccursive(nextDirPath, nextFormattedPath, files);
+		}
+	}
+
 	// Public functions
 	FileInput::FileInput(const string& filePath, StreamType streamType) {
 		// Open the file input stream using the given parameters
@@ -306,6 +367,49 @@ namespace wfe {
 	FileOutput::~FileOutput() {
 		// Close the file output stream
 		Close();
+	}
+
+	vector<string> GetDirectoryChildrenFiles(const string& dirPath) {
+		// Format the given directory path
+		string fullDirPath = dirPath, formattedPath;
+		FormatDirPath(fullDirPath, formattedPath);
+
+		// Append a wildcard character at the end for the search
+		formattedPath.push_back('*');
+
+		// Scan the directory for files
+		vector<string> files;
+		ScanDirChildren(fullDirPath, formattedPath, &files, nullptr);
+
+		return files;
+	}
+	vector<string> GetDirectoryChildrenDirectories(const string& dirPath) {
+		// Format the given directory path
+		string fullDirPath = dirPath, formattedPath;
+		FormatDirPath(fullDirPath, formattedPath);
+
+		// Append a wildcard character at the end for the search
+		formattedPath.push_back('*');
+
+		// Scan the directory for children dirs
+		vector<string> dirs;
+		ScanDirChildren(fullDirPath, formattedPath, nullptr, &dirs);
+
+		return dirs;
+	}
+	vector<string> GetDirectoryFiles(const string& dirPath) {
+		// Format the given directory path
+		string fullDirPath = dirPath, formattedPath;
+		FormatDirPath(fullDirPath, formattedPath);
+
+		// Append a wildcard character at the end for the search
+		formattedPath.push_back('*');
+
+		// Scan the directory reccursively for files
+		vector<string> files;
+		ScanDirReccursive(fullDirPath, formattedPath, files);
+
+		return files;
 	}
 }
 
