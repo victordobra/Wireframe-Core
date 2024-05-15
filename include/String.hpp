@@ -134,13 +134,12 @@ namespace wfe {
 			
 			// Set the new string values
 			strSize = other.strSize;
+			strCapacity = other.strCapacity;
 
 			if(strData)
-				strData = (pointer)ReallocMemory(strData, other.strCapacity);
+				strData = (pointer)ReallocMemory(strData, strCapacity);
 			else
 				strData = (pointer)AllocMemory(strCapacity);
-
-			strCapacity = other.strCapacity;
 
 			// Check if the memory has been allocated successfully
 			if(!strData)
@@ -453,13 +452,12 @@ namespace wfe {
 			
 			// Set the new string values
 			strSize = str.strSize;
+			strCapacity = str.strCapacity;
 
 			if(strData)
-				strData = (pointer)ReallocMemory(strData, str.strCapacity);
+				strData = (pointer)ReallocMemory(strData, strCapacity);
 			else
 				strData = (pointer)AllocMemory(strCapacity);
-
-			strCapacity = str.strCapacity;
 
 			// Check if the memory has been allocated successfully
 			if(!strData)
