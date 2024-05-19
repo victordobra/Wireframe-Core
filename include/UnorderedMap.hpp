@@ -831,7 +831,7 @@ namespace wfe {
 			// Get the current key's bucket
 			size_type currentBucket = bucket(key);
 
-			const node_type** elem = umapBucketCount + currentBucket;
+			const node_type* const* elem = umapBucketCount + currentBucket;
 
 			// Look for the given key in the bucket
 			while(*elem) {
@@ -876,7 +876,7 @@ namespace wfe {
 			// Get the current key's bucket
 			size_type currentBucket = bucket(key);
 
-			const node_type** elem = umapBuckets + currentBucket;
+			const node_type* const* elem = umapBuckets + currentBucket;
 
 			// Look for the given key in the bucket
 			while(*elem) {
@@ -898,7 +898,7 @@ namespace wfe {
 			// Get the current key's bucket
 			size_type currentBucket = bucket(key);
 
-			const node_type** elem = (const node_type**)(umapBuckets + currentBucket);
+			const node_type* const* elem = umapBuckets + currentBucket;
 
 			// Look for the given key in the bucket
 			while(*elem) {
@@ -942,7 +942,7 @@ namespace wfe {
 			// Get the current key's bucket
 			size_type currentBucket = bucket(key);
 
-			const node_type** elem = umapBucketCount + currentBucket;
+			const node_type* const* elem = umapBucketCount + currentBucket;
 
 			// Look for the given key in the bucket
 			while(*elem) {

@@ -1200,7 +1200,7 @@ namespace wfe {
 		/// @return The number of values in the given bucket.
 		size_type bucket_size(size_type n) const {
 			// Loop through the given bucket's linked list, counting the number of values
-			node_type* ptr = usetBuckets + n;
+			const node_type* ptr = usetBuckets + n;
 			size_type count = 0;
 
 			while(ptr) {
@@ -1235,7 +1235,7 @@ namespace wfe {
 		}
 		/// @brief Sets the unordered set's max load factor, which is equal to the ratio between the total number of values and the number of buckets.
 		/// @param z The unordered set's new max load factor.
-		void max_load_factor(float32_t z) const {
+		void max_load_factor(float32_t z) {
 			usetMaxLoadFactor = z;
 		}
 		/// @brief Sets the number of buckets in the unordered set.
