@@ -84,8 +84,10 @@ namespace wfe {
 		internalData = (void*)CreateFileA(filePath.c_str(), GENERIC_READ, FILE_SHARE_VALID_FLAGS, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
 		// Check if the function succeeded
-		if(internalData == INVALID_HANDLE_VALUE)
+		if(internalData == INVALID_HANDLE_VALUE) {
+			internalData = nullptr;
 			return false;
+		}
 		
 		// Check if the STREAM_TYPE_AT_THE_END flag is set
 		if(streamType & STREAM_TYPE_AT_THE_END) {
@@ -245,16 +247,20 @@ namespace wfe {
 				return true;
 			
 			// Exit the function if the stream creation failed due to reasons other than the file not existing
-			if(GetLastError() != ERROR_FILE_NOT_FOUND)
+			if(GetLastError() != ERROR_FILE_NOT_FOUND) {
+				internalData = nullptr;
 				return false;
+			}
 		}
 
 		// Create the file output stream
 		internalData = (void*)CreateFileA(filePath.c_str(), GENERIC_WRITE, FILE_SHARE_VALID_FLAGS, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 
 		// Check if the stream was created successfully
-		if(internalData == INVALID_HANDLE_VALUE)
+		if(internalData == INVALID_HANDLE_VALUE) {
+			internalData = nullptr;
 			return false;
+		}
 
 		// Move the pointer to the end of the file if the append flag is set
 		if(streamType & STREAM_TYPE_APPEND) {
