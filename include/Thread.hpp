@@ -4,7 +4,7 @@
 
 namespace wfe {
 	/// @brief An implementation of a processor thread.
-	struct Thread {
+	class Thread {
 	public:
 		/// @brief All possible results for thread operations.
 		typedef enum {

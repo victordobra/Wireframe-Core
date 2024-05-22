@@ -3,11 +3,12 @@
 #include "Defines.hpp"
 
 namespace wfe {
-	struct Vector3;
-	struct Vector4;
+	class Vector3;
+	class Vector4;
 
-	/// @brief A struct that holds a quaternion. Used for representing 3D rotations.
-	struct Quaternion {
+	/// @brief A class that holds a quaternion. Used for representing 3D rotations.
+	class Quaternion {
+	public:
 		/// @brief An identity quaternion, representing no rotation.
 		static const Quaternion identity;
 

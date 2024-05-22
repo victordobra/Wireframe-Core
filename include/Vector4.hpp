@@ -3,12 +3,12 @@
 #include "Defines.hpp"
 
 namespace wfe {
-	struct Vector2;
-	struct Vector3;
-	struct Quaternion;
+	class Vector2;
+	class Vector3;
+	class Quaternion;
 
-	/// @brief A struct that holds a 2D vector
-	struct Vector4 {
+	/// @brief A class that holds a 2D vector
+	class Vector4 {
 		/// @brief A Vector4 with all elements set to 0.
 		static const Vector4 zero;
 		/// @brief A Vector4 with all elements set to 1.

@@ -9,7 +9,7 @@
 
 namespace wfe {
 	/// @brief An implementation of a mutex.
-	struct Mutex {
+	class Mutex {
 	public:
 		/// @brief All possible results from mutex operations.
 		typedef enum {
@@ -80,7 +80,7 @@ namespace wfe {
 	};
 
 	/// @brief An implementation of a mutex that uses atomic variables for synchronization.
-	struct AtomicMutex {
+	class AtomicMutex {
 	public:
 		/// @brief Creates an atomic mutex object.
 		AtomicMutex() = default;

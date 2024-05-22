@@ -6,8 +6,8 @@
 #include <initializer_list>
 
 namespace wfe {
-	/// @brief A struct that calls multiple listener functions when requested.
-	struct Event {
+	/// @brief A class that calls multiple listener functions when requested.
+	class Event {
 	public:
 		/// @brief An event listener callback.
 		typedef void*(*ListenerCallback)(void* args, void* userData);

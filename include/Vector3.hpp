@@ -3,11 +3,11 @@
 #include "Defines.hpp"
 
 namespace wfe {
-	struct Vector2;
-	struct Vector4;
+	class Vector2;
+	class Vector4;
 
-	/// @brief A struct that holds a 2D vector
-	struct Vector3 {
+	/// @brief A class that holds a 2D vector
+	class Vector3 {
 		/// @brief A Vector3 with all elements set to 0.
 		static const Vector3 zero;
 		/// @brief A Vector3 with all elements set to 1.

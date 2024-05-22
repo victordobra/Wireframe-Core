@@ -5,8 +5,8 @@
 #include <stdio.h>
 
 namespace wfe {
-	/// @brief A struct that represents an exception throw by the program.
-	struct Exception {
+	/// @brief A class that represents an exception throw by the program.
+	class Exception {
 	public:
 		Exception() = delete;
 		/// @brief Copies the given exception.
@@ -52,8 +52,8 @@ namespace wfe {
 		char_t str[MAX_MESSAGE_LEN];
 	};
 
-	/// @brief A struct that represents an exception caused by a failed assertion.
-	struct AssertException : public Exception {
+	/// @brief A class that represents an exception caused by a failed assertion.
+	class AssertException : public Exception {
 	public:
 		AssertException() = delete;
 		/// @brief Copies the given exception.
@@ -100,8 +100,8 @@ namespace wfe {
 /// @param message The message used if the assertion fails.
 #define WFE_ASSERT(cond, message) WFE_ASSERT_FULL(cond, message, __FILE__,  __LINE__);
 
-	/// @brief A struct that represents an exception caused by a failed memory allocation.
-	struct BadAllocException : public Exception {
+	/// @brief A class that represents an exception caused by a failed memory allocation.
+	class BadAllocException : public Exception {
 	public:
 		BadAllocException() = delete;
 		/// @brief Copies the given exception.
@@ -137,8 +137,8 @@ namespace wfe {
 		~BadAllocException() = default;
 	};
 
-	/// @brief A struct that represents an exception caused by attempting to acces data that is out of range.
-	struct OutOfRangeException : public Exception {
+	/// @brief A class that represents an exception caused by attempting to acces data that is out of range.
+	class OutOfRangeException : public Exception {
 	public:
 		OutOfRangeException() = delete;
 		/// @brief Copies the given exception.

@@ -4,7 +4,7 @@
 
 namespace wfe {
 	/// @brief An implementation of a semaphore.
-	struct Semaphore {
+	class Semaphore {
 	public:
 		/// @brief The maximum possible value the semaphore can reach.
 		const uint32_t MAX_VAL = 1048576;

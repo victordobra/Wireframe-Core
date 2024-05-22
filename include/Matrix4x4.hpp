@@ -4,10 +4,11 @@
 #include "Vector4.hpp"
 
 namespace wfe {
-	struct Vector3;
-	struct Vector2;
+	class Vector3;
+	class Vector2;
 
-	struct Matrix4x4 {
+	class Matrix4x4 {
+	public:
 		/// @brief An identity matrix.
 		static const Matrix4x4 identity;
 

@@ -12,8 +12,8 @@ namespace wfe {
 		/// @brief The function pointer type for a job's function.
 		typedef void*(*JobFunction)(void* args);
 
-		/// @brief A struct that can retrieve a job's result once finished.
-		struct Result {
+		/// @brief A class that can retrieve a job's result once finished.
+		class Result {
 		public:
 			/// @brief Creates an empty job result.
 			Result() = default;
