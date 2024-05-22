@@ -15,6 +15,25 @@ namespace wfe {
 	constexpr float32_t RAD_TO_DEG_MULTIPLIER = 180.f / PI;
 	/// @brief A multiplier used to convert degrees to radians.
 	constexpr float32_t DEG_TO_RAD_MULTIPLIER = PI / 180.f;
+
+	/// @brief Gets the maximum value between the two input values.
+	/// @tparam T The type of the values.
+	/// @param val1 The first value.
+	/// @param val2 The second value.
+	/// @return The maximum value.
+	template<class T>
+	constexpr T Max(const T& val1, const T& val2) {
+		return (val1 < val2) ? val2 : val1;
+	}
+	/// @brief Gets the minimum value between the two input values.
+	/// @tparam T The type of the values.
+	/// @param val1 The first value.
+	/// @param val2 The second value.
+	/// @return The minimum value.
+	template<class T>
+	constexpr T Min(const T& val1, const T& val2) {
+		return (val1 < val2) ? val1 : val2;
+	}
 	
 	/// @brief Calculates the sine of the given number.
 	/// @param x The number whose sine to calculate.
