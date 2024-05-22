@@ -9,6 +9,7 @@ namespace wfe {
 
 	/// @brief A class that holds a 2D vector
 	class Vector4 {
+	public:
 		/// @brief A Vector4 with all elements set to 0.
 		static const Vector4 zero;
 		/// @brief A Vector4 with all elements set to 1.

@@ -10,6 +10,7 @@ namespace wfe {
 	/// @tparam T2 The type of the second value.
 	template<class T1, class T2>
 	class pair {
+	public:
 		/// @brief The first value's type.
 		typedef T1 first_type;
 		/// @brief THe second value's type.

@@ -8,6 +8,7 @@ namespace wfe {
 
 	/// @brief A class that holds a 2D vector
 	class Vector3 {
+	public:
 		/// @brief A Vector3 with all elements set to 0.
 		static const Vector3 zero;
 		/// @brief A Vector3 with all elements set to 1.
