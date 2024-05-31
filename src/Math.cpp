@@ -88,7 +88,7 @@ namespace wfe {
 	}
 	uint64_t RightmostBit(uint64_t x) {
 		// A simple bithask will return the mask
-		return x & (x - 1);
+		return x & ~(x - 1);
 	}
 	uint64_t Pow2BitIndex(uint64_t x) {
 		// Simply return the popcount of the decremented number
