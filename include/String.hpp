@@ -33,7 +33,7 @@ namespace wfe {
 		/// @param other The string to copy.
 		string(const string& other) : strSize(other.strSize), strCapacity(other.strCapacity), strData((pointer)AllocMemory(strCapacity)) {
 			// Check if the memory has been allocated successfully
-			if(!strData)
+			if(strCapacity && !strData)
 				throw BadAllocException("Failed to allocate string data!");
 			
 			// Copy the string's contents
@@ -59,7 +59,7 @@ namespace wfe {
 			
 			// Allocate the string's data
 			strData = (pointer)AllocMemory(strCapacity);
-			if(!strData)
+			if(strCapacity && !strData)
 				throw BadAllocException("Failed to allocate string data!");
 
 			// Copy the string's contents
@@ -80,7 +80,7 @@ namespace wfe {
 			
 			// Allocate the string's data
 			strData = (pointer)AllocMemory(strCapacity);
-			if(!strData)
+			if(strCapacity && !strData)
 				throw BadAllocException("Failed to allocate string data!");
 
 			// Copy the string's contents
@@ -104,7 +104,7 @@ namespace wfe {
 			
 			// Allocate the string's data
 			strData = (pointer)AllocMemory(strCapacity);
-			if(!strData)
+			if(strCapacity && !strData)
 				throw BadAllocException("Failed to allocate string data!");
 
 			// Set the string's contents
@@ -117,7 +117,7 @@ namespace wfe {
 		/// @param str The string to copy.
 		string(const std::string& str) : strSize(str.size()), strCapacity(str.capacity()), strData((pointer)AllocMemory(strCapacity)) {
 			// Check if the memory has been allocated successfully
-			if(!strData)
+			if(strCapacity && !strData)
 				throw BadAllocException("Failed to allocate string data!");
 
 			// Copy the string's contents
@@ -136,13 +136,14 @@ namespace wfe {
 			strSize = other.strSize;
 			strCapacity = other.strCapacity;
 
-			if(strData)
+			if(strData) {
 				strData = (pointer)ReallocMemory(strData, strCapacity);
-			else
+			} else {
 				strData = (pointer)AllocMemory(strCapacity);
+			}
 
 			// Check if the memory has been allocated successfully
-			if(!strData)
+			if(strCapacity && !strData)
 				throw BadAllocException("Failed to allocate string data!");
 
 			// Copy the string's contents
@@ -454,13 +455,14 @@ namespace wfe {
 			strSize = str.strSize;
 			strCapacity = str.strCapacity;
 
-			if(strData)
+			if(strData) {
 				strData = (pointer)ReallocMemory(strData, strCapacity);
-			else
+			} else {
 				strData = (pointer)AllocMemory(strCapacity);
+			}
 
 			// Check if the memory has been allocated successfully
-			if(!strData)
+			if(strCapacity && !strData)
 				throw BadAllocException("Failed to allocate string data!");
 
 			// Copy the string's contents
@@ -1143,16 +1145,15 @@ namespace wfe {
 						strCapacity <<= step;
 				strCapacity <<= 1;
 
+				// Reallocate the string's data
 				if(strData) { 
-					// Reallocate the string
 					strData = (pointer)ReallocMemory(strData, strCapacity);
 				} else {
-					// Allocate the string
 					strData = (pointer)AllocMemory(strCapacity);
 				}
 
 				// Check if the memory has been allocated successfully
-				if(!strData)
+				if(strCapacity && !strData)
 					throw BadAllocException("Failed to allocate string data!");
 			}
 
@@ -1187,16 +1188,15 @@ namespace wfe {
 			// Make the capacity higher than the string's size
 			newCapacity = (newCapacity <= strSize) ? (strSize + 1) : newCapacity;
 
+			// Reallocate the string's data
 			if(strData) { 
-				// Reallocate the string
 				strData = (pointer)ReallocMemory(strData, newCapacity);
 			} else {
-				// Allocate the string
 				strData = (pointer)AllocMemory(newCapacity);
 			}
 
 			// Check if the memory has been allocated successfully
-			if(!strData)
+			if(strCapacity && !strData)
 				throw BadAllocException("Failed to allocate string data!");
 
 			// Set the string's new capacity
@@ -1278,9 +1278,9 @@ namespace wfe {
 			size_t position = 1;
 			difference_type candidate = 0;
 			while(position < wantedLength) {
-				if(wanted[position] == wanted[candidate])
+				if(wanted[position] == wanted[candidate]) {
 					table[position] = table[candidate];
-				else {
+				} else {
 					table[position] = candidate;
 					while(candidate >= 0 && wanted[position] != wanted[candidate])
 						candidate = table[candidate];
@@ -1321,8 +1321,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							++i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 
@@ -1360,8 +1361,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							++i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 
@@ -1398,8 +1400,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							++i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 
@@ -1442,9 +1445,9 @@ namespace wfe {
 			size_t position = 1;
 			difference_type candidate = 0;
 			while(position < wantedLength) {
-				if(wanted[position] == wanted[candidate])
+				if(wanted[position] == wanted[candidate]) {
 					table[position] = table[candidate];
-				else {
+				} else {
 					table[position] = candidate;
 					while(candidate >= 0 && wanted[position] != wanted[candidate])
 						candidate = table[candidate];
@@ -1485,8 +1488,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							++i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 
@@ -1524,8 +1528,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							++i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 
@@ -1562,8 +1567,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							++i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 
@@ -1610,9 +1616,9 @@ namespace wfe {
 			size_type position = 1;
 			difference_type candidate = 0;
 			while(position < wantedLength) {
-				if(wanted[position] == wanted[candidate])
+				if(wanted[position] == wanted[candidate]) {
 					table[position] = table[candidate];
-				else {
+				} else {
 					table[position] = candidate;
 					while(candidate >= 0 && wanted[position] != wanted[candidate])
 						candidate = table[candidate];
@@ -1653,8 +1659,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							++i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 
@@ -1692,8 +1699,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							++i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 
@@ -1730,8 +1738,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							++i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 
@@ -1795,9 +1804,9 @@ namespace wfe {
 			size_type position = 1;
 			difference_type candidate = 0;
 			while(position < wantedLength) {
-				if(wanted[wantedLength - position - 1] == wanted[wantedLength - candidate - 1])
+				if(wanted[wantedLength - position - 1] == wanted[wantedLength - candidate - 1]) {
 					table[position] = table[candidate];
-				else {
+				} else {
 					table[position] = candidate;
 					while(candidate >= 0 && wanted[wantedLength - position - 1] != wanted[wantedLength - candidate - 1])
 						candidate = table[candidate];
@@ -1844,8 +1853,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							--i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 			}
@@ -1883,8 +1893,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							--i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 			}
@@ -1921,8 +1932,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							--i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 			}
@@ -1959,9 +1971,9 @@ namespace wfe {
 			size_type position = 1;
 			difference_type candidate = 0;
 			while(position < wantedLength) {
-				if(wanted[wantedLength - position - 1] == wanted[wantedLength - candidate - 1])
+				if(wanted[wantedLength - position - 1] == wanted[wantedLength - candidate - 1]) {
 					table[position] = table[candidate];
-				else {
+				} else {
 					table[position] = candidate;
 					while(candidate >= 0 && wanted[wantedLength - position - 1] != wanted[wantedLength - candidate - 1])
 						candidate = table[candidate];
@@ -2008,8 +2020,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							--i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 			}
@@ -2047,8 +2060,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							--i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 			}
@@ -2085,8 +2099,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							--i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 			}
@@ -2124,9 +2139,9 @@ namespace wfe {
 			size_type position = 1;
 			difference_type candidate = 0;
 			while(position < wantedLength) {
-				if(wanted[wantedLength - position - 1] == wanted[wantedLength - candidate - 1])
+				if(wanted[wantedLength - position - 1] == wanted[wantedLength - candidate - 1]) {
 					table[position] = table[candidate];
-				else {
+				} else {
 					table[position] = candidate;
 					while(candidate >= 0 && wanted[wantedLength - position - 1] != wanted[wantedLength - candidate - 1])
 						candidate = table[candidate];
@@ -2173,8 +2188,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							--i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 			}
@@ -2212,8 +2228,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							--i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 			}
@@ -2250,8 +2267,9 @@ namespace wfe {
 						if(signedPosition < 0) {
 							--i;
 							position = 0;
-						} else
+						} else {
 							position = (size_type)signedPosition;
+						}
 					}
 				}
 			}

@@ -41,7 +41,7 @@ namespace wfe {
 		/// @param other The set to copy.
 		set(const set& other) : setSize(other.setSize), setCapacity(other.setCapacity), setData((pointer)AllocMemory(setCapacity * sizeof(value_type))) {
 			// Check if the memory was allocated correctly
-			if(!setData)
+			if(setCapacity && !setData)
 				throw BadAllocException("Failed to allocate set data!");
 
 			// Copy every value from the other set
@@ -72,7 +72,7 @@ namespace wfe {
 			// Allocate the set's memory
 			setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
-			if(!setData)
+			if(setCapacity && !setData)
 				throw BadAllocException("Failed to allocate set data!");
 
 			// Insert every value from the list
@@ -89,7 +89,7 @@ namespace wfe {
 					continue;
 				
 				// Move part of the set forward to make room for the new value
-				memmove(setData + pos + 1, setData + pos, (setSize - pos) * sizeof(value_type));
+				wfe::memmove(setData + pos + 1, setData + pos, (setSize - pos) * sizeof(value_type));
 
 				// Create the new value
 				new(setData + pos) value_type(*ptr);
@@ -113,7 +113,7 @@ namespace wfe {
 			// Allocate the set's memory
 			setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
-			if(!setData)
+			if(setCapacity && !setData)
 				throw BadAllocException("Failed to allocate set data!");
 			
 			// Copy every value from the given set
@@ -149,7 +149,7 @@ namespace wfe {
 			setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
 			// Check if the memory was allocated correctly
-			if(!setData)
+			if(setCapacity && !setData)
 				throw BadAllocException("Failed to allocate set data!");
 
 			// Copy every value from the given set
@@ -217,7 +217,7 @@ namespace wfe {
 			// Allocate the set's memory
 			setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
 
-			if(!setData)
+			if(setCapacity && !setData)
 				throw BadAllocException("Failed to allocate set data!");
 
 			// Insert every value from the list
@@ -235,7 +235,7 @@ namespace wfe {
 					continue;
 				
 				// Move part of the set forward to make room for the new value
-				memmove(setData + pos + 1, setData + pos, (setSize - pos) * sizeof(value_type));
+				wfe::memmove(setData + pos + 1, setData + pos, (setSize - pos) * sizeof(value_type));
 
 				// Create the new value
 				new(setData + pos) value_type(*ptr);
@@ -291,17 +291,18 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				if(setData)
+				if(setData) {
 					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
-				else
+				} else {
 					setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
+				}
 
-				if(!setData)
+				if(setCapacity && !setData)
 					throw BadAllocException("Failed to allocate set data!");
 			}
 
 			// Move part of the set forward to make room for the new value
-			memmove(setData + pos + 1, setData + pos, (setSize - 1 - pos) * sizeof(value_type));
+			wfe::memmove(setData + pos + 1, setData + pos, (setSize - 1 - pos) * sizeof(value_type));
 
 			// Create the new value
 			new (setData + pos) value_type(val);
@@ -344,17 +345,18 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				if(setData)
+				if(setData) {
 					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
-				else
+				} else {
 					setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
+				}
 
-				if(!setData)
+				if(setCapacity && !setData)
 					throw BadAllocException("Failed to allocate set data!");
 			}
 
 			// Move part of the set forward to make room for the new value
-			memmove(setData + pos + 1, setData + pos, (setSize - 1 - pos) * sizeof(value_type));
+			wfe::memmove(setData + pos + 1, setData + pos, (setSize - 1 - pos) * sizeof(value_type));
 
 			// Create the new value
 			new (setData + pos) value_type(val);
@@ -392,17 +394,18 @@ namespace wfe {
 					setCapacity <<= 1;
 
 					// Reallocate the set's memory
-					if(setData)
+					if(setData) {
 						setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
-					else
+					} else {
 						setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
+					}
 
-					if(!setData)
+					if(setCapacity && !setData)
 						throw BadAllocException("Failed to allocate set data!");
 				}
 
 				// Move part of the set forward to make room for the new value
-				memmove(setData + posInd + 1, setData + posInd, (setSize - 1 - posInd) * sizeof(value_type));
+				wfe::memmove(setData + posInd + 1, setData + posInd, (setSize - 1 - posInd) * sizeof(value_type));
 
 				// Create the new value
 				new(setData + posInd) value_type(val);
@@ -459,17 +462,18 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				if(setData)
+				if(setData) {
 					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
-				else
+				} else {
 					setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
+				}
 
-				if(!setData)
+				if(setCapacity && !setData)
 					throw BadAllocException("Failed to allocate set data!");
 			}
 
 			// Move part of the set forward to make room for the new value
-			memmove(setData + posInd + 1, setData + posInd, (setSize - 1 - posInd) * sizeof(value_type));
+			wfe::memmove(setData + posInd + 1, setData + posInd, (setSize - 1 - posInd) * sizeof(value_type));
 
 			// Create the new value
 			new (setData + posInd) value_type(val);
@@ -504,17 +508,18 @@ namespace wfe {
 					setCapacity <<= 1;
 
 					// Reallocate the set's memory
-					if(setData)
+					if(setData) {
 						setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
-					else
+					} else {
 						setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
+					}
 
-					if(!setData)
+					if(setCapacity && !setData)
 						throw BadAllocException("Failed to allocate set data!");
 				}
 
 				// Move part of the set forward to make room for the new value
-				memmove(setData + posInd + 1, setData + posInd, (setSize - 1 - posInd) * sizeof(value_type));
+				wfe::memmove(setData + posInd + 1, setData + posInd, (setSize - 1 - posInd) * sizeof(value_type));
 
 				// Create the new value
 				new(setData + posInd) value_type(val);
@@ -571,17 +576,18 @@ namespace wfe {
 				setCapacity <<= 1;
 
 				// Reallocate the set's memory
-				if(setData)
+				if(setData) {
 					setData = (pointer)ReallocMemory(setData, setCapacity * sizeof(value_type));
-				else
+				} else {
 					setData = (pointer)AllocMemory(setCapacity * sizeof(value_type));
+				}
 
-				if(!setData)
+				if(setCapacity && !setData)
 					throw BadAllocException("Failed to allocate set data!");
 			}
 
 			// Move part of the set forward to make room for the new value
-			memmove(setData + posInd + 1, setData + posInd, (setSize - 1 - posInd) * sizeof(value_type));
+			wfe::memmove(setData + posInd + 1, setData + posInd, (setSize - 1 - posInd) * sizeof(value_type));
 
 			// Create the new value
 			new (setData + posInd) value_type(val);
@@ -617,7 +623,7 @@ namespace wfe {
 			pos->~value_type();
 
 			// Move part of the set backwards to erase the value at the given position
-			memcpy((pointer)pos, pos + 1, (setData + setSize - pos) * sizeof(value_type));
+			wfe::memcpy((pointer)pos, pos + 1, (setData + setSize - pos) * sizeof(value_type));
 
 			return (pointer)pos;
 		}
@@ -652,7 +658,7 @@ namespace wfe {
 			setData[pos].~value_type();
 
 			// Move part of the set backwards to erase the value at the given position
-			memcpy(setData + pos, setData + pos + 1, (setSize - pos) * sizeof(value_type));
+			wfe::memcpy(setData + pos, setData + pos + 1, (setSize - pos) * sizeof(value_type));
 
 			return 1;
 		}
@@ -675,7 +681,7 @@ namespace wfe {
 				ptr->~value_type();
 			
 			// Move part of the set backwards to erase the values in the given range
-			memcpy((pointer)first, last, (setData + setSize - last) * sizeof(value_type));
+			wfe::memcpy((pointer)first, last, (setData + setSize - last) * sizeof(value_type));
 
 			// Decrease the set's size
 			setSize -= erasedSize;
@@ -956,10 +962,11 @@ namespace wfe {
 			range.first = lower_bound(val);
 
 			// Set the range's upper bound based on the lower bound
-			if(range.first != end() && val == *range.first)
+			if(range.first != end() && val == *range.first) {
 				range.second = range.first + 1;
-			else
+			} else {
 				range.second = range.first;
+			}
 			
 			return range;
 		}
@@ -973,10 +980,11 @@ namespace wfe {
 			range.first = lower_bound(val);
 
 			// Set the range's upper bound based on the lower bound
-			if(range.first != end() && val == *range.first)
+			if(range.first != end() && val == *range.first) {
 				range.second = range.first + 1;
-			else
+			} else {
 				range.second = range.first;
+			}
 			
 			return range;
 		}

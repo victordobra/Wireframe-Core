@@ -267,7 +267,7 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Set all the bucket pointers to 0
-			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
+			wfe::memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
 		}
 		/// @brief Copies the given unordered set.
 		/// @param other The unordered set to copy.
@@ -277,7 +277,7 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Check if the data was allocated correctly
-			if(!usetData)
+			if(usetCapacity && !usetData)
 				throw BadAllocException("Failed to allocate unordered set data!");
 			
 			// Copy every bucket relative to this set
@@ -329,11 +329,11 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Check if the unordered set's data was allocated correctly
-			if(!usetData)
+			if(usetCapacity && !usetData)
 				throw BadAllocException("Failed to allocate unordered set data!");
 
 			// Set all bucket pointers to nullptr
-			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
+			wfe::memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
 
 			// Loop through every value in the given list
 			const_pointer end = list.end();
@@ -367,10 +367,11 @@ namespace wfe {
 				if(usetSize > usetCapacity) {
 					// Get the element pointer's index
 					size_t ind;
-					if(elem >= usetBuckets && elem < usetBuckets + usetBucketCount)
+					if(elem >= usetBuckets && elem < usetBuckets + usetBucketCount) {
 						ind = SIZE_T_MAX;
-					else
+					} else {
 						ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - usetData;
+					}
 					
 					// Set the set's capacity to the lowest power of 2 higher than or equal to the set's size
 					size_type newCapacity = 1;
@@ -403,7 +404,7 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Set all bucket pointers to nullptr
-			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type**));
+			wfe::memset(usetBuckets, 0, usetBucketCount * sizeof(node_type**));
 
 			// Set the capacity to the lowest power of 2 higher than the size
 			for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -413,7 +414,7 @@ namespace wfe {
 
 			// Allocate the unordered set's data
 			usetData = (node_type*)AllocMemory(usetCapacity * sizeof(node_type));
-			if(!usetData)
+			if(usetCapacity && !usetData)
 				throw BadAllocException("Failed to allocate unordered set data!");
 			
 			// Insert every value from the other set
@@ -469,7 +470,7 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Check if the data was allocated correctly
-			if(!usetData)
+			if(usetCapacity && !usetData)
 				throw BadAllocException("Failed to allocate unordered set data!");
 
 			// Copy every bucket relative to this set
@@ -576,11 +577,11 @@ namespace wfe {
 			
 			// Allocate the unordered set's data
 			usetData = (node_type*)AllocMemory(sizeof(node_type));
-			if(!usetData)
+			if(usetCapacity && !usetData)
 				throw BadAllocException("Failed to allocate unordered set data!");
 
 			// Set all bucket pointers to nullptr
-			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
+			wfe::memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
 
 			// Loop through every value in the given list
 			const_pointer end = list.end();
@@ -614,10 +615,11 @@ namespace wfe {
 				if(usetSize > usetCapacity) {
 					// Get the element pointer's index
 					size_t ind;
-					if(elem >= usetBuckets && elem < usetBuckets + usetBucketCount)
+					if(elem >= usetBuckets && elem < usetBuckets + usetBucketCount) {
 						ind = SIZE_T_MAX;
-					else
+					} else {
 						ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - usetData;
+					}
 					
 					// Set the set's capacity to the lowest power of 2 higher than or equal to the set's size
 					size_type newCapacity = 1;
@@ -817,10 +819,11 @@ namespace wfe {
 			if(usetSize > usetCapacity) {
 				// Get the element pointer's index
 				size_t ind;
-				if(elem >= usetBuckets && elem < usetBuckets + usetBucketCount)
+				if(elem >= usetBuckets && elem < usetBuckets + usetBucketCount) {
 					ind = SIZE_T_MAX;
-				else
+				} else {
 					ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - usetData;
+				}
 				
 				// Set the set's capacity to the lowest power of 2 higher than or equal to the set's size
 				size_type newCapacity = 1;
@@ -848,10 +851,11 @@ namespace wfe {
 
 				// Get the element pointer's index
 				size_t ind;
-				if(elem >= (node_type**)usetData && elem < (node_type**)(usetData + usetSize))
+				if(elem >= (node_type**)usetData && elem < (node_type**)(usetData + usetSize)) {
 					ind = SIZE_T_MAX;
-				else
+				} else {
 					ind = elem - usetBuckets;
+				}
 
 				// Rehash the unordered set
 				rehash(newBucketCount);
@@ -897,10 +901,11 @@ namespace wfe {
 			if(usetSize > usetCapacity) {
 				// Get the element pointer's index
 				size_t ind;
-				if(elem >= usetBuckets && elem < usetBuckets + usetBucketCount)
+				if(elem >= usetBuckets && elem < usetBuckets + usetBucketCount) {
 					ind = SIZE_T_MAX;
-				else
+				} else {
 					ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - usetData;
+				}
 				
 				// Set the set's capacity to the lowest power of 2 higher than or equal to the set's size
 				size_type newCapacity = 1;
@@ -928,10 +933,11 @@ namespace wfe {
 
 				// Get the element pointer's index
 				size_t ind;
-				if(elem >= (node_type**)usetData && elem < (node_type**)(usetData + usetSize))
+				if(elem >= (node_type**)usetData && elem < (node_type**)(usetData + usetSize)) {
 					ind = SIZE_T_MAX;
-				else
+				} else {
 					ind = elem - usetBuckets;
+				}
 
 				// Rehash the unordered set
 				rehash(newBucketCount);
@@ -1005,7 +1011,7 @@ namespace wfe {
 				return posPtr;
 
 			// To keep the unordered set's data consistent, move the last value into the now empty space
-			memcpy(posPtr, lastPtr, sizeof(node_type));
+			wfe::memcpy(posPtr, lastPtr, sizeof(node_type));
 
 			// Find the previous value in the last value's bucket
 			size_type lastBucket = bucket(posPtr->val);
@@ -1062,7 +1068,7 @@ namespace wfe {
 				return 1;
 
 			// To keep the unordered set's data consistent, move the last value into the now empty space
-			memcpy(posPtr, lastPtr, sizeof(node_type));
+			wfe::memcpy(posPtr, lastPtr, sizeof(node_type));
 
 			// Find the previous value in the last value's bucket
 			size_type lastBucket = bucket(posPtr->val);
@@ -1104,7 +1110,7 @@ namespace wfe {
 			usetSize = 0;
 
 			// Set every bucket pointer to nullptr
-			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
+			wfe::memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
 		}
 		/// @brief Swaps the two unordered set's contents.
 		/// @param other The unordered set to swap with.
@@ -1245,17 +1251,18 @@ namespace wfe {
 			usetBucketCount = n;
 
 			// Reallocate the unordered set's buckets
-			if(usetBuckets)
+			if(usetBuckets) {
 				usetBuckets = (node_type**)ReallocMemory(usetBuckets, usetBucketCount * sizeof(node_type*));
-			else
+			} else {
 				usetBuckets = (node_type**)AllocMemory(usetBucketCount * sizeof(node_type*));
+			}
 
 			// Check if the bucket list was allocated correctly
 			if(!usetBuckets)
 				throw BadAllocException("Failed to allocate unordered set buckets!");
 			
 			// Set every pointer in the bucket list to nullptr
-			memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
+			wfe::memset(usetBuckets, 0, usetBucketCount * sizeof(node_type*));
 
 			// Loop through the unordered set's data backwards
 			node_type* end = usetData - 1;
@@ -1313,7 +1320,7 @@ namespace wfe {
 			}
 			
 			// Check if the memory was allocated correctly
-			if(!usetData)
+			if(usetCapacity && !usetData)
 				throw BadAllocException("Failed to allocate unordered set data!");
 			
 			// Set the unordered set's new capacity

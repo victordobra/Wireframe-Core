@@ -269,7 +269,7 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered map buckets!");
 
 			// Set all the bucket pointers to nullptr
-			memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
+			wfe::memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
 		}
 		/// @brief Copies the given unordered map.
 		/// @param other The unordered map to copy.
@@ -279,7 +279,7 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered map buckets!");
 			
 			// Check if the unordered map's data was allocated correctly
-			if(!umapData)
+			if(umapCapacity && !umapData)
 				throw BadAllocException("Failed to allocate unordered map data!");
 			
 			// Copy every bucket relative to this unordered map
@@ -331,11 +331,11 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered map buckets!");
 			
 			// Check if the unordered map's data was allocated correctly
-			if(!umapData)
+			if(umapCapacity && !umapData)
 				throw BadAllocException("Failed to allocate unordered map data!");
 			
 			// Set all bucket pointers to nullptr
-			memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
+			wfe::memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
 
 			// Loop through every value in the given list
 			const_pointer end = list.end();
@@ -369,10 +369,11 @@ namespace wfe {
 				if(umapSize > umapCapacity) {
 					// Get the element pointer's index
 					size_t ind;
-					if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount)
+					if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount) {
 						ind = SIZE_T_MAX;
-					else
+					} else {
 						ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
+					}
 					
 					// Set the map's capacity to the lowest power of 2 higher than or equal to the map's size
 					size_type newCapacity = 1;
@@ -405,7 +406,7 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered map buckets!");
 
 			// Set all of the unordered map's buckets to nullptr
-			memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
+			wfe::memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
 			
 			// Set the unordered map's capacity to the lowest power of 2 higher than or equal to its size
 			for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -416,7 +417,7 @@ namespace wfe {
 			// Allocate the unordered map's data
 			umapData = (node_type*)AllocMemory(umapCapacity * sizeof(node_type));
 
-			if(!umapData)
+			if(umapCapacity && !umapData)
 				throw BadAllocException("Failed to allocate unordered map data!");
 			
 			// Add every value from the other unordered map to this unordered map
@@ -469,7 +470,7 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered map buckets!");
 			
 			// Check if the unordered map's data was allocated correctly
-			if(!umapData)
+			if(umapCapacity && !umapData)
 				throw BadAllocException("Failed to allocate unordered map data!");
 			
 			// Copy every bucket relative to this unordered map
@@ -573,11 +574,11 @@ namespace wfe {
 				throw BadAllocException("Failed to allocate unordered map buckets!");
 			
 			// Check if the unordered map's data was allocated correctly
-			if(!umapData)
+			if(umapCapacity && !umapData)
 				throw BadAllocException("Failed to allocate unordered map data!");
 			
 			// Set all of the unordered map's buckets to nullptr
-			memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
+			wfe::memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
 
 			// Loop through every value in the given list
 			const_pointer end = list.end();
@@ -611,10 +612,11 @@ namespace wfe {
 				if(umapSize > umapCapacity) {
 					// Get the element pointer's index
 					size_t ind;
-					if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount)
+					if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount) {
 						ind = SIZE_T_MAX;
-					else
+					} else {
 						ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
+					}
 					
 					// Set the map's capacity to the lowest power of 2 higher than or equal to the map's size
 					size_type newCapacity = 1;
@@ -675,10 +677,11 @@ namespace wfe {
 
 				// Get the element pointer's index
 				size_t ind;
-				if(elem >= (node_type**)umapData && elem < (node_type**)(umapData + umapSize))
+				if(elem >= (node_type**)umapData && elem < (node_type**)(umapData + umapSize)) {
 					ind = SIZE_T_MAX;
-				else
+				} else {
 					ind = elem - umapBuckets;
+				}
 
 				// Rehash the unordered set
 				rehash(newBucketCount);
@@ -692,10 +695,11 @@ namespace wfe {
 			if(umapSize > umapCapacity) {
 				// Get the element pointer's index
 				size_t ind;
-				if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount)
+				if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount) {
 					ind = SIZE_T_MAX;
-				else
+				} else {
 					ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
+				}
 				
 				// Set the map's capacity to the lowest power of 2 higher than or equal to the map's size
 				size_type newCapacity = 1;
@@ -755,10 +759,11 @@ namespace wfe {
 
 				// Get the element pointer's index
 				size_t ind;
-				if(elem >= (node_type**)umapData && elem < (node_type**)(umapData + umapSize))
+				if(elem >= (node_type**)umapData && elem < (node_type**)(umapData + umapSize)) {
 					ind = SIZE_T_MAX;
-				else
+				} else {
 					ind = elem - umapBuckets;
+				}
 
 				// Rehash the unordered set
 				rehash(newBucketCount);
@@ -772,10 +777,11 @@ namespace wfe {
 			if(umapSize > umapCapacity) {
 				// Get the element pointer's index
 				size_t ind;
-				if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount)
+				if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount) {
 					ind = SIZE_T_MAX;
-				else
+				} else {
 					ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
+				}
 				
 				// Set the map's capacity to the lowest power of 2 higher than or equal to the map's size
 				size_type newCapacity = 1;
@@ -1016,10 +1022,11 @@ namespace wfe {
 
 				// Get the element pointer's index
 				size_t ind;
-				if(elem >= (node_type**)umapData && elem < (node_type**)(umapData + umapSize))
+				if(elem >= (node_type**)umapData && elem < (node_type**)(umapData + umapSize)) {
 					ind = SIZE_T_MAX;
-				else
+				} else {
 					ind = elem - umapBuckets;
+				}
 
 				// Rehash the unordered set
 				rehash(newBucketCount);
@@ -1033,10 +1040,11 @@ namespace wfe {
 			if(umapSize > umapCapacity) {
 				// Get the element pointer's index
 				size_t ind;
-				if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount)
+				if(elem >= umapBuckets && elem < umapBuckets + umapBucketCount) {
 					ind = SIZE_T_MAX;
-				else
+				} else {
 					ind = (node_type*)((char_t*)elem - offsetof(node_type, next)) - umapData;
+				}
 				
 				// Set the map's capacity to the lowest power of 2 higher than or equal to the map's size
 				size_type newCapacity = 1;
@@ -1116,7 +1124,7 @@ namespace wfe {
 			}
 
 			// Move the value to the empty space
-			memcpy((node_type*)pos.node, umapData + umapSize, sizeof(node_type));
+			wfe::memcpy((node_type*)pos.node, umapData + umapSize, sizeof(node_type));
 
 			// Move the linked list pointer to the last value to the now filled space
 			*elem = (node_type*)pos.node;
@@ -1173,7 +1181,7 @@ namespace wfe {
 			}
 
 			// Move the value to the empty space
-			memcpy(pos, umapData + umapSize, sizeof(node_type));
+			wfe::memcpy(pos, umapData + umapSize, sizeof(node_type));
 
 			// Move the linked list pointer to the last value to the now filled space
 			*elem = pos;
@@ -1205,7 +1213,7 @@ namespace wfe {
 			umapSize = 0;
 
 			// Set all bucket pointers to nullptr
-			memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
+			wfe::memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
 		}
 		/// @brief Swaps the contents of the two unordered maps.
 		/// @param other The unordered map to swap with.
@@ -1347,17 +1355,18 @@ namespace wfe {
 			umapBucketCount = n;
 
 			// Reallocate the unordered map's buckets
-			if(umapBuckets)
+			if(umapBuckets) {
 				umapBuckets = (node_type**)ReallocMemory(umapBuckets, umapBucketCount * sizeof(node_type*));
-			else
+			} else {
 				umapBuckets = (node_type**)AllocMemory(umapBucketCount * sizeof(node_type*));
+			}
 
 			// Check if the unordered map's buckets were allocated correctly
 			if(!umapBuckets)
 				throw BadAllocException("Failed to allocate unordered map buckets!");
 
 			// Set all bucket pointers to 0
-			memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
+			wfe::memset(umapBuckets, 0, umapBucketCount * sizeof(node_type*));
 
 			// Loop through the unordered map's data backwards
 			node_type* end = umapData - 1;
@@ -1415,7 +1424,7 @@ namespace wfe {
 			}
 
 			// Check if the unordered map's data was allocated correctly
-			if(!umapData)
+			if(umapCapacity && !umapData)
 				throw BadAllocException("Failed to allocate unordered map data!");
 
 			// Set the unordered map's new capacity

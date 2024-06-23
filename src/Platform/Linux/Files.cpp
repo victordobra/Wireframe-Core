@@ -20,10 +20,11 @@ namespace wfe {
 
         // Set the file modes based on the given stream type flags
         const char_t* modes;
-        if(streamType & STREAM_TYPE_BINARY)
+        if(streamType & STREAM_TYPE_BINARY) {
             modes = "rb";
-        else
+		} else {
             modes = "r";
+		}
 
 		// Open the file using fopen
 		internalData = fopen(filePath.c_str(), modes);
@@ -152,16 +153,18 @@ namespace wfe {
         // Set the file modes base on the given stream type flags
         char_t fileModes[3];
 
-        if(streamType & STREAM_TYPE_APPEND)
+        if(streamType & STREAM_TYPE_APPEND) {
             fileModes[0] = 'a';
-        else
+		} else {
             fileModes[0] = 'w';
+		}
         
         if(streamType & STREAM_TYPE_BINARY) {
             fileModes[1] = 'b';
             fileModes[2] = 0;
-        } else
+        } else {
             fileModes[1] = 0;
+		}
         
         // Open the file output stream using fopen
         internalData = fopen(filePath.c_str(), fileModes);

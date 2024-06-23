@@ -34,7 +34,7 @@ namespace wfe {
 		/// @param other The vector to copy.
 		vector(const vector& other) : vecSize(other.vecSize), vecCapacity(other.vecCapacity), vecData((pointer)AllocMemory(vecCapacity * sizeof(value_type))) {
 			// Check if the memory was allocated correctly
-			if(!vecData)
+			if(vecCapacity && !vecData)
 				throw BadAllocException("Failed to allocate vector data!");
 			
 			// Copy every value afrom the given vector
@@ -62,7 +62,7 @@ namespace wfe {
 			// Allocate the vector's data
 			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
-			if(!vecData)
+			if(vecCapacity && !vecData)
 				throw BadAllocException("Failed to allocate vector data!");
 
 			// Construct every value in the vector
@@ -86,7 +86,7 @@ namespace wfe {
 			// Allocate the vector's data
 			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
-			if(!vecData)
+			if(vecCapacity && !vecData)
 				throw BadAllocException("Failed to allocate vector data!");
 
 			// Construct every value in the vector
@@ -109,7 +109,7 @@ namespace wfe {
 			// Allocate the vector's data
 			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
-			if(!vecData)
+			if(vecCapacity && !vecData)
 				throw BadAllocException("Failed to allocate vector data!");
 
 			// Copy every value in the vector from the initializer list
@@ -123,7 +123,7 @@ namespace wfe {
 		/// @param other The std library vector to copy.
 		vector(const std::vector<T>& other) : vecSize(other.size()), vecCapacity(other.capacity()), vecData((pointer)AllocMemory(vecCapacity * sizeof(value_type))) {
 			// Check if the memory was allocated correctly
-			if(!vecData)
+			if(vecCapacity && !vecData)
 				throw BadAllocException("Failed to allocate vector data!");
 			
 			// Copy every value from the given vector
@@ -156,7 +156,7 @@ namespace wfe {
 			vecData = (pointer)AllocMemory(vecSize * sizeof(value_type));
 
 			// Check if the memory was allocated correctly
-			if(!vecData)
+			if(vecCapacity && !vecData)
 				throw BadAllocException("Failed to allocate vector data!");
 
 			// Copy every value from the given vector
@@ -221,7 +221,7 @@ namespace wfe {
 			// Allocate the vector's data
 			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
-			if(!vecData)
+			if(vecCapacity && !vecData)
 				throw BadAllocException("Failed to allocate vector data!");
 
 			// Copy every value in the vector from the initializer list
@@ -335,7 +335,7 @@ namespace wfe {
 			// Allocate the vector's data
 			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
-			if(!vecData)
+			if(vecCapacity && !vecData)
 				throw BadAllocException("Failed to allocate vector data!");
 
 			// Set every value in the vector to the given value
@@ -373,7 +373,7 @@ namespace wfe {
 			// Allocate the vector's data
 			vecData = (pointer)AllocMemory(vecCapacity * sizeof(value_type));
 
-			if(!vecData)
+			if(vecCapacity && !vecData)
 				throw BadAllocException("Failed to allocate vector data!");
 
 			// Copy every value in the vector from the initializer list
@@ -475,7 +475,7 @@ namespace wfe {
 			}
 
 			// Move part of the vector forward to make room for the new value
-			memmove(vecData + posInd + 1, vecData + posInd, (vecSize - posInd - 1) * sizeof(value_type));
+			wfe::memmove(vecData + posInd + 1, vecData + posInd, (vecSize - posInd - 1) * sizeof(value_type));
 
 			// Copy the value into the new space
 			new(vecData + posInd) value_type(val);
@@ -514,7 +514,7 @@ namespace wfe {
 			}
 
 			// Move part of the vector forward to make room for the new value
-			memmove(vecData + posInd + 1, vecData + posInd, (vecSize - posInd - 1) * sizeof(value_type));
+			wfe::memmove(vecData + posInd + 1, vecData + posInd, (vecSize - posInd - 1) * sizeof(value_type));
 
 			// Move the value into the new space
 			new(vecData + posInd) value_type(val);
@@ -557,7 +557,7 @@ namespace wfe {
 			}
 
 			// Move part of the vector forward to make room for the new value
-			memmove(vecData + posInd + n, vecData + posInd, (oldSize - posInd) * sizeof(value_type));
+			wfe::memmove(vecData + posInd + n, vecData + posInd, (oldSize - posInd) * sizeof(value_type));
 
 			// Fill the new space with the given value
 			pointer end = vecData + posInd + n;
@@ -601,7 +601,7 @@ namespace wfe {
 			}
 
 			// Move part of the vector forward to make room for the new value
-			memmove(vecData + posInd + list.size(), vecData + posInd, (oldSize - posInd) * sizeof(value_type));
+			wfe::memmove(vecData + posInd + list.size(), vecData + posInd, (oldSize - posInd) * sizeof(value_type));
 
 			// Fill the new space with the given value
 			pointer end = vecData + posInd + list.size();
@@ -626,7 +626,7 @@ namespace wfe {
 			pos->~value_type();
 
 			// Move part of the vector back to remove the destructed value
-			memmove((pointer)pos, pos + 1, (vecData + vecSize + 1 - pos) * sizeof(value_type));
+			wfe::memmove((pointer)pos, pos + 1, (vecData + vecSize + 1 - pos) * sizeof(value_type));
 
 			return (pointer)pos;
 		}
@@ -655,7 +655,7 @@ namespace wfe {
 				ptr->~value_type();
 			
 			// Move part of the vector back to remove the destructed values
-			memmove((pointer)first, last, (vecData + oldSize - last) * sizeof(value_type));
+			wfe::memmove((pointer)first, last, (vecData + oldSize - last) * sizeof(value_type));
 
 			return (pointer)first;
 		}
@@ -727,7 +727,7 @@ namespace wfe {
 			}
 
 			// Move part of the vector forward to make room for the new value
-			memmove(vecData + posInd + 1, vecData + posInd, (vecSize - posInd - 1) * sizeof(value_type));
+			wfe::memmove(vecData + posInd + 1, vecData + posInd, (vecSize - posInd - 1) * sizeof(value_type));
 
 			// Construct the value into the new space
 			new(vecData + posInd) value_type(args...);
@@ -920,7 +920,7 @@ namespace wfe {
 			}
 
 			// Check if the memory was allocated correctly
-			if(!vecData)
+			if(vecCapacity && !vecData)
 				throw BadAllocException("Failed to allocate vector data!");
 			
 			// Set the vector's new capacity

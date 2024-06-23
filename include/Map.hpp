@@ -43,7 +43,7 @@ namespace wfe {
 		/// @param other The map to copy.
 		map(const map& other) : mapSize(other.mapSize), mapCapacity(other.mapCapacity), mapData(AllocMemory(mapCapacity * sizeof(value_type))) {
 			// Check if the memory was allocated correctly
-			if(!mapData)
+			if(mapCapacity && !mapData)
 				throw BadAllocException("Failed to allocate map data!");
 
 			// Copy every value from the given map
@@ -74,7 +74,7 @@ namespace wfe {
 			// Allocate the map's memory
 			mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 
-			if(!mapData)
+			if(mapCapacity && !mapData)
 				throw BadAllocException("Failed to allocate map data!");
 			
 			// Insert every pair from the list into the map
@@ -96,7 +96,7 @@ namespace wfe {
 				}
 
 				// Move part of the map forward to make room for the new pair
-				memmove(mapData + pos + 1, mapData + pos, (mapSize - pos) * sizeof(value_type));
+				wfe::memmove(mapData + pos + 1, mapData + pos, (mapSize - pos) * sizeof(value_type));
 
 				// Create the new pair
 				new(mapData + pos) value_type(*ptr);
@@ -120,7 +120,7 @@ namespace wfe {
 			// Allocate the map's memory
 			mapData = AllocMemory(mapCapacity * sizeof(value_type));
 
-			if(!mapData)
+			if(mapCapacity && !mapData)
 				throw BadAllocException("Failed to allocate map data!");
 			
 			// Copy every value from the given map
@@ -155,7 +155,7 @@ namespace wfe {
 			mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
 
 			// Check if the memory was allocated correctly
-			if(!mapData)
+			if(mapCapacity && !mapData)
 				throw BadAllocException("Failed to allocate map data!");
 			
 			// Copy every value from the given map
@@ -223,7 +223,7 @@ namespace wfe {
 			// Allocate the map's memory
 			mapData = AllocMemory(mapCapacity * sizeof(value_type));
 
-			if(!mapData)
+			if(mapCapacity && !mapData)
 				throw BadAllocException("Failed to allocate map data!");
 			
 			// Insert every pair from the list into the map
@@ -245,7 +245,7 @@ namespace wfe {
 				}
 
 				// Move part of the map forward to make room for the new pair
-				memmove(mapData + pos + 1, mapData + pos, (mapSize - pos) * sizeof(value_type));
+				wfe::memmove(mapData + pos + 1, mapData + pos, (mapSize - pos) * sizeof(value_type));
 
 				// Create the new pair
 				new(mapData + pos) value_type(*ptr);
@@ -293,9 +293,6 @@ namespace wfe {
 
 			// Check if memory needs to be reallocated
 			if(mapSize > mapCapacity) {
-				// Save the map's old capacity
-				size_type oldCapacity = mapCapacity;
-
 				// Set the map's capacity to the lowest power of 2 higher than or equal to the map's size
 				mapCapacity = 1;
 				for(size_type step = sizeof(size_type) << 2; step; step >>= 1)
@@ -304,18 +301,19 @@ namespace wfe {
 				mapCapacity <<= 1;
 
 				// Reallocate the set's memory
-				if(!mapData)
+				if(!mapData) {
 					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
-				else
-					mapData = (pointer)ReallocMemory(mapData, oldCapacity * sizeof(value_type), mapCapacity * sizeof(value_type));
+				} else {
+					mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
+				}
 				
 				// Check if the memory was allocated correctly
-				if(!mapData)
+				if(mapCapacity && !mapData)
 					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the map forward to make room for the new pair
-			memmove(mapData + pos + 1, mapData + pos, (mapSize - 1 - pos) * sizeof(value_type));
+			wfe::memmove(mapData + pos + 1, mapData + pos, (mapSize - 1 - pos) * sizeof(value_type));
 
 			// Create the new value
 			new(mapData + pos) value_type(key, {});
@@ -358,18 +356,19 @@ namespace wfe {
 				mapCapacity <<= 1;
 
 				// Reallocate the set's memory
-				if(!mapData)
+				if(!mapData) {
 					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
-				else
+				} else {
 					mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
+				}
 				
 				// Check if the memory was allocated correctly
-				if(!mapData)
+				if(mapCapacity && !mapData)
 					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the map forward to make room for the new pair
-			memmove(mapData + pos + 1, mapData + pos, (mapSize - 1 - pos) * sizeof(value_type));
+			wfe::memmove(mapData + pos + 1, mapData + pos, (mapSize - 1 - pos) * sizeof(value_type));
 
 			// Create the new value
 			new(mapData + pos) value_type(key, {});
@@ -455,18 +454,19 @@ namespace wfe {
 				mapCapacity <<= 1;
 
 				// Reallocate the set's memory
-				if(!mapData)
+				if(!mapData) {
 					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
-				else
+				} else {
 					mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
+				}
 				
 				// Check if the memory was allocated correctly
-				if(!mapData)
+				if(mapCapacity && !mapData)
 					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the map forward to make room for the new pair
-			memmove(mapData + pos + 1, mapData + pos, (mapSize - 1 - pos) * sizeof(value_type));
+			wfe::memmove(mapData + pos + 1, mapData + pos, (mapSize - 1 - pos) * sizeof(value_type));
 
 			// Create the new pair
 			new(mapData + pos) value_type(val);
@@ -509,18 +509,19 @@ namespace wfe {
 				mapCapacity <<= 1;
 
 				// Reallocate the set's memory
-				if(!mapData)
+				if(!mapData) {
 					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
-				else
+				} else {
 					mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
+				}
 				
 				// Check if the memory was allocated correctly
-				if(!mapData)
+				if(mapCapacity && !mapData)
 					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the map forward to make room for the new pair
-			memmove(mapData + pos + 1, mapData + pos, (mapSize - 1 - pos) * sizeof(value_type));
+			wfe::memmove(mapData + pos + 1, mapData + pos, (mapSize - 1 - pos) * sizeof(value_type));
 
 			// Create the new pair
 			new(mapData + pos) value_type(val);
@@ -536,9 +537,9 @@ namespace wfe {
 			WFE_ASSERT(pos >= begin() && pos <= end(), "The given pointer must be in range!")
 
 			// Check if the position hint is correct
-			if(pos != end() && Equal()(pos->first, val.first))
+			if(pos != end() && Equal()(pos->first, val.first)) {
 				return (pointer)pos;
-			else if((pos == begin() || Lower()((pos - 1)->first, val.first)) && (pos != end() && Lower()(val.first, pos->first))) {
+			} else if((pos == begin() || Lower()((pos - 1)->first, val.first)) && (pos != end() && Lower()(val.first, pos->first))) {
 				// Save the position hint's index relative to the map's data
 				size_type posInd = pos - mapData;
 
@@ -558,18 +559,19 @@ namespace wfe {
 					mapCapacity <<= 1;
 
 					// Reallocate the set's memory
-					if(!mapData)
+					if(!mapData) {
 						mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
-					else
+					} else {
 						mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
+					}
 					
 					// Check if the memory was allocated correctly
-					if(!mapData)
+					if(mapCapacity && !mapData)
 						throw BadAllocException("Failed to allocate map data!");
 				}
 
 				// Move part of the set forward to make room for the new value
-				memmove(mapData + posInd + 1, mapData + posInd, (mapSize - 1 - posInd) * sizeof(value_type));
+				wfe::memmove(mapData + posInd + 1, mapData + posInd, (mapSize - 1 - posInd) * sizeof(value_type));
 
 				// Create the new pair
 				new(mapData + posInd) value_type(val);
@@ -626,18 +628,19 @@ namespace wfe {
 				mapCapacity <<= 1;
 
 				// Reallocate the set's memory
-				if(!mapData)
+				if(!mapData) {
 					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
-				else
+				} else {
 					mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
+				}
 				
 				// Check if the memory was allocated correctly
-				if(!mapData)
+				if(mapCapacity && !mapData)
 					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the set forward to make room for the new value
-			memmove(mapData + posInd + 1, mapData + posInd, (mapSize - 1 - posInd) * sizeof(value_type));
+			wfe::memmove(mapData + posInd + 1, mapData + posInd, (mapSize - 1 - posInd) * sizeof(value_type));
 
 			// Create the new pair
 			new(mapData + posInd) value_type(val);
@@ -653,9 +656,9 @@ namespace wfe {
 			WFE_ASSERT(pos >= begin() && pos <= end(), "The given pointer must be in range!")
 
 			// Check if the position hint is correct
-			if(pos != end() && Equal()(pos->first, val.first))
+			if(pos != end() && Equal()(pos->first, val.first)) {
 				return (pointer)pos;
-			else if((pos == begin() || Lower()((pos - 1)->first, val.first)) && (pos != end() && Lower()(val.first, pos->first))) {
+			} else if((pos == begin() || Lower()((pos - 1)->first, val.first)) && (pos != end() && Lower()(val.first, pos->first))) {
 				// Save the position hint's index relative to the map's data
 				size_type posInd = pos - mapData;
 
@@ -675,18 +678,19 @@ namespace wfe {
 					mapCapacity <<= 1;
 
 					// Reallocate the set's memory
-					if(!mapData)
+					if(!mapData) {
 						mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
-					else
+					} else {
 						mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
+					}
 					
 					// Check if the memory was allocated correctly
-					if(!mapData)
+					if(mapCapacity && !mapData)
 						throw BadAllocException("Failed to allocate map data!");
 				}
 
 				// Move part of the set forward to make room for the new value
-				memmove(mapData + posInd + 1, mapData + posInd, (mapSize - 1 - posInd) * sizeof(value_type));
+				wfe::memmove(mapData + posInd + 1, mapData + posInd, (mapSize - 1 - posInd) * sizeof(value_type));
 
 				// Create the new pair
 				new(mapData + posInd) value_type(val);
@@ -743,18 +747,19 @@ namespace wfe {
 				mapCapacity <<= 1;
 
 				// Reallocate the set's memory
-				if(!mapData)
+				if(!mapData) {
 					mapData = (pointer)AllocMemory(mapCapacity * sizeof(value_type));
-				else
+				} else {
 					mapData = (pointer)ReallocMemory(mapData, mapCapacity * sizeof(value_type));
+				}
 				
 				// Check if the memory was allocated correctly
-				if(!mapData)
+				if(mapCapacity && !mapData)
 					throw BadAllocException("Failed to allocate map data!");
 			}
 
 			// Move part of the set forward to make room for the new value
-			memmove(mapData + posInd + 1, mapData + posInd, (mapSize - 1 - posInd) * sizeof(value_type));
+			wfe::memmove(mapData + posInd + 1, mapData + posInd, (mapSize - 1 - posInd) * sizeof(value_type));
 
 			// Create the new pair
 			new(mapData + posInd) value_type(val);
@@ -791,7 +796,7 @@ namespace wfe {
 			pos->~value_type();
 
 			// Move part of the map backwards to erase the wanted pair
-			memcpy((pointer)pos, pos + 1, (mapData + mapSize - pos) * sizeof(value_type));
+			wfe::memcpy((pointer)pos, pos + 1, (mapData + mapSize - pos) * sizeof(value_type));
 
 			return (pointer)pos;
 		}
@@ -822,7 +827,7 @@ namespace wfe {
 			mapData[pos].~value_type();
 
 			// Move part of the map backwards to erase the wanted pair
-			memcpy(mapData + pos, mapData + pos + 1, (mapSize - pos) * sizeof(value_type));
+			wfe::memcpy(mapData + pos, mapData + pos + 1, (mapSize - pos) * sizeof(value_type));
 
 			return 1;
 		}
@@ -845,7 +850,7 @@ namespace wfe {
 				ptr->~value_type();
 
 			// Move part of the map backwards to erase the pairs from the given range
-			memcpy((pointer)first, last, (mapData + mapSize - last) * sizeof(size_type));
+			wfe::memcpy((pointer)first, last, (mapData + mapSize - last) * sizeof(size_type));
 
 			// Decrease the map's size by the erased size
 			mapSize -= erasedSize;
@@ -1094,10 +1099,11 @@ namespace wfe {
 			range.first = lower_bound(key);
 
 			// Set the range's upper bound based on the lower bound
-			if(range.first != end() && key == range.first->first)
+			if(range.first != end() && key == range.first->first) {
 				range.second = range.first + 1;
-			else
+			} else {
 				range.second = range.first;
+			}
 			
 			return range;
 		}
@@ -1111,10 +1117,11 @@ namespace wfe {
 			range.first = lower_bound(key);
 
 			// Set the range's upper bound based on the lower bound
-			if(range.first != end() && key == range.first->first)
+			if(range.first != end() && key == range.first->first) {
 				range.second = range.first + 1;
-			else
+			} else {
 				range.second = range.first;
+			}
 			
 			return range;
 		}

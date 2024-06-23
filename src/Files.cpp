@@ -29,7 +29,7 @@ namespace wfe {
 			// Check if the last number got cut off to the previous buffer
 			char_t* ptr = buffer;
 			if(lastValSet) {
-				if(lastVal < 0)
+				if(lastVal < 0) {
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
 						lastVal *= 10;
@@ -38,7 +38,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
-				else
+				} else {
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
 						lastVal *= 10;
@@ -47,6 +47,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
+				}
 			}
 
 			// Check if there are no following characters. If so, move on to the next buffer
@@ -130,7 +131,7 @@ namespace wfe {
 			// Check if the last number got cut off to the previous buffer
 			char_t* ptr = buffer;
 			if(lastValSet) {
-				if(lastVal < 0)
+				if(lastVal < 0) {
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
 						lastVal *= 10;
@@ -139,7 +140,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
-				else
+				} else {
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
 						lastVal *= 10;
@@ -148,6 +149,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
+				}
 			}
 
 			// Check if there are no following characters. If so, move on to the next buffer
@@ -231,7 +233,7 @@ namespace wfe {
 			// Check if the last number got cut off to the previous buffer
 			char_t* ptr = buffer;
 			if(lastValSet) {
-				if(lastVal < 0)
+				if(lastVal < 0) {
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
 						lastVal *= 10;
@@ -240,7 +242,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
-				else
+				} else {
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
 						lastVal *= 10;
@@ -249,6 +251,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
+				}
 			}
 
 			// Check if there are no following characters. If so, move on to the next buffer
@@ -332,7 +335,7 @@ namespace wfe {
 			// Check if the last number got cut off to the previous buffer
 			char_t* ptr = buffer;
 			if(lastValSet) {
-				if(lastVal < 0)
+				if(lastVal < 0) {
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
 						lastVal *= 10;
@@ -341,7 +344,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
-				else
+				} else {
 					while(*ptr >= '0' && *ptr <= '9') {
 						// Add the current digit to the last value
 						lastVal *= 10;
@@ -350,6 +353,7 @@ namespace wfe {
 						// Increment the pointer
 						++ptr;
 					}
+				}
 			}
 
 			// Check if there are no following characters. If so, move on to the next buffer

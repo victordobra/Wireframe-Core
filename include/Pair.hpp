@@ -78,13 +78,13 @@ namespace wfe {
 			char_t memory[sizeof(pair)];
 
 			// Copy this pair into the memory block.
-			memcpy(memory, this, sizeof(pair));
+			wfe::memcpy(memory, this, sizeof(pair));
 
 			// Copy the given pair into this pair.
-			memcpy(this, &other, sizeof(pair));
+			wfe::memcpy(this, &other, sizeof(pair));
 
 			// Copy the memory block into the given pair
-			memcpy(&other, memory, sizeof(pair));
+			wfe::memcpy(&other, memory, sizeof(pair));
 		}
 
 		/// @brief Destroys the pair.

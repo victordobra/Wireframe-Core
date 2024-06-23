@@ -27,10 +27,11 @@ namespace wfe {
 
 	void AddUnitTestCallback(UnitTestCallback callback) {
 		// Only add the callback to the list if the size doesn't surpass the max size
-		if(unitTestCallbackCount < MAX_UNIT_TEST_CALLBACK_COUNT)
+		if(unitTestCallbackCount < MAX_UNIT_TEST_CALLBACK_COUNT) {
 			unitTestCallbacks[unitTestCallbackCount++] = callback;
-		else
+		} else {
 			++unitTestCallbackCount; // For debug purposes
+		}
 	}
 	void RunUnitTests() {
 		// Check if there are any unit test callbacks that weren't included
@@ -90,9 +91,9 @@ namespace wfe {
 
 			// Calculate the precentage or correct results
 			size_t precentage;
-			if(unitTestList.unitTestCount)
+			if(unitTestList.unitTestCount) {
 				precentage = correctCount * 100 / unitTestList.unitTestCount;
-			else {
+			} else {
 				// Output 10 dots for consistency
 				printf("..........");
 

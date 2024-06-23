@@ -24,10 +24,11 @@ namespace wfe {
 
 		// Retrieve the current memory usage type
 		MemoryUsageType memoryUsageType;
-		if(!memoryUsageTypeStackSize)
+		if(!memoryUsageTypeStackSize) {
 			memoryUsageType = MEMORY_USAGE_TYPE_OTHER;
-		else
+		} else {
 			memoryUsageType = memoryUsageTypeStack[memoryUsageTypeStackSize - 1];
+		}
 		
 		// Increase the requested size to fit the memory usage and try to allocate the memory
 		void* mem = PlatformAllocateMemory(size + sizeof(MemoryUsageType));

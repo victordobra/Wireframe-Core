@@ -62,9 +62,9 @@ namespace wfe {
 	}
 	void* memmove(void* dest, const void* src, size_t size) {
 		// Exit if the target and source memory block are the same; nothing needs to be copied
-		if(dest == src)
+		if(dest == src) {
 			return dest;
-		else if(dest < src) {
+		} else if(dest < src) {
 			// Copy the memory blocks from left to right; memcpy works fine in this case
 			return memcpy(dest, src, size);
 		} else {
@@ -345,10 +345,11 @@ namespace wfe {
 			// Compare all characters
 			for(size_t i = 0; i != sizeof(size_t); ++i) {
 				// Compare both characters
-				if(*segment1Ptr > *segment2Ptr)
+				if(*segment1Ptr > *segment2Ptr) {
 					return 1;
-				else if(*segment1Ptr < *segment2Ptr)
+				} else if(*segment1Ptr < *segment2Ptr) {
 					return -1;
+				}
 
 				// Increment both pointers
 				++segment1Ptr;
@@ -376,10 +377,11 @@ namespace wfe {
 			// Compare all characters
 			for(size_t i = 0; i != sizeof(uint32_t); ++i) {
 				// Compare both characters
-				if(*segment1Ptr < *segment2Ptr)
+				if(*segment1Ptr < *segment2Ptr) {
 					return -1;
-				else if(*segment1Ptr > *segment2Ptr)
+				} else if(*segment1Ptr > *segment2Ptr) {
 					return 1;
+				}
 
 				// Increment both pointers
 				++segment1Ptr;
@@ -406,10 +408,11 @@ namespace wfe {
 			// Compare all characters
 			for(size_t i = 0; i != sizeof(uint16_t); ++i) {
 				// Compare both characters
-				if(*segment1Ptr < *segment2Ptr)
+				if(*segment1Ptr < *segment2Ptr) {
 					return -1;
-				else if(*segment1Ptr > *segment2Ptr)
+				} else if(*segment1Ptr > *segment2Ptr) {
 					return 1;
+				}
 
 				// Increment both pointers
 				++segment1Ptr;
@@ -429,10 +432,11 @@ namespace wfe {
 			char_t char1 = *ptr1Char, char2 = *ptr2Char;
 
 			// Compare the current characters
-			if(char1 < char2)
+			if(char1 < char2) {
 				return -1;
-			else if(char1 > char2)
+			} else if(char1 > char2) {
 				return 1;
+			}
 		}
 
 		return 0;
@@ -944,10 +948,11 @@ namespace wfe {
 				}
 
 				// Compare the two characters
-				if(*segment1Ptr > *segment2Ptr)
+				if(*segment1Ptr > *segment2Ptr) {
 					return 1;
-				else if(*segment1Ptr < *segment2Ptr)
+				} else if(*segment1Ptr < *segment2Ptr) {
 					return -1;
+				}
 				
 				// Increment the segment pointers
 				++segment1Ptr;
@@ -963,10 +968,11 @@ namespace wfe {
 		}
 
 		// Both string are equal up to the first end; check which one is longer
-		if(*str1)
+		if(*str1) {
 			return 1;
-		else if(*str2)
+		} else if(*str2) {
 			return -1;
+		}
 		
 		// Both string are equal and have the same length; return 0
 		return 0;
@@ -1004,10 +1010,11 @@ namespace wfe {
 				}
 
 				// Compare both characters
-				if(*segment1Ptr > *segment2Ptr)
+				if(*segment1Ptr > *segment2Ptr) {
 					return 1;
-				else if(*segment1Ptr < *segment2Ptr)
+				} else if(*segment1Ptr < *segment2Ptr) {
 					return -1;
+				}
 				
 				// Increment both pointers
 				++segment1Ptr;
@@ -1050,10 +1057,11 @@ namespace wfe {
 				}
 
 				// Compare both characters
-				if(*segment1Ptr < *segment2Ptr)
+				if(*segment1Ptr < *segment2Ptr) {
 					return -1;
-				else if(*segment1Ptr > *segment2Ptr)
+				} else if(*segment1Ptr > *segment2Ptr) {
 					return 1;
+				}
 
 				// Increment both pointers
 				++segment1Ptr;
@@ -1094,10 +1102,11 @@ namespace wfe {
 				}
 
 				// Compare both characters
-				if(*segment1Ptr < *segment2Ptr)
+				if(*segment1Ptr < *segment2Ptr) {
 					return -1;
-				else if(*segment1Ptr > *segment2Ptr)
+				} else if(*segment1Ptr > *segment2Ptr) {
 					return 1;
+				}
 
 				// Increment both pointers
 				++segment1Ptr;
@@ -1118,10 +1127,11 @@ namespace wfe {
 			char_t char1 = *str1, char2 = *str2;
 
 			// Compare the current characters
-			if(char1 < char2)
+			if(char1 < char2) {
 				return -1;
-			else if(char1 > char2)
+			} else if(char1 > char2) {
 				return 1;
+			}
 			
 			// Increment both pointers by the size of uint8_t
 			str1 += sizeof(uint8_t);
@@ -1133,10 +1143,11 @@ namespace wfe {
 			return 0;
 
 		// Both string are equal up to the first end; check which one is longer
-		if(*str1 && !*str2)
+		if(*str1 && !*str2) {
 			return 1;
-		else if(*str2 && !*str1)
+		} else if(*str2 && !*str1) {
 			return -1;
+		}
 		
 		// Both string are equal and have the same length; return 0
 		return 0;
@@ -1553,9 +1564,9 @@ namespace wfe {
 		size_t pos = 1;
 		ptrdiff_t candidate = 0;
 		while(pos < wantedLength) {
-			if(wanted[pos] == wanted[candidate])
+			if(wanted[pos] == wanted[candidate]) {
 				table[pos] = table[candidate];
-			else {
+			} else {
 				table[pos] = candidate;
 				while(candidate >= 0 && wanted[pos] != wanted[candidate])
 					candidate = table[candidate];
@@ -1600,8 +1611,9 @@ namespace wfe {
 					if(position < 0) {
 						++i;
 						pos = 0;
-					} else
+					} else {
 						pos = (size_t)position;
+					}
 				}
 			}
 
@@ -1627,9 +1639,9 @@ namespace wfe {
 		size_t pos = 1;
 		ptrdiff_t candidate = 0;
 		while(pos < wantedLength) {
-			if(wanted[pos] == wanted[candidate])
+			if(wanted[pos] == wanted[candidate]) {
 				table[pos] = table[candidate];
-			else {
+			} else {
 				table[pos] = candidate;
 				while(candidate >= 0 && wanted[pos] != wanted[candidate])
 					candidate = table[candidate];
@@ -1674,8 +1686,9 @@ namespace wfe {
 					if(position < 0) {
 						++i;
 						pos = 0;
-					} else
+					} else {
 						pos = (size_t)position;
+					}
 				}
 			}
 
