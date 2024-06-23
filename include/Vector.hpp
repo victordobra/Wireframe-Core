@@ -626,7 +626,7 @@ namespace wfe {
 			pos->~value_type();
 
 			// Move part of the vector back to remove the destructed value
-			memmove((pointer)pos, (pointer)pos + 1, (vecData + vecSize + 1 - pos) * sizeof(value_type));
+			memmove((pointer)pos, pos + 1, (vecData + vecSize + 1 - pos) * sizeof(value_type));
 
 			return (pointer)pos;
 		}
@@ -655,7 +655,7 @@ namespace wfe {
 				ptr->~value_type();
 			
 			// Move part of the vector back to remove the destructed values
-			memmove((pointer)first, (pointer)last, (vecData + oldSize - last) * sizeof(value_type));
+			memmove((pointer)first, last, (vecData + oldSize - last) * sizeof(value_type));
 
 			return (pointer)first;
 		}
